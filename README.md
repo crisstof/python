@@ -12,7 +12,7 @@ Documentation
 -------------
 
 PyQT5:
-[![PyQT5_IHM](./img/PyQT5.PNG)]
+[![PyQT5_IHM](./img/PyQT5.png)](https://www.python.org/)
 
 
 
@@ -20,3 +20,8 @@ PyQT5:
 
 Glossaire
 ---------
+
+
+Lien
+---------
+https://riverbankcomputing.com/
