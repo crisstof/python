@@ -12,7 +12,7 @@ Documentation
 -------------
 
 PyQT5:
-[![PyQT5_IHM](./img/PyQT5.png)=300*150](https://www.python.org/)
+[![PyQT5_IHM](./img/PyQT5.png)](https://www.python.org/)
 
 
 
