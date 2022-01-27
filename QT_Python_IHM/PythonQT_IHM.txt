@@ -1,0 +1,533 @@
+IHM_Python
+Nous avons une multitude de librairies: Unity, Flutter, wxWidget, QT.
+ici nous allons parler de PyQt5/PyQt6 ou Pyside2/PySide6.
+PyQt5 est de RiverBank et PySide est l'entreprise Qt la principale différence
+Riverbank en licence GPL contrainte logiciel libre l'autre LGPL donc on est pas obligé de montrer le source 
+à par si modification de la librairie LGPL il faudra publié sous la licence LGPL (Free Software Foundation)
+Qt6 cette dernière mouture ne reprend pas en charge l'intégralité des modules de Qt5 comme:
+QtBluetooth, QCharts, QtMultimedia, QtWebEngine etc.
+C'est une programmation evènementielle on peut utiliser les threads et fonctions asynchrones pour paralléliser les actions 
+et donner l'impression de simultanéité. De plus on peut intégrer du HTML, CSS pour une charte graphique.
+
+Installation (numpy, matpotlib, pyQt5)
+Installation de python windows Télécharger sur le site.
+pip install module
+pip uninstall module
+pip list
+
+*****************************************************************************************
+		QT5									*
+*****************************************************************************************
+Fenêtre principale QMainWindow
+Objet basique QWidget  #sert de support pour la création d'une fenêtre ou objet 
+personnalisé, boites de dialogue (QdialogBox, QFileDialog, QcolorDialog)
+------------------------------------------------------
+    Première Fenêtre
+------------------------------------------------------
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget
+app=QApplication(sys.argv) #Gère l'aspet évènementiel du prog (1 seule instance)
+base=QWidget()             #objet de support pour notre fenêtre avec caractéristiques:
+base.resize(320,240) #taille
+base.setWindowTitle('Bonjour') #titre
+base.show()  #affiche
+app.exec_()  #reste ouvert
+------------------------------------------------------
+Mais prenons de l'importance et restons lisible, créons une classe dérivé de QWidget
+pour notre fenêtre, soit la partie graphique de notre application.
+-----------------------------------------------------------------------------------------
+    Un peu de classe quand même	(chaque fenêtre est un objet à part entière)		|
+-----------------------------------------------------------------------------------------
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget
+
+class fenetre_principale(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.InitGUI()
+    def InitGUI(self):
+        self.setWindowTitle('Bonjour')
+        self.resize(320, 240)
+        self.show()
+app=QApplication(sys.argv) #Gère l'aspet évènementiel du prog (1 seule instance)
+IHM=fenetre_principale()
+app.exec_()  #reste ouvert
+----------------------------------------------------------------------------------------
+Ajoutons un bouton et une étiquette (label) modifions le méthode InitGUI
+----------------------------------------------------------------------------------------
+def InitGUI(self):
+        self.setWindowTitle('Bonjour')
+        self.resize(320, 240)
+        self.label1=QLabel("Première application", self)
+        self.bouton1=QPushButton('OK', self)
+        self.bouton1.move(0,50)
+        self.show()
+-----------------------------------------------------------------------------------------
+ARRANGEMENTS DES ELEMENTS: LAYOUT
+Nous avons fait une position absolue avec la méthode move.
+On peut utiliser des layout avec 3 agencements:
+  QVBoxLayout, QHBoxLayout, QGridLayout
+  (Verticale, Horizontale)  (en Grille coordonnées)  modifions le méthode InitGUI
+-----------------------------------------------------------------------------------------
+ def InitGUI(self):
+        self.setWindowTitle('Bonjour')
+        self.resize(320, 240)
+        self.layout=QGridLayout()
+        self.bouton1=QPushButton('1', None)
+        self.bouton2=QPushButton('2', None)
+        self.bouton3=QPushButton('3', None)
+        self.bouton4=QPushButton('4', None)
+        self.layout.addWidget(self.bouton1,0,0)
+        self.layout.addWidget(self.bouton2,0,3)
+        self.layout.addWidget(self.bouton3,2,2)
+        self.layout.addWidget(self.bouton4,4,1)
+        self.setLayout(self.layout)
+        self.show()
+
+Nos QPushButton ne sont plus associée à notre classe elle même 
+(QPushButton('1', self) devient  -> QPushButton('1', None)) #None peut être omis.
+Ils sont ajoutées au layout avec la méthode addWidget en précisant leur position.
+Ensuite nous apposons le layout sur notre fenêtre principale vial la méthode setLayout.
+Nous pouvons définir un objet sur plusieurs cellules: étalons le bouton1 sur 2 colonnes:
+  self.layout.addWidget(self.bouton1, 0, 0, 1, 2)#cad plus large le bouton de 2 colonnes
+                                       0,0ligne/1,2colonne
+-----------------------------------------------------------------------------------------
+Positionnons plusieurs objets dans une même cellule.
+on positionne une image de fond sur notre fenêtre, puis au dessus un bouton).
+plusieurs méthodes pour ajouter une image QLabel est la plus simple sans étiquette,
+auquel nous associons l'image via setPixmap.
+Afin de créer un objet image à partir d'un fichier, nous devons utiliser la 
+fonction QPixmap et donc importer QtGui.
+-----------------------------------------------------------------------------------------
+import sys
+from PyQt5.QtWidgets import QApplication, QGridLayout, QLabel, QPushButton, QWidget
+from PyQt5.QtGui import *
+
+class fenetre_principale(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.InitGUI()
+    def InitGUI(self):
+        self.setWindowTitle('Bonjour')
+        self.resize(320, 240)
+        self.layout=QGridLayout()
+
+        self.bouton1=QPushButton('1', None)
+
+        self.image=QPixmap('crayon_01.jpg')
+        self.labelimage=QLabel() #attachement du lable à la fenêtre parents (base)
+        self.labelimage.setPixmap(self.image)
+        self.layout.addWidget(self.labelimage, 0, 0, 4, 4)
+        self.layout.addWidget(self.bouton1, 1,1)
+        self.setLayout(self.layout)
+        self.show()
+
+if __name__=='__main__':
+    app=QApplication(sys.argv) #Gère l'aspet évènementiel du prog (1 seule instance)
+    IHM=fenetre_principale()
+    app.exec_()  #reste ouvert
+-----------------------------------------------------------------------------------------
+Une nouvelle fois, il est possible d'intégrer des layouts à d'autres layouts et ainsi
+définir dinement l'agencement de l'interface graphique zone par zone.
+
+**CSS** modifier le style d'un objet avec setStyleSheet avec comme paramètre
+la définition CSS su style. comme sur notre bouton1
+ self.bouton1=QPushButton('1', None)
+ self.bouton1.setStyleSheet(
+            "background-color: #FF00FF;"
+            "border-radius: 5px; "
+            "border: 2px solid gray;" 
+        )
+-----------------------------------------------------------------------------------------
+BON ON CLICK MAIS RIEN:
+	LA GESTION D'INTERACTION: SIGNAL ET SLOT
+-----------------------------------------------------------------------------------------
+Si on appui sur un bouton il émet un signal.
+Afin de pouvoir répondre à ce signal, nous devons lui associer un fonction slot.
+Pour que l'objet émette un signal il faut que l'évènement en question ait été
+implémenté dans l'objet lui-même.
+QPushButton peut réagir aux 3 évènements: 
+(appui)pressed, relache)release, (appui suivi d'un relachement)clicked)
+
+Pour une QProgressBar ou QSlider (curseur)  c'est un changement de valeur (valueChanged).
+pour une boite combiné QComboBox il s'agit de changement de sélection depuis la liste déroulante...
+
+Pour réagir à un évènement, nous devons connecter ce dernier à une fonction slot qui 
+effectuera la tâche ou l'action en réponse de cet évènement:
+objet.évènement.connect(slot)  # donc dans notre application:
+-----------------------------------------------------------------------------------------------------------
+CHAQUE CLIC LE MESSAGE S'AFFICHE Boutonx appuyé dans le terminal
+-----------------------------------------------------------------------------------------------------------
+import sys
+from PyQt5.QtWidgets import QApplication, QGridLayout, QLabel, QPushButton, QWidget
+from PyQt5.QtGui import *
+
+class fenetre_principale(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.InitGUI()
+    def InitGUI(self):
+        self.setWindowTitle('Bonjour')
+        self.resize(320, 240)
+        self.layout=QGridLayout()
+        self.bouton1=QPushButton("1")
+        self.bouton1.clicked.connect(self.bouton)
+        self.bouton2=QPushButton("2")
+        self.bouton2.clicked.connect(self.bouton)
+        self.bouton3=QPushButton('3', None)
+        self.bouton3.clicked.connect(self.bouton)
+        self.layout.addWidget(self.bouton1, 0, 0, 1, 2)
+        self.layout.addWidget(self.bouton2,0,3)
+        self.layout.addWidget(self.bouton3,2,2)
+        self.setLayout(self.layout)
+        self.show()
+
+    def bouton(self):
+        sender=self.sender()
+        print(f'Bouton {sender.text()} appuyé')
+        
+if __name__=='__main__':
+    app=QApplication(sys.argv) #Gère l'aspet évènementiel du prog (1 seule instance)
+    IHM=fenetre_principale()
+    app.exec_()  #reste ouvert
+
+-----------------------------------------------------------------------------------------------------------
+PS C:\Python\1_Programs> python .\pyQt5.py
+Bouton 1 appuyé
+Bouton 2 appuyé
+Bouton 3 appuyé
+----------------------------------------------
+Nous avons utilisé la méthode sender qui permet d'identifier l'objet qui a généré l'évènement.
+dans notre cas il s'agit du bouton sur lequel nous avons cliqué.
+et s'affiche le message Bouton 1 appuyé
+-----------------------------------------------------------------------------------------------------------
+	CREATION D'UN OBJET QT PERSONNALISE  CREER NOS Qwidget (graphique et comportemental)
+Création d'un thermomètre
+dont la couleur changeront 
+en fonction de la température.
+-----------------------------------------------------------------------------------------------------------
+dans thermo.py créer une classe pour notre objet (__init__) contenant les attributs
+les bornes de tempérarture du thermomètre, la température courante et certains
+paramètres géométriques.
++ 2 paramètres colorChanged et valureChanged correspondant aux signaux générés par l'objet,
+qui seront définis via la fonction pyqtSignal: qui retourne en l'occurrence un entier, 
+paramètre de la fonction pysqtSignal.
+Nous définirons plus tard la génération de ces signaux.
+-----------------------------------------------------------------------
+CREATION DE L'OBJET THERMOMETRE
+--------------------------------
+import sys
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import Qt, QRect, pyqtSignal, pyqtSlot
+
+class thermo(QWidget):
+    colorChanged=pyqtSignal(int)
+    valueChanged=pyqtSignal(int)
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.radius=20
+        self.height=80 #selfmax-selfmin
+        self.width=self.radius
+        self.color=Qt.green
+        self.value=25
+        self.h=self.value
+        self.max=60
+        self.min=-20
+        self.froid=0
+        self.chaud=30
+        self.initGui() 
+        #après avoir défini les caractéristiques de notre thermomètre
+        #nous appelons notre fonction initialisation graphique qui
+        #spécifie la dimension de l'objet
+    def setTemp(self,val):  #fonction setter permet de modifier la
+        self.value=val      #valeur de la température depuis 
+        self.update()       #l'extérieur de l'objet
+    def initGui(self):
+        self.setGeometry(0, 0, 4*self.radius, 4*self.radius+self.height)
+        self.show
+----------------------------------------------------------------------------------------
+Qt propose la classe QPainter qui regroupe différents outils de dessins:
+lignes, chemins, texte, image, formes.
+pour tracer: un stylo (QPen) ligne, contours brosse
+		      (QBrush) pour remplir, peindre l'intérieur des formes.
+Tout élément Qt(QPushButton, Qlabel...) est redessiné à chaque rafraîchissement
+de fenêtre, par exemple lors d'un redimenssionnement de la fenêtre ou directement
+avec update et repaint.
+Quel que soit le type de rafraîchissement c'est la méthode paintEvent qui est
+appelée automatiquement par Qt.
+-----------------------------------------------------------------------------------------
+Nous allons définir pour notre objet personnalisé son aspect et comportement visuel
+dans la méthode paintEnvent.
+réprésentation d'un thermomètre à mercure avec son niveau.
+modélison par un cercle correspondant à la réserve et le rectangle le niveau de mercure.
+La température sera affichée directement dans la réserve.
+La couleur s'adaptera également (froid/chaud).
+Programmation:
+récupérer le support graphique du termomètre avec QPainter. Puis définissons un stylo,
+une brosse et resp leurs tailles et couleurs.
+rectangle blanc (tube sans mercure) 
+coordoné coin haut gauche de notre QWidget.
+nous changeons la couleur du stylo et brosse pour tracer la partie contenant le mercure.
+et la couleur définie automatiquement en fonction de la température et seuil chaud/froid.
+-------------------------------------------------------------------------------------------
+def paintEvent(self, event):
+        qp=QPainter()
+        qp.begin(self)
+        pen=QPen()
+        pen.setWidth(1)
+        pen.setColor(Qt.white)
+        qp.setPen(pen)
+        qp.setBrush(Qt.white)
+        qp.drawRect(int(self.radius/2), 5, self.width, self.height+self.radius)
+        if self.value < self.froid:
+            pen.setColor(Qt.blue)
+            qp.setPen(pen)
+            qp.setBrush(Qt.blue)
+        elif self.value > self.chaud:
+            pen.setColor(Qt.red)
+            qp.setPen(pen)
+            qp.setBrush(Qt.red)
+        else:
+             pen.setColor(Qt.green)
+             qp.setPen(pen)
+             qp.setBrush(Qt.green)
+        qp.drawEllipse(0, self.height + 2*self.radius, 2*self.radius)
+        qp.drawRect(int(self.radius/2), self.height+20+5, self.width,-(5+self.radius)- self.value)
+        #Pour l'affichage textuel de la température
+        #spécifions la couleur, taille des caractères
+        pen.setColor(Qt.black)
+        qp.setPen(pen)
+        qp.setFont(QFont('Arial',12))
+        qp.drawText(int(self.radius/2), (self.height+2*self.radius+5), str(self.value))
+        qp.end()
+-------------------------------------------------------------------------------------------------------------
+Notre thermomètre est terminé l'aspect visuel tout du moins.
+Nous avions défini les signaux 2 colorChanged et valueChanged avec une valeur entière.
+Nous créons 2 fonctions changeCouleur, changeValeur pour but d'émettre ces signaux.
+Il suffit d'utiliser la méthode emit dudit signal. Et pour le visuel du thermomètre
+il faut le mettre à jour à chaque modification de température nous forçons 
+un rafraîchissement via la fonction update:
+-------------------------------------------------------------------------------------------------------------
+def changeCouleur(self, color):
+        self.color = color
+        self.colorChanged.emit(self.color)
+        self.update()
+    def changeValeur(self, value):
+        self.value = value
+        self.valueChanged.emit(self.value)
+        self.h = self.value+20
+        self.update()
+-------------------------------------------------------------------------------------------------------------
+				APPLICATION FINALE
+créons l'interface IHM pour mettre en oeuvre les concepts.
+créer un fichier demo_IHM.py
+Et importer les modules
+----------------------------------------------------------------------------------
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import Qt
+from pyqtSignal import thermo
+
+from matplotlib import pyplot as plot
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+import sys
+-----------------------------------------------------------------------------------
+nous créons une classe pour notre interface graphique (Monitoring)
+Après avoir déclarer le constructeur nous définisson la fonction de construction
+de l'interface initGui().
+L'interface comportera deux onglets (QTabWidget)
+1 infos en temps réel
+2 tracé de l'historique de température sous forme de courbe
+-----------------------------------------------------------------------------------
+class Monitoring(QWidget):
+    def __init__(self):
+        QWidget.__init__(self)
+        self.status =0
+        self.course = 0
+    #variables servant à la simulation du tracé de l'historique
+        self.tabval = []
+        self.index = 0
+        self.InitGUI()
+    def InitGUI(self):
+        self.base = QWidget()
+        self.base.setWindowTitle("Station météo")
+        self.base.resize(640,480)
+    #creation des onglets
+        self.tab=QTabWidget()
+        self.tab1=QWidget()
+        self.tab2=QWidget()
+        self.tab.addTab(self.tab1,"Infos")
+        self.tab.addTab(self.tab2,"Historique")
+        self.mainLayout=QGridLayout()
+        self.mainLayout.addWidget(self.tab)
+    #définissons et positionnons les objets présents sur l'onglet infos
+        self.bt1=QPushButton("OK")
+        self.Pstatus=QProgressBar()
+        self.Hstatus=QProgressBar()
+        self.RSSIstatus=QProgressBar()
+        self.thermo=thermo()
+        self.Plabel=QLabel('Pression')
+        self.Hlabel=QLabel('Humidité')
+        self.RSSIlabel=QLabel('RSSI')
+        self.infolayout=QGridLayout()
+        self.infolayout.addWidget(self.Plabel,0,0)
+        self.infolayout.addWidget(self.Hlabel,1,0)
+        self.infolayout.addWidget(self.RSSIlabel,2,0)
+        self.infolayout.addWidget(self.Pstatus,0,1)
+        self.infolayout.addWidget(self.Hstatus,1,1)
+        self.infolayout.addWidget(self.RSSIstatus,2,1)
+        self.infolayout.setHorizontalSpacing(40)
+        self.infolayout.addWidget(self.thermo,0,3,3,1)
+        self.infolayout.addWidget(self.bt1,3,3)
+        self.tab1.setLayout(self.infolayout)
+------------------------------------------------------------------------------------------------------
+le tracé de l'historique peut être fait avec pyqtgraph, matpotlib.
+nous avons opté pour matpotlib et le rafraîchissement périodique
+avec la fonction (trace) mettant à jour les données du graphe.
+        self.dyn_canv=FigureCanvas(Figure(figsize=(5,5)))
+        self.ax_dyn=self.dyn_canv.figure.subplots()
+        self.timer=self.dyn_canv.new_timer(interval=100)
+        self.timer.add_callback(self.trace,self.ax_dyn)
+        self.timer.start()
+        self.courbelayout=QGridLayout()
+        self.courbelayout.addWidget(self.dyn_canv)
+        self.tab2.setLayout(self.courbelayout)
+------------------------------------------------------------------------------------------------------
+la fonction trace pour ajouter la valeur éléatoire pour le tracer
+et appsons notre layout principal à notre fenêtre
+n'oublié pas d'importer
+import random
+import numpy as np
+-------------------------------------------------------------------------------------------------------
+#la fonction trace (ajout valeur aléatoire pour le tracer)
+    def trace(self,ax):
+        ax.figure.canvas.draw()
+        self.Index +=1
+        self.val = random.random()
+        self.tabval.append(self.val)
+        ax.plot(np.asarray(self.tabval))
+        #apposons notre layout principal à notre fenêtre
+        self.base.setLayout(self.mainLayout)
+        self.base.show()
+----------------------------------------------------------------------------------------------------------
+Ajouter les setters: fonctions permettant la modification depuis l'extérieur de la classe
+position juste après le constructeur
+----------------------------------------------------------------------------------------------------------
+#ajout des setters fonction de modification depuis l'ext class
+    def setPval(self, val):
+        self.Pstatus.setValue(val)
+    def setHval(self,val):
+        self.Hstatus.setValue(val)
+    def setRSSI(self,val):
+        self.RSSIstatus.setValue(val)
+    def setTemp(self, val):
+        self.thermo.setTemp(val)
+----------------------------------------------------------------------------------------------------------
+Créons notre application elle même car nous avons fini avec l'interface
+----------------------------------------------------------------------------------------------------------
+if __name__ == "__main__":
+    app=QApplication(sys.argv)
+    IHM=Monitoring()
+    app.exec_()
+--------------------------------------------
+onmontre ici le côté dynamisme du graphique
+----------------------------------------------------------------------------------------------------------
+nous souhaitons rafraîchir les données de l'interface à intervalle régulier.
+dans l'onglet Historique nous avons mis un timer sur le graphique,
+pour but de refraîchir le graphique lui même mais pas les données (pression, humitité ...)
+De plus une mise à jour aléatoire dans la méthode trace des données (pour le dynamisme du graphique)
+
+Nous allons implémenter un QTimer dans l'application principale pour gérer le rafraîchissement de l'application
+elle-même.
+Nous modifions la fonction trace pour prendre en compte les données et pas des données virtuelle:
+------------------------------------------------------------------------------------------------------------
+dans le main: créons un timer
+--------------------
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    IHM = Monitoring()
+    timer = QTimer()
+    timer.timeout.connect(affiche)
+    timer.strat(100) #update every millisecond
+    app.exec_()
+-------------------------
+il faut ajouter une fonction slot qui répond au timer via la foncion affiche.
+elle doit être définie avant son utilisation.
+et nous allons prendre des paramètres de notre machine température, processeur ...
+pour obtenir ses paramètre pip install psutil (ne fonctionne pas sur win python3.10)
+on modifie la classe Monitoring
+def get_temp:
+	tt=psutil.sensor_temperatures()
+	tmep_list=[]
+	for n,i in tt.itmes():
+		for ii in i:
+			temp_list.append(ii.current)
+	return temp_list
+on passe la définition à affiche
+def affiche():
+	IHM.setPval(int(psutil.cpu_percent(0.5))
+	IHM.setHval(int(psutil.virtual_memory().percent))
+	IHM.setRSSI(int(psutil.sensor_battery().percent))
+	temp=get_temp()
+	IHM.setTemp(int(temp[0])) #temp CPU
+#modifier la fonction trace pour la valeur temperature
+self.val= self.thermo.value
+
+*************************************************************************************************************
+Liens
+https://www.tutorialspoint.com/pyqt/pyqt_basic_widgets.htm
+https://www.tutorialspoint.com/pyqt/pyqt_major_classes.htm
+https://courspython.com/interface-graphique.html
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,3065 @@
+       	*************************
+	* LANGUAGE PYTHON	*
+	*************************
+
+Interpréter un programme python:
+python .\hello.py
+
+structures:
+---------
+(if)
+if a > 5:
+    a=a+1
+elif a == 5:
+     a=a+100
+else:
+    a=a-1;
+
+(while)
+nb = 7
+i = 0
+while i<10:
+   print(i+1, "*", nb, "=", (i+1) * nb)
+   i += 1
+
+(for)
+for element in sequence:  #element variable créée par for prend la valeur de la séquence parcourue
+chaine = "Bonjour"
+for lettre in chaine:
+	if lettre in "AEIOUYaeiouy":
+		print(lettre)
+	else:
+		print("*")
+
+le mot break interrompre la boucle.
+       continu continuer une boucle repartant à la ligne.
+
+
+Fonctions:
+---------
+la signature d'une fonction en python et son nom car on ne précise pas le type en Python.
+def nom_de_la_fonction(param1, param2, paramN):  #def define
+def carre(val):
+	return val * val
+
+Des fonctions limitées à une seule instruction ainsi qu'un def serait 
+plus long et moins pratique, nous avons:
+les fonctions lambda:  lambda arg1, arg2, ...: instruction de retour
+appel_maFonction = lambda x: x * x
+
+les modules ce sont des bouts de code enfermé dans un fichier ayant un rapport entre elles.
+(le module math contient des fonctions mathématiques)
+import math
+math.sqrt(16)
+help("math.sqrt") #pour en savoir plus sur le module et ses fonctions.
+le module crée un espace de noms dénommé math.
+changer cet espace de nom: import math as mathematiques
+mathematiques.sqrt(25)
+
+form math import fabs #si nous avons besoin que d'une fonction
+et sans préfixe math donc la fonction est chargée dans l'interpréteur
+au même plan que les fonctions existantes comme print.
+Evite plus de saisie mais l'inconvénient s'il existe 2 méthodes avec le même nom
+l'interpréteur conservera que la dernière fonction appelée.
+
+
+Faire un fichier, fichier.py:
+----------------------------
+#!chemin  (/usr/bin/python3.4)
+# -*-coding:utf-8 -*
+ mais le code ferme la fenêtre il faut donc faire:
+import os
+et à la fin du fichier on met le programme en pause:
+os.system("pause")
+
+Faire un test de module dans le module-même!!: mettre tous dans un seul fichier!!
+---------------------------------------------------------------------------------
+Comme une table de multiplication:
+dans un autre fichier on importe la fonction et on l'appelle.
+si on appelle table(8) dans fichier fonction multipli à chaque import il sera exécuté et afficher.
+Séparer les éléments du code qui doivent être exécutés lorsqu'on lance le module 
+directement en tant que programme  ou lorsqu'on cherche à l'importer:
+
+"""module multipli contenant la fonction table"""
+# -*-coding:utf-8 -*
+import os
+
+def table(nb, max=10):
+	"""fonction table"""
+	i=0
+	while i<max:
+		print(i+1, "*", nb, "=", (i+1)*nb)
+		i += 1
+#test de la fonction table
+if __name__ == "__main__":   #***connecsens même chose
+	table(4)
+	os.system("pause")
+
+*********************************************************************
+variable spécial
+#monScript.py
+if __name__ == __main__:
+ print(mon script est exécuté directement)
+else
+ print(mon script est importé par un autre module)
+#monAutreScript.py
+import monScript
+
+__name__
+En lançant le script monScript avec la commande python monScript.py, 
+on obtient le message mon script est exécuté directement. 
+Si par contre on exécute le script monAutreScript, 
+qui importe le fichier monScript.py, le message affiché 
+sera mon script est importé par un autre module.
+
+**********************************************************************
+
+si on double-clic la table de 4 s'affiche mais si on l'importe
+le code de test de n'exécutera pas.
+Puisque la variable __name__ c'est une variable qui existe dès le lancement
+de l'interpréteur. 
+Si elle vaut __main__ cela veut dire que le fichier appelé est le fichier exécuté.
+Autrement dit si __name__ vaut __main__ vous pouvez mettre un code qui sera
+exécuté si le fichier est lancé directement comme un exécutable.
+
+on peut regrouper les modules dans des packages. (il faudra les importer)
+créer un dossier package  (on peut créer des fichier py ou des sous packages)
+
+Le fichier d'initialisation le package __init__.py dans un répertoire destiné à devenir un package.
+on peut mettre du code d'initialisation .
+
+Les exceptions:
+--------------
+try:
+  resultat = numerateur / denominateur
+except:
+  print("Une erreur est survenue...")
+
+et plusieurs exceptions est capable de survenir:
+NameError une variable n'a pas été définie
+TypeError l'une des variables ne peut diviser ou être divisée
+ZeroDivisionError si denominateur vaut 0
+
+try:
+    resultat = numerateur / denominateur
+except NameError:
+    print("La variable numerateur ou denominateur n'a pas été définie.")
+except TypeError:
+    print("La variable numerateur ou denominateur possède un type incompatible avec la division.")
+except ZeroDivisionError:
+    print("La variable denominateur est égale à 0.")
+else:
+    print("Le résultat obtenu est", resultat)
+finally:
+ #instruction exécutée qu'il y ait eu des erreurs ou non
+
+
+les assertions est un moyen de s'assurer avant de continuer q'une condition est respectée.
+assert var==5
+si le test renvoie True l'exécution se poursuit normalement. 
+Sinon une exception AssertionError est levée.
+
+une autre façon de lever une exception: raise TypeDeLException("message à afficher")
+annee = input() # L'utilisateur saisit l'année
+try:
+    annee = int(annee) # On tente de convertir l'année
+    if annee<=0:
+        raise ValueError("l'année saisie est négative ou nulle")
+except ValueError:
+    print("La valeur saisie est invalide (l'année est peut-être négative).")
+
+Il faut quand même savoir quelles exceptions peuvent être levées par Python dans une situation donnée.
+
+
+*********************************************************************************************************************************
+        ***************************												*
+	*	En Python tout est objet	*										*
+	  	*********************************										*
+*********************************************************************************************************************************
+les méthodes de la classe str:
+chaine = "BONJOUR"
+chaine.lower() #minuscule
+chaine.upper() #majuscule
+chaine.center(20) #centre un titre avec 20 caractères
+len(chaine) #longueur de chaîne
+Un objet est issu d'une classe. La classe est une forme de type de donnée, sauf qu'elle
+permet de définir des fonctions et variables propres au type.
+les fonctions définies dans une classe sont appelées des méthodes.
+
+chaine = str() # Crée une chaîne vide
+# On aurait obtenu le même résultat en tapant chaine = ""
+
+while chaine.lower() != "q": #l'utilisateur peut taper Q ou q la chaine s'arrête
+    print("Tapez 'Q' pour quitter...")
+    chaine = input()
+
+print("Merci !")
+
+formater des chaines:
+seulement utile que pour l'affichage la méthode format:
+print"Je m'appelle {0} {1}".format(prenom, nom))
+ou 
+# formatage d'une adresse
+adresse = """
+{no_rue}, {nom_rue}
+ {code_postal} {nom_ville} ({pays})
+""".format(no_rue=5, nom_rue="rue des Postes", code_postal=75003, nom_ville="Paris", pays="France")
+print(adresse)
+
+Concaténation de chaine: 
+message = "J'ai " + str(age) + " ans."
+
+*********************************************************************************************************************************
+---LES LISTES ET LES TUPLES---
+délimitation
+() tuples, [] listes, {} dictionnaires
+
+Liste: sont des séquences, ce sont des objets capables de contenir d'autres objets
+de n'importe quel type. ce sont donc des séquences d'objet 
+Une liste peut contenir des objets issus de différentes classes sans inconvénient. 
+De plus, une liste peut contenir des doublons 
+(c'est-à-dire qu'elle peut contenir plusieurs fois le même objet).
+
+Tuple: sont des séquences assez semblables aux listes,
+sauf qu'on ne peut modifier un tuple après qu'il ait été créé.
+les TUPLES sont des listes immuables mais avec des parenthèses
+
+Dictionnaire:sont des objets pouvant en contenir d'autres à l'instart des listes.
+ils associent chaque objet contenu à une clé (chaine de caractères) comme un carnet d'adresse
+on accède à chaque contact en précisant son nom.
+*********************************************************************************************************************************
+les listes sont des séquences, ce sont des objets capables de contenir d'autres objets
+de n'importe quel type. ce sont donc des séquences d'objet:
+ma_liste = list() #liste vide
+ma_liste = [1, 3.2, "chaine", []] 
+les listes sont des types dits mutables on peut remplacer un élément par une autre.
+ma_liste.append(56) #ajoute à la fin de la liste modifie l'objet d'origine et ne renvoit rien
+ma_liste.insert(2, 'c') #insère c à l'indice 2
+ma_liste.extend(2, 'c') 
+del ma_liste[2] #supprime le troisième élément de la liste fonctionnalité python et pas une méthode de list
+ma_liste.remove(32) #supprime le nombre 32 de la liste et que la première occurrence.
+**append, insert, remove ne renvoit rien**
+parcourir une liste
+while i < len(ma_liste):
+	print(ma_liste[i])
+	i += 1
+
+for elt in ma_liste:
+	print(elt)
+
+pour savoir l'indice on peut combiner les deux:
+ for i, elt in enumerate(ma_liste):
+     print("À l'indice {} se trouve {}.".format(i, elt))
+
+Sinon on a aussi:
+for elt in enumerate(ma_liste):
+	print(elt)
+affiche (0, 'a) ...
+quand on parcourt chaque élément de l'objet renvoyé par enumerate, on voit des tuples
+qui contiennent deuc éléments.
+*********************************************************************************************************************************
+les TUPLES sont des séquences assez semblables aux listes,
+sauf qu'on ne peut modifier un tuple après qu'il ait été créé.
+
+les TUPLES sont des listes immuables mais avec des parenthèses
+tuple_vide = ()
+tuple_non_vide = (1,2,3) #plus de modification
+*********************************************************************************************************************************
+
+convertir une chaîne en liste:  chaine.split(" ")  #['bonjour', 'à', 'tous']
+inverse : " ".join(ma_liste) # "bonjour à tous'
+
+def afficher_flottant(flottant):
+    """Fonction prenant en paramètre un flottant et renvoyant une chaîne 
+       de caractères représentant la troncature de ce nombre. La partie flottante doit 
+       avoir une longueur maximum de 3 caractères.
+       De plus, on va remplacer le point décimal par la virgule"""
+    if type(flottant) is not float:
+        raise TypeError("Le paramètre attendu doit être un flottant")
+    flottant = str(flottant)
+    partie_entiere, partie_flottante = flottant.split(".")
+    # La partie entière n'est pas à modifier
+    # Seule la partie flottante doit être tronquée
+    return ",".join([partie_entiere, partie_flottante[:3]])
+
+les Fonctions dont on ne connait pas à l'avance le nombre de paramètre.
+-------------------------------------------------------------------------
+def fonction(*parametres):
+def fonction_inconnue(nom, prenom, *commentaires):#avec des paramètres fournis 
+
+def fonction_inconnue(*parametres):
+    """Test d'une fonction pouvant être appelée avec un nombre variable de paramètres"""
+    print("J'ai reçu : {}.".format(parametres))
+
+le * fait que Python va placer tous les paramètres de la fonction dans un tuple que l'on traite après.
+
+def afficher(*param, sep=' ', fin='\n'):
+	param = mist(param) #converti un tuple en liste
+	for i, param in enumerate(param): 
+		param[i] = str(param) #convertir toutes les valeurs en chaines de caractère
+	chaine = sep.join(param) #constituer la chaîne finale
+	chaine += fin
+	print(chiane, end= '') #affiche l'ensemble
+
+
+*********************************************************************************************************************************
+***********COMPREHENSIONS DE LISTE**********
+
+parcourir une liste en en renvoyant une seconde, modifiée ou filtrée
+simple modification:
+liste_orig = [0, 1, 2, 3]
+[nb * nb for nb in liste_orig]
+résultat [0, 1, 4, 9]
+Quand Python interprète cette ligne, il va parcourir la liste d'origine et 
+mettre chaque élément de la liste au carré. 
+Il renvoie ensuite le résultat obtenu, sous la forme d'une liste qui est 
+de la même longueur que celle d'origine. 
+On peut naturellement capturer cette nouvelle liste dans une variable.
+
+Filtrage avec un branchment conditionnel
+[nb for nb in liste_orig if nb % 2 == 0]
+
+
+programme 
+>>> qtt_a_retirer = 7 # On retire chaque semaine 7 fruits de chaque sorte
+>>> fruits_stockes = [15, 3, 18, 21] # Par exemple 15 pommes, 3 melons...
+>>> [nb_fruits-qtt_a_retirer for nb_fruits in fruits_stockes if nb_fruits>qtt_a_retirer]
+[8, 11, 14]
+>>>
+*********************************************************************************************************************************
+délimitation
+() tuples, [] listes, {} dictionnaires
+
+LES DICTIONNAIRES sont des objets pouvant en contenir d'autres à l'instart des listes.
+ils associent chaque objet contenu à une clé (chaine de caractères) comme un carnet d'adresse
+on accède à chaque contact en précisant son nom.
+mon_dicot = dict()
+mon_dicot = {}   #même chose que dict()
+mon_dico["pseudo"] = "Prolixe"
+mon_dico["mot de passe"] = "*"
+>>> {'mot de passe': '*', 'pseudo': 'Prolixe'}
+mon_dico["mot de passe"] #si la clé n'existe pas une exception de type KeyError
+
+comme pour un Echiquier dictionnaire dont les clés seront des tuples(lettre, chiffre)
+echiquier = {}
+echiquier['a', 1] = "tour blanche" # En bas à gauche de l'échiquier
+certains encouragent à toujours placer des parenthèses autour des tuples quand on les utilise.
+
+placard = {"chemise":3, "pantalon":6, "tee-shirt":7}
+mon_dictionnaire = {'pseudo', 'mot de passe'} #c 'est pas un dictionnaire mais un set (ensemble) objet 
+conteneur semblable au liste sauf qu'il ne peut contenir deux objets identiques donc pas
+deux fois l'entier 3
+
+del placard["chemise"] #supprime
+placard.pop("chemise") #supprime mais renvoie cette valeur.
+
+parcourir un dictionnaire:
+fruits = {"pommes":21, "melons":3, "poires":31}
+
+for cle in fruits:
+	print(cle)
+>>>melon poires pommes effectivement un dictionnaire n'ont pas de structure ordonnée.
+
+for cle in fruits.keys():
+	print(cle) #renvoie à coup sur des clés
+on a du même types: values (valeurs: 21, 3, 31)
+ou comme ça: if 21 in fruits.values(): instruction
+
+pour parcourir clé:valeur la fonction enumerate on utilise items renvoie sous forme de tuple.
+for cle, valeur in fruits.items():
+	 print("La clé {} contient la valeur {}.".format(cle, valeur))
+
+Récupérer les paramètres nommés dans un dictionnaire
+fonction qui accepte n'importe quel type de paramètres, 
+nommés ou non, dans n'importe quel ordre, dans n'importe quelle quantité, 
+il faut la déclarer de cette manière : def fonction_inconnue(*en_liste, **en_dictionnaire):
+"utile pour les décorateurs
+Transformer un dictionnaire en paramètres nommés d'une fonction
+>>> parametres = {"sep":" >> ", "end":" -\n"}
+>>> print("Voici", "un", "exemple", "d'appel", **parametres)
+Voici >> un >> exemple >> d'appel -
+>>>
+
+>>> parametres = {"sep":" >> ", "end":" -\n"}
+>>> print("Voici", "un", "exemple", "d'appel", **parametres)
+Voici >> un >> exemple >> d'appel -
+>>>
+comme si on avait écrit ça 
+>>> print("Voici", "un", "exemple", "d'appel", sep=" >> ", end=" -\n")
+Voici >> un >> exemple >> d'appel -
+>>>
+
+*********************************************************************************************************************************
+*********************
+	LES FICHIERS
+	***************************
+
+changer le répertoire de travail courant
+>>>import os
+>>> os.chdir("C:/tests python") #C:\test\fic.txt
+on peut afficher le répertoire de travail courant avec os.getcwd()  CWD: current working directory
+
+Ouverture du fichier dans le répertoir courant lire et écrire
+les modes: r(read)  w(write) le contenu est écrasé si le fichier n'existe pas il est créé. a(append)ajout
+           b(ouverture du fichier en mode binaire)
+
+
+
+
+---------------
+Lire un fichier
+---------------
+>>>mon_fichier = open("fichier.txt", "r") #crée un fichier et renvoie un objet de la classe TextIoWrapper affiche du texte à l'écran
+>>>mon_fichier
+<_io.TextIOWrapper name='fichier.txt' encoding='cp1252'> #encodage de windows propre à la console
+>>>type(mon_fichier)
+<class '_io.TextIOWrapper'>
+>>>
+>>>mon_fichier.close() #ferme le fichier
+
+Pour lire l'intégralité du fichier
+>>>mon_fichier = open("fichier.txt", "r")
+>>>contenu = mon_fichier.read() #renvoie  tout le contenu du fichier que l'on capture dans une chaîne de caractères
+>>>print(contenu)
+lit le fichier
+>>>mon_fichier.close()
+>>>
+après tout est possible split la chaîne pour parcourir chaque ligne et les traiter.
+
+Pour écrire dans un fichier
+>>>mon_fichier = open("fichier.txt", "w")
+>>>mon_fichier.write("Premier test d'écriture dans un fichier via Python")
+50
+>>>mon_fichier.close
+>>>#on peut vérifier que votre fichier contient bien le texte qu'on y a écrit.
+write accepte que des chaînes de caractère, pour les nombre 
+il faudra les convertir en chaîne avant de les écrire et les convertir en entier après les avoir lus.
+le module os contient beaucoup de fonction pour créer, supprimer des fichiers et des répertoires.
+
+pour éviter les erreurs lire, écrire, le fichier reste ouvert.
+with open(mon_fichier, mode_ouverture) as variable:
+with prélude au bloc dans lequel on va manipuler notre fichier
+crée un context manager (gestionnaire de contexte) qui vérifie que le fichier est ouvert et fermé.
+open va renvoyer un objet TextIOWrapper (notre fichier)
+as  dans le mécanisme d'importation et dans les exceptions signifie en tant que
+variable qui contiendra notre objet.
+
+with open(mon_fichier, mode_ouverture) as mon_fichier: #UTILISER MIEUX CA
+	texte = mon_fichier.read()
+signifie que si une exception se produit le fichier sera tout de même fermé à la fin du bloc.
+
+Enregistrer des objets dans un fichier: pour un prochain lancement, le fichier résultant pourra être lu depuis n'importe quel
+système d'exploitation (pour le peut qu'il prenne en charge python)
+exemple:
+Avec with :
+with open(fichier, mode) as fichier:
+    # manipulation du fichier
+Sans with :
+fichier = open(fichier, mode)
+try:
+    # manipulation du fichier
+finally:
+    fichier.close()
+
+
+import pickle     #utilise 2 classes Pickler et Unpickler
+>>> with open('donnees', 'wb') as fichier:
+	mon_pickler = pickle.Pickler(fichier)
+	#enregistrement
+enregistrer les objet dans le fichier donnees ouvre le fichier en mode binaire
+maintenant que notre pickler est créé nous allons enregistrer un ou plusieurs objets dans notre fichier.
+ici c'est vous de vous organisez ici on peut enregistrer un objet par fichier (mais aucune obligation)
+
+>>> score = {
+...   "joueur 1":    5,
+...   "joueur 2":   35,
+...   "joueur 3":   20,
+...   "joueur 4":    2,
+>>> }
+>>> with open('donnees', 'wb') as fichier:
+	mon_pickler = pickle.Pickler(fichier)
+	mon_pickler.dump(score)  #dump enregistre l'objet on a enregistrer les scores des joueurs.
+
+Récupérer nos objets enregistrés "Unpickler"
+>>> with open('donnees', 'rb') as fichier:       #crée l'objet on lui passe le fichier qu'on va lire en read binaire
+...     mon_depickler = pickle.Unpickler(fichier)
+...     score_recupere = mon_depickler.load() #pour lire l'objet dans notre fichier on appelle load du deplicker
+si le fichier a pu être lu dans la variable score_recupere on récupère notre dictionnaire contenant les scores.
+
+vous récupérez votre dictionnaire contenant les scores. Là, c'est peut-être peu spectaculaire mais, 
+quand vous utilisez ce module pour sauvegarder des objets devant être conservés alors que votre programme
+n'est pas lancé, c'est franchement très pratique.
+
+open read write close pickle
+
+
+
+*********************************************************************************************************************************
+-------------------------------------
+Portée des variables et références
+-------------------------------------
+>>> a = 5
+>>> def print_a():
+...     """Fonction chargée d'afficher la variable a.
+...     Cette variable a n'est pas passée en paramètre de la fonction.
+...     On suppose qu'elle a été créée en dehors de la fonction, on veut voir
+...     si elle est accessible depuis le corps de la fonction"""    
+...     print("La variable a = {0}.".format(a))
+>>> print_a()
+La variable a = 5.
+>>> a = 8
+>>> print_a()
+La variable a = 8.
+>>>
+dans notre fonction, python vérifie si a est dans l'espace local de la fonction
+pas de passage en paramètre et pas définie dans son corps donc elle n'est pas dans l'espace local.
+il va regarder dans l'espace local dans lequel la fonction a été appelée et il la trouve.
+
+la portée des variables: Python a une règle spécifique aux variables extérieures à l'espace local,
+on peut les lire mais pas les modifier par affectation du moins.
+et cet espace local est détruit après l'appel à la fonction.
+
+une fonction ne peut modifier par affectation la valeur d'une variable extérieur à son espace local.
+mais relativiser (une fonction modifiant des objets): en Python tout est objet
+quand on passe des paramètres à une fonction ce sont des objets qui sont transmis et pas les valeurs des objets.
+et donc on peut appeler une méthode de l'objet qui la modifie Voyons cela:
+
+def ajouter(liste, valeur-a-ajouter):
+	liste.append(valeur_a_ajouter)
+ma_liste=['a', 'b', 'c']
+ajouter(ma_liste, 'd') #on a bien ajouter à la liste.
+
+donc on peut en appellant une méthode de l'objet:
+parametre = nouvelle_valeur #non marche pas
+parametre.methode_modif(..) #ou ça marche
+
+Les références dans cela????
+une variable est un nom identifiant, pointant vers une référence d'un objet.
+La référence c'est  un peut la position en mémoire mais de plus haut niveau que le pointeur en C.
+ce n'est pas vraiment la mémoire de votre ordinateur et on ne manipule pas ces références directement.
+donc 2 variables peuvent pointer sur le même objet?
+oui 2 variables avec la même valeur. on ne parle pas de valeurs ici mais d'objets:
+exemple:
+>>> ma_liste1 = [1, 2, 3]
+>>> ma_liste2 = ma_liste1 #ce n'est pas une copie
+>>> ma_liste2.append(4)   #mais les 2 liste contiennent une référence vers le même objet.
+>>> print(ma_liste2)
+[1, 2, 3, 4]
+>>> print(ma_liste1)
+[1, 2, 3, 4]
+>>>
+
+Attention pour les entier, flottants, chaîne n'ont aucune méthode sur l'objet lui-même.
+les chaîne de caractères ne modifie pas l'objet appelant mais renvoient un nouvel objet modifié.
+
+pour modifier une liste sans toucher à l'autre?
+les 2 variables pointent sur le m^éme objet par jeu de références
+créer un nouvel objet avec 
+ma_liste2 = list(ma_liste1) #copie le contenu de ma_liste1
+constructeur pour créer une list sinon utliser dict pour les dictionnaires.
+
+pour approcher les références on a la fonction is qui prend en paramètre un objet.
+Elle renvoie la position de l'objet dans la mémoire Python en entier.
+il compare les ID des objets donc gard à l'utilisation?
+ma_liste1 == ma_liste2 #compare le contenu True
+ma_liste1 == ma_liste2 #compare leur référence False
+*********************************************************************************************************************************
+*********************************
+variables globales  (mot global)
+*********************************
+pour modifier des variables extérieures mais utiliser le plus les variables locales.
+oui en globale on a accès en écriture (toutes) mais aussi en écriture. (voir entier, flottane)
+Les variables globales se définissent à l'aide du mot-cléglobalsuivi du nom de la variable préalablement créée.
+
+>>> i = 4 # Une variable, nommée i, contenant un entier
+>>> def inc_i():
+...     """Fonction chargée d'incrémenter i de 1"""
+...     global i # Python recherche i en dehors de l'espace local de la fonction
+...     i += 1
+... 
+>>> i
+4
+>>> inc_i()
+>>> i
+5
+>>>
+
+*********************************************************************************************************************************
+********************************************
+	LES CLASSES
+********************************************
+
+class Personne:
+    """Classe définissant une personne caractérisée par :
+    - son nom
+    - son prénom
+    - son âge
+    - son lieu de résidence"""
+
+    
+    def __init__(self): # Notre méthode constructeur
+        """Constructeur de notre classe. Chaque attribut va être instancié
+        avec une valeur par défaut... original"""
+
+        
+        self.nom = "Dupont" #self il s'agit de notre objet en train de se créer
+        self.prenom = "Jean" # Quelle originalité
+        self.age = 33 # Cela n'engage à rien
+        self.lieu_residence = "Paris"
+
+**un constructeur avec des paramètres
+def __init__(self, nom, prenom):
+        """Constructeur de notre classe"""
+        self.nom = nom
+        self.prenom = prenom
+        self.age = 33
+        self.lieu_residence = "Paris"
+
+résultat:
+>>> jean = Personne()
+>>> jean.nom
+'Dupont'
+... jean.lieu_residence = "Berlin" #oui kes accesseur et mutateurs en python n'ont pas lieu d'être
+>>> jean.lieu_residence
+'Berlin'
+>>>
+
+
+un compteur de création d'objet
+
+class Compteur:
+    """Cette classe possède un attribut  qui s'incrémente"""
+    
+    objets_crees = 0 # Le compteur vaut 0 au départ
+    def __init__(self):
+        """À chaque fois qu'on crée un objet, on incrémente le compteur"""
+        Compteur.objets_crees += 1
+
+
+
+>>> Compteur.objets_crees
+0
+>>> a = Compteur() # On crée un premier objet
+>>> Compteur.objets_crees     1
+>>> b = Compteur()
+>>> Compteur.objets_crees     2
+
+
+
+Exemple d'un tableau noir qu'on écrit par ligne
+class TableauNoir:
+    """Classe définissant une surface sur laquelle on peut écrire,
+    que l'on peut lire et effacer, par jeu de méthodes. L'attribut modifié
+    est 'surface'"""
+    
+    def __init__(self):
+        """Par défaut, notre surface est vide"""
+        self.surface = ""
+    def ecrire(self, message_a_ecrire):
+        """Méthode permettant d'écrire sur la surface du tableau.
+        Si la surface n'est pas vide, on saute une ligne avant de rajouter
+        le message à écrire"""
+        
+        if self.surface != "":
+            self.surface += "\n"
+        self.surface += message_a_ecrire
+
+    def lire(self):
+        print(self.surface)
+
+    def effacer(self):
+        self.surface = ""
+
+action
+>>> tab = TableauNoir()
+>>> tab.surface
+''
+>>> tab.ecrire("Coooool ! Ce sont les vacances !")
+>>> tab.surface
+"Coooool ! Ce sont les vacances !"
+
+pourquoi self?
+-------------
+Les méthodes sont contenues dans la classe qui définit notre objet. 
+C'est très important. Quand vous tapeztab.ecrire(…), 
+Python va chercher la méthodeecrirenon pas dans l'objet tab, mais dans la classeTableauNoir.
+
+Comme vous le voyez, quand vous tapez tab.ecrire(…), 
+cela revient au même que si vous écrivez TableauNoir.ecrire(tab, …). 
+Votre paramètre self, c'est l'objet qui appelle la méthode. 
+C'est pour cette raison que vous modifiez la surface de l'objet en appelant self.surface.
+
+Pour résumer, quand vous devez travailler dans une méthode de l'objet sur l'objet lui-même,
+vous allez passer parself.
+
+
+Méthodes de classe et méthodes statiques
+-----------------------------------------
+une méthode qui ne travaillent pas sur l'instance self mais sur la classe même.
+elle prend en paramètre cls (la classe objet) et non self (l'instance de l'objet)
+et on utilise une fonction built-in de Python pour lui faire comprendre
+qu'il s'agit d'une méthode de classe. une méthode de classe prend en paramètre cls donc.
+
+class Compteur:
+    """Cette classe possède un attribut de classe qui s'incrémente à chaque
+    fois que l'on crée un objet de ce type"""
+    
+    objets_crees = 0 # Le compteur vaut 0 au départ
+    def __init__(self):
+        """À chaque fois qu'on crée un objet, on incrémente le compteur"""
+        Compteur.objets_crees += 1
+    def combien(cls):
+        """Méthode de classe affichant combien d'objets ont été créés"""
+        print("Jusqu'à présent, {} objets ont été créés.".format(
+                cls.objets_crees))
+    combien = classmethod(combien) "pour python reconnait la méthode de classe
+
+action
+>>> Compteur.combien()
+Jusqu'à présent, 0 objets ont été créés.
+>>> a = Compteur()   ou a.combien()
+>>> Compteur.combien()
+Jusqu'à présent, 1 objets ont été créés.
+>>> b = Compteur()
+>>> Compteur.combien()
+Jusqu'à présent, 2 objets ont été créés.
+>>>
+
+les méthodes statiques proche sauf qu'elle ne prennent aucun premier paramètre.
+class Test:
+    """Une classe de test tout simplement"""
+    def afficher():
+        """Fonction chargée d'afficher quelque chose"""
+        print("On affiche la même chose.")
+        print("peu importe les données de l'objet ou de la classe.")
+    afficher = staticmethod(afficher) "pour python reconnait la méthode statique
+*********************************************************************************************************************************
+***********************
+de L'instrospection
+***********************
+la fonction dir  renvoie une liste nom des attributs et méthodes de l'objet 
+qu'on lui passe en paramètre. renvoie tout ce qu'il y a dans l'objet.
+ce sont des méthodes spéciales utiles à Python
+
+class Test:
+    """Une classe de test tout simplement"""
+    def __init__(self):
+        """On définit dans le constructeur un unique attribut"""
+        self.mon_attribut = "ok"
+    
+    def afficher_attribut(self):
+        """Méthode affichant l'attribut 'mon_attribut'"""
+        print("Mon attribut est {0}.".format(self.mon_attribut))
+action
+>>> # Créons un objet de la classe Test
+... un_test = Test()
+>>> un_test.afficher_attribut()
+Mon attribut est ok.
+>>> dir(un_test)
+['__class__', '__delattr__', '__dict__', '__doc__', '__eq__', '__format__', '__g
+e__', '__getattribute__', '__gt__', '__hash__', '__init__', '__le__', '__lt__',
+'__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '_
+_setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', 'affich
+er_attribut', 'mon_attribut']
+>>>
+
+l'attribut spécial __dict__
+Cet attribut est un dictionnaire qui contient en guise de clés 
+les noms des attributs et, en tant que valeurs, les valeurs des attributs.
+Tous les objets construits depuis cette classe possèderont un attribut spécial __dict__
+entouré de double underscore méthodes spéciales créer par Python (dictionnaire)
+>>> un_test = Test()
+>>> un_test.__dict__
+{'mon_attribut': 'ok'}
+on peut modifier un attribut d'une classe mais la première et mieux sinon le bazarre
+objet.attribut = valeurqueobjet.__dict__[nom_attribut] = valeur
+
+*****************************************************************************************
+Un concept propre à Python et ausi Ruby c'est une fonctionnalité qui change l'approche
+objet et le principe de l'encapsulation
+*****************************************************************************************
+L'ENCAPSULATION ?
+on va définir des accesseurs get (accéder afficher) et mutateurs set (modifier)
+le contrôle de nos attributs certains environnements proposent de créer automatiquement.
+
+Python a une philosophie un peu différente : 
+pour tous les objets dont on n'attend pas une action particulière,
+on va y accéder directement, comme nous l'avons fait au chapitre précédent.
+ On peut y accéder et les modifier en écrivant simplementmon_objet.mon_attribut.
+Et pour certains, on va créer des propriétés
+
+pour le C++ ou Java le principe d'accès privé, public.
+En Python il n'y a pas d'attribut privé. Tout est public donc pour faire respecter l'encapsulation
+on la fonde sur des conventions.
+
+Les propriétés sont un moyen transparent de manipuler des attributs d'objet. 
+Elles permettent de dire à Python :
+ « Quand un utilisateur souhaite modifier cet attribut, fais cela ». 
+De cette façon, on peut rendre certains attributs tout à fait inaccessibles depuis
+ l'extérieur de la classe, ou dire qu'un attribut ne sera visible qu'en lecture et 
+non modifiable. Ou encore, on peut faire en sorte que, si on modifie un attribut,
+Python recalcule la valeur d'un autre attribut de l'objet.
+Mais pour l'utilisateur c'est transparent il doit avoir un accès direect à l'attribut.
+C'est dans la définition de la classe que l'on précise s'il est accéssible ou modifiable avec certaines propriétés.
+
+******
+Les propriétés sont des objets particuliers de Python.
+elles prennent la place d'un attribut et agissent différemment en fonction du contexte,
+dans lequel elles sont appelées. si on les appelle pour modifier l'attribut elles vont 
+rediriger vers une méthode que nous avons créée qui gère le cas.
+******************
+LES PROPRIETES
+******************
+une propriété qui se crée dans le corps de la classe. 
+c'est une classe son nom est property elle attend 4 paramètres optionnels:
+la méthode donnant accès à l'attribut.  (accesseur) on utlise surtout les 2 premiers
+la méthode modifiant l'attribut.         (mutateur)
+la méthode appelée quand on souhaite supprimer l'attribut.
+la méthode appelée qudn on demande de l'aide sur l'attribut.
+
+class Personne:
+    """Classe définissant une personne caractérisée par :"""
+    def __init__(self, nom, prenom):
+        """Constructeur de notre classe"""
+        self.nom = nom
+        self.prenom = prenom
+        self.age = 33
+        self._lieu_residence = "Paris" # Notez le souligné _ devant le nom
+                                       #convention _ on veut pas d'accès extérieur
+    def _get_lieu_residence(self):
+    """Méthode qui sera appelée quand on souhaitera accéder en lecture
+        à l'attribut 'lieu_residence'"""
+        print("On accède à l'attribut lieu_residence !")
+        return self._lieu_residence
+
+    def _set_lieu_residence(self, nouvelle_residence):
+        """Méthode appelée quand on souhaite modifier le lieu de résidence"""
+        print("Attention, il semble que {} déménage à {}.".format( \
+                self.prenom, nouvelle_residence))
+        self._lieu_residence = nouvelle_residence
+    # On va dire à Python que notre attribut lieu_residence pointe vers une
+    # propriété
+    lieu_residence = property(_get_lieu_residence, _set_lieu_residence)
+action
+>>> jean = Personne("Micado", "Jean")
+>>> jean.nom
+'Micado'
+>>> jean.lieu_residence
+On accède à l'attribut lieu_residence !
+'Paris'
+>>> jean.lieu_residence = "Berlin"
+Attention, il semble que Jean déménage à Berlin.
+>>> jean.lieu_residence
+On accède à l'attribut lieu_residence !
+'Berlin'
+>>>
+
+il est possible de définir en troisième position du constructeur property, une
+méthode del objet.lieu_residence et une quatrième help(objet.lieu_residence).
+
+Avec ce concept, on perd beaucoup moins de temps. 
+On ne fait pas systématiquement un accesseur et un mutateur 
+pour chaque attribut et le code est bien plus lisible. C'est autant de gagné.
+
+
+******************
+METHODES SPECIALES
+******************
+Utilisé par Python dans certain contexte et indique ce qu'il doit faire on contrôler
+la façon dont un objet se crée. Allez voir le site officiel de Python
+
+les méthodes qui travaillent sur l'objet et permettent d'accéder aux attributs.
+-------------------------------------------------------------------------------
+le Constructeur de l'objet:
+class Exemple:
+    def __init__(self, nom):
+	self.nom = nom
+	self.autre_attribut = "une valeur"
+
+mon_objet = Exemple("mon premier exemple")
+mon objet est crée je peut accéder à ses attributs mon_objet.nom_methode()
+
+une autre méthode __del__ quand l'objet se dtruit-il?
+def __del__(self):
+        """Méthode appelée quand l'objet est supprimé"""
+        print("C'est la fin ! On me supprime !")
+Quand on le supprime explicitement, si l'espace de noms contenant l'objet est détruit.
+si à la fin de la fonction la méthode __del__ est appelée, ou en fin d'exécution.
+
+Représentation de l'objet comment l'objet est représenté et affiché:
+avec print on a <__main__.XXX object at 0x00B46A70> un peu laid
+ def __repr__(self):
+        """Quand on entre notre objet dans l'interpréteur"""
+        return "Personne: nom({}), prénom({}), âge({})".format(
+                self.nom, self.prenom, self.age)
+
+Un autre qui affiche l'objet
+def __str__(self):
+        """Méthode permettant d'afficher plus joliment notre objet"""
+        return "{} {}, âgé de {} ans".format(
+                self.prenom, self.nom, self.age)
+
+action
+>>> p1 = Personne("Micado", "Jean")
+>>> print(p1)
+Jean Micado, âgé de 33 ans
+>>> chaine = str(p1)
+>>> chaine
+'Jean Micado, âgé de 33 ans'
+>>>
+
+Accès aux attributs de notre objet et les modifier: (3 méthodes)
+La méthode spéciale__getattr__permet de définir une méthode d'accès à nos 
+attributs plus large que celle que Python propose par défaut. 
+En fait, cette méthode est appelée quand vous tapez
+objet.attribut(non pas pour modifier l'attribut mais simplement pour y accéder).
+ Python recherche l'attribut et, s'il ne le trouve pas dans l'objet et 
+si une méthode__getattr__existe, il va l'appeler en lui passant en paramètre 
+le nom de l'attribut recherché, sous la forme d'une chaîne de caractères.
+
+class Protege:
+     """Classe possédant une méthode particulière d'accès à ses attributs :
+     Si l'attribut n'est pas trouvé, on affiche une alerte et renvoie None"""
+     
+     def __init__(self):
+         """On crée quelques attributs par défaut"""
+         self.a = 1
+         self.b = 2
+         self.c = 3
+     def __getattr__(self, nom):
+        """Si Python ne trouve pas l'attribut nommé nom, il appelle
+         cette méthode. On affiche une alerte"""
+         print("Alerte ! Il n'y a pas d'attribut {} ici !".format(nom))
+
+>>> pro = Protege()
+>>> pro.a
+1
+>>> pro.e
+Alerte ! Il n'y a pas d'attribut e ici !
+
+
+Cette méthode définit l'accès à un attribut destiné à être modifié. 
+Si vous écrivezobjet.nom_attribut = nouvelle_valeur, la méthode spéciale __setattr__ sera 
+appelée ainsi :objet.__setattr__("nom_attribut", nouvelle_valeur). Là encore, 
+le nom de l'attribut recherché est passé sous la forme d'une chaîne de caractères.
+
+def __setattr__(self, nom_attr, val_attr):
+        """Méthode appelée quand on fait objet.nom_attr = val_attr.
+        On se charge d'enregistrer l'objet"""
+        object.__setattr__(self, nom_attr, val_attr) #toutes les classes hérite de la class object
+        self.enregistrer()                             on redéfinie la méthode ici
+
+attention dans cette méthode on ne peut modifier les attributs car on va appeler
+la même méthode __setattr__ ainsi de suite et donc erreur. donc pas de self.attribut = valeur
+
+
+Quand on souhaite supprimer un attribut de l'objet, en faisantdel objet.attribut
+def __delattr__(self, nom_attr):
+        """On ne peut supprimer d'attribut, on lève l'exception
+        AttributeError"""
+        raise AttributeError("Vous ne pouvez supprimer aucun attribut de cette classe")
+
+Là encore, si vous voulez supprimer un attribut, n'utilisez pas dans votre méthode
+del self.attribut. Sinon, vous risquez de mettre Python très en colère ! 
+Passez par object.__delattr__ qui sait mieux que nous comment tout cela fonctionne.
+
+
+
+Au lieu de travailler avec des noms d'attributs voici comment avec des chaîne de caractères:
+objet = MaClasse() # On crée une instance de notre classe
+getattr(objet, "nom") # Semblable à objet.nom
+setattr(objet, "nom", val) # = objet.nom = val ou objet.__setattr__("nom", val)
+delattr(objet, "nom") # = del objet.nom ou objet.__delattr__("nom")
+hasattr(objet, "nom") # Renvoie True si l'attribut "nom" existe, False sinon
+
+*********************************************************************************************************************************
+***************************
+Les méthodes de conteneur                     (4 méthodes)
+***************************
+appeler surcharge d'opérateurs on dit à Python quoi faire quand on utilise tel ou tel opérateur
+Accès aux éléments d'un conteneur: (ce sont des listes, chaines de caractères, dictionnaire ...)
+tous un point commun il contiennent d'autres objets auxquels on accède avec l'opérateur []
+méthodes __getitem__, __setitem__, __delitem__
+quoi faire quand on écrit objet[index], objet[index] = valeur, del objet[index]
+Nous allons voir un classe enveloppe de dictionnaire. 
+classes enveloppes est une classes qui ressemblent à d'autres classes mais n'en sont pas réellement.
+
+class ZDict:
+    """Classe enveloppe d'un dictionnaire"""
+    def __init__(self):
+        """Notre classe n'accepte aucun paramètre"""
+        self._dictionnaire = {} #attribut non accéssible de l'extérieur
+    def __getitem__(self, index):
+        """Cette méthode spéciale est appelée quand on fait objet[index]
+        Elle redirige vers self._dictionnaire[index]"""
+        
+        return self._dictionnaire[index]
+    def __setitem__(self, index, valeur):
+        """Cette méthode est appelée quand on écrit objet[index] = valeur
+        On redirige vers self._dictionnaire[index] = valeur"""
+        
+        self._dictionnaire[index] = valeur
+
+l'intérieur de la classe on feraself._dictionnaire[index]. 
+En réalité, notre classe fera semblant d'être un dictionnaire, 
+elle réagira de la même manière, mais elle n'en sera pas réellement un.
+
+La méthode spéciale derrière le mot-clé in:
+__contains__ savoir si un objet se trouve dans un conteneur.
+ma_liste = [1, 2, 3, 4, 5]
+8 in ma_liste # Revient au même que ...
+ma_liste.__contains__(8)
+Ainsi, si vous voulez que votre classe enveloppe puisse utiliser 
+le mot-clé in comme une liste ou un dictionnaire, vous devez redéfinir 
+cette méthode__contains__qui prend en paramètre, outreself, l'objet qui 
+nous intéresse. Si l'objet est dans le conteneur, on doit renvoyerTrue; sinonFalse.
+
+
+******************************
+Les méthodes mathématiques
+******************************
+une classe avec 2 attributs minutes et secondes et l'affiche:
+class Duree:
+    """Classe contenant des durées sous la forme d'un nombre de minutes
+    et de secondes"""
+    
+    def __init__(self, min=0, sec=0):
+        """Constructeur de la classe"""
+        self.min = min # Nombre de minutes
+        self.sec = sec # Nombre de secondes
+    def __str__(self):
+        """Affichage un peu plus joli de nos objets"""
+        return "{0:02}:{1:02}".format(self.min, self.sec)
+action
+d1 = Duree(3,5)
+>>> print(d1)
+03:05
+Comment ajouter une durée voici la méthode:
+def __add__(self, objet_a_ajouter):
+        """L'objet à ajouter est un entier, le nombre de secondes"""
+        nouvelle_duree = Duree() #crée une nouvelle durée
+        # On va copier self dans l'objet créé pour avoir la même durée
+        nouvelle_duree.min = self.min
+        nouvelle_duree.sec = self.sec  #la nouvelle équivalent au contenu de self
+        # On ajoute la durée
+        nouvelle_duree.sec += objet_a_ajouter #8+54=1h02 = 62
+        # Si le nombre de secondes >= 60
+        if nouvelle_duree.sec >= 60:
+            nouvelle_duree.min += nouvelle_duree.sec // 60 # 13 div entière .03333
+            nouvelle_duree.sec = nouvelle_duree.sec % 60 # 62 modulo 60 = 2
+        # On renvoie la nouvelle durée
+        return nouvelle_duree  #renvoi l'objet nouvelle_duree (min et sec)
+action
+>>> d1 = Duree(12, 8)
+>>> print(d1)
+12:08
+>>> d2 = d1 + 54 # d1 + 54 secondes  #d3 = d1.__add__(54)
+>>> print(d2)     54 + d1 pas le même mais appel la méthode __radd__
+13:02
+
+__sub__: surcharge de l'opérateur-;
+
+__mul__: surcharge de l'opérateur*;
+
+__truediv__: surcharge de l'opérateur/;
+
+__floordiv__: surcharge de l'opérateur//(division entière) ;
+
+__mod__: surcharge de l'opérateur%(modulo) ;
+
+__pow__: surcharge de l'opérateur**(puissance) ;
+
+etc
+
+Sachez également que, si Python n'arrive pas à faireobjet1 < objet2, 
+il essayera l'opération inverse, soitobjet2 >= objet1. Cela vaut aussi 
+pour les autres opérateurs de comparaison que nous venons de voir.
+**pickle pour enregistrer nos objet pour le prochain lancement de notre programme.**
+
+__getstate__   appelée au moment de sérialiser l'objet:
+quand on veut enregistrer l'objet à l'aide du module pickle, __getstate__ va être appelée
+juste avant l'enregistrement. Si aucune méthode getstate n'est définie pickle enregistre le
+dictionnaire des attributs de l'objet à enregistrer contenu dans objet.__dict__
+Sinon pickle enregistre dans le fichier la veleur renvoyée par __getstate__ (un dictionnaire d'attributs modifié).
+
+class Temp:
+    """Classe contenant plusieurs attributs, dont un temporaire"""
+    
+    def __init__(self):
+        """Constructeur de notre objet"""
+        self.attribut_1 = "une valeur"
+        self.attribut_2 = "une autre valeur"
+        self.attribut_temporaire = 5
+   
+    def __getstate__(self):   				#méthode d'instance
+        """Renvoie le dictionnaire d'attributs à sérialiser"""
+        dict_attr = dict(self.__dict__)         	#enregistre le dictionnaire des attributs dans une variable locale dict_attr
+        dict_attr["attribut_temporaire"] = 0 		#on doit le récupérer avec la valeur 0.
+        return dict_attr
+
+le self_dict dictionnaire des attributs de l'objet. En revanche il a une référence différente.
+Sans cela au moment de modifier attribut_temporaire le changement aurait été également appliqué à l'objet ce qu'on veut éviter.
+Comme dict_attr et self_dict n'ont pas la même référence, l'attribut n'est changé que dans dict_attr et le dictionnaire de self n'est pas modifié.
+et on renvoie dict_attr au lieu d'enregistrer dans notre fichier self_dict, pickle enregistre notre dictionnaire modifié dict_attr.
+
+
+__setstate__   appelée au moment de désérialiser l'objet:
+derrière unplicker.load() donc Unplicker lit le fichier:
+bien sûr si aucune __getstate__ n'et définie ce dictionnaire est celui contenu dans l'attribut spécial __dict__
+sera appelée après la récupération du dictionnaire des attributs.
+Sinon ce dictionnaire récupéré est envoyé à la méthode __setstate__ si elle existe. 
+...
+    def __setstate__(self, dict_attr):
+        """Méthode appelée lors de la désérialisation de l'objet"""
+        dict_attr["attribut_temporaire"] = 0
+        self.__dict__ = dict_attr
+
+On peut enregistrer dans un fichier autre chose que des dictionnaires
+Votre méthode__getstate__n'est pas obligée de renvoyer un dictionnaire d'attributs.
+Elle peut renvoyer un autre objet, un entier, un flottant, mais dans ce cas une 
+méthode__setstate__devra exister pour savoir « quoi faire » avec l'objet enregistré. 
+Si ce n'est pas un dictionnaire d'attributs, Python ne peut pas le deviner !
+
+Là encore, je vous laisse tester si cela vous intéresse.
+Je veux encore plus puissant !
+__getstate__et__setstate__sont les deux méthodes les plus connues pour agir sur la sérialisation d'objets. Mais il en existe d'autres, plus complexes.
+
+Si vous êtes intéressés, jetez un œil du côté de la https://www.python.org/dev/peps/pep-0307/.
+
+
+**************************************************************************************
+Méthodes de tri en Python (trier des listes de nombres, chaîne de caractères, objets)
+**************************************************************************************
+
+sort (trier) méthode de liste et travaille sur la liste-même et change donc son ordre si c'est nécessaire.
+sorted (fonction builtin: disponible d'office dans Python sans importation) et travaille sur n'importe
+quel type de séquence (tuple, liste, dictionnaire) et ne modifie pas l'objet d'origine mais en retourne un nouveau.
+
+>>> prenoms = ["Jacques", "Laure", "André", "Victoire", "Albert", "Sophie"]
+>>> prenoms.sort()
+>>> prenoms
+['Albert', 'André', 'Jacques', 'Laure', 'Sophie', 'Victoire'] #ordre alphabétique
+>>> # Et avec la fonction 'sorted'
+... prenoms = ["Jacques", "Laure", "André", "Victoire", "Albert", "Sophie"]
+>>> sorted(prenoms)
+['Albert', 'André', 'Jacques', 'Laure', 'Sophie', 'Victoire'] #sorted n'a pas modifié
+>>> prenoms						      #retourne juste une nouvelle liste
+['Jacques', 'Laure', 'André', 'Victoire', 'Albert', 'Sophie']
+>>>
+une autre de voir
+>>> sorted([1, 8, -2, 15, 9]) -> [-2, 1, 8, 9, 15] tri croissant
+>>> sorted(["1", "8", "-2", "15", "9"]) -> ['-2', '1', '15', '8', '9'] tri par chaine de caractère
+si on a plusieurs types Python ne sait pas Traceback error
+
+Donc les moyens sont limités
+pour trier:
+etudiants = [   #prenom, age, moyenne           #Liste tuples 
+    ("Clément", 14, 16),
+    ("Charles", 12, 15),
+    ("Oriane", 14, 18),
+    ("Thomas", 11, 12),
+    ("Damien", 12, 15),
+]
+sorted(etudiants) affiche pas ordre alphabétique en fonction du prenom
+si on veut trier par note (changer de colonne de notre liste pour mettre les notes au début ?)
+Mieux avec l'argument Key: avec les fonctions lambda.
+>>> doubler = lambda x: x * 2  #lambda arguments ensuite : et le retour de la fonction param * 2
+>>> doubler
+<function <lambda> at 0x00000000029AD1E0>
+>>> doubler(8)
+16
+on va se servir de des fonctions lambdas (trier en fonctions des notes)
+lambda colonnes: colonnes[2] #colonnes un élément de la liste des étudiants (tuple) : retroune la moyenne de l'étudiant
+>>>sorted(etudiants, key=lambda colonnes: colonnes[2])  
+[ 				#trier par note croissante
+    ('Thomas', 11, 12), 
+    ('Charles', 12, 15), 
+    ('Damien', 12, 15), 
+    ('Clément', 14, 16),
+    ('Oriane', 14, 18)
+]
+
+Trier une liste d'objets  (reprenons Etudiant)
+class Etudiant:
+
+    def __init__(self, prenom, age, moyenne):
+        self.prenom = prenom
+        self.age = age
+        self.moyenne = moyenne
+
+    def __repr__(self):
+        return "<Étudiant {} (âge={}, moyenne={})>".format(
+                self.prenom, self.age, self.moyenne)
+
+recréons la liste d'objet Etudiant
+etudiants = [                         
+    Etudiant("Clément", 14, 16),
+    Etudiant("Charles", 12, 15),
+    Etudiant("Oriane", 14, 18),
+    Etudiant("Thomas", 11, 12),
+    Etudiant("Damien", 12, 15),
+]
+si on veut trier:
+>>> etudiants
+[
+    <Étudiant Clément (âge=14, moyenne=16)>,
+    <Étudiant Charles (âge=12, moyenne=15)>,
+    <Étudiant Oriane (âge=14, moyenne=18)>,
+    <Étudiant Thomas (âge=11, moyenne=12)>,
+    <Étudiant Damien (âge=12, moyenne=15)>
+]
+>>> sorted(etudiants)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: unorderable types: Etudiant() < Etudiant()
+>>>
+ERROR donc on fait comment/
+comment Trier notre liste d'objet ?
+1 on peut utiliser l'argument key comme précédemment.
+2 méthode spéciale ___It__ de notre classe utilisé par Python pour trier une liste lower than < .
+  méthode pertinente si notre objet est un nombre (durée, heure) Sinon utiliser key
+
+ 
+>>> sorted(etudiants, key=lambda etudiant: etudiant.moyenne)
+[
+    <Étudiant Thomas (âge=11, moyenne=12)>,
+    <Étudiant Charles (âge=12, moyenne=15)>,
+    <Étudiant Damien (âge=12, moyenne=15)>,
+    <Étudiant Clément (âge=14, moyenne=16)>,
+    <Étudiant Oriane (âge=14, moyenne=18)>
+]
+>>> ordre age inverse: sorted(etudiants, key=lambda etudiant: etudiant.age, reverse=True)
+
+inconvenient repose sur des fonctions lambdas car trop lente si beaucoup d'objet par exemple.
+Le paramètre key attendait une fonction faudrait redéfinir une focntion ordinaire? oui mais un autre module c'est operator
+*****************************************
+Méthodes de tri plus rapide et efficace
+*****************************************
+les fonctions module operator propose plusieurs fonctions et fait d'autres choses aussi.
+on va voir itemgetter et attrgetter.
+Liste de tuples etudiants
+sorted(etudiants, key=lambda etudiant: etudiant[2]) #moyenne ascendante
+même chose avec:
+from operator import itemgetter
+sorted(etudiants, key=itemgetter(2))
+#un objet operator.itmegetter est créé et passé au paramètre key de la fonction sorted.
+#et pour chaque étudiant de la liste l'objet operator.itemgetter est appelée et retourne la note moyenne de l'étudiant.
+#plus rapide et plus facile à lire
+
+Trier une liste d'objets ?
+class Etudiant:
+
+   def __init__(self, prenom, age, moyenne):
+        self.prenom = prenom
+        self.age = age
+        self.moyenne = moyenne
+
+    def __repr__(self):
+        return "<Étudiant {} (âge={}, moyenne={})>".format(
+                self.prenom, self.age, self.moyenne)
+
+etudiants = [
+    Etudiant("Clément", 14, 16),
+    Etudiant("Charles", 12, 15),
+    Etudiant("Oriane", 14, 18),
+    Etudiant("Thomas", 11, 12),
+    Etudiant("Damien", 12, 15),
+]
+Trier
+from operator import attrgetter
+sorted(etudiants, key=attrgetter("moyenne")) #le calcul est fait sur un attribut d'objet (moyenne)
+
+Trier sur 2 critères ? étudiant même âge le tri se fera sur leur moyenne.
+sorted(etudiants, key=attrgetter("age", "moyenne"))
+
+****chainage de tris****
+class LigneInventaire:
+
+    def __init__(self, produit, prix, quantite):
+        self.produit = produit
+        self.prix = prix
+        self.quantite = quantite
+
+    def __repr__(self):
+        return "<Ligne d'inventaire {} ({}X{})>".format(
+                self.produit, self.prix, self.quantite)
+
+# Création de l'inventaire
+inventaire = [
+    LigneInventaire("pomme rouge", 1.2, 19),
+    LigneInventaire("orange", 1.4, 24),
+    LigneInventaire("banane", 0.9, 21),
+    LigneInventaire("poire", 1.2, 24),
+]
+
+ liste par prix et par quantité: 
+from operator import attrgetter
+sorted(inventaire, key=attrgetter("prix", "quantite"))
+
+mais par prix croissant et par quantité décroissante (si même prix alors  quantité ordre décroissante).
+tri par ordre décroissant de quantité et un autre par ordre croissant de prix
+inventaire.sort(key=attrgetter("quantite"), reverse=True)
+sorted(inventaire, key=attrgetter("prix"))
+>>>
+[
+    <Ligne d'inventaire banane (0.9X21)>,
+    <Ligne d'inventaire poire (1.2X24)>,
+    <Ligne d'inventaire pomme rouge (1.2X19)>,
+    <Ligne d'inventaire orange (1.4X24)>
+]
+sans la propriété le second tri (prix) aurait modifier l'ordre de notre liste rendant inutile notre premier tri.
+pomme poire ont le même prix mais poire a été vendue en plus de quantité elle apparait en premier.
+
+remarque: Le tri en Python est « stable », 
+c'est-à-dire que l'ordre de deux éléments dans la liste n'est pas modifié 
+s'ils sont égaux. Cette propriété permet le chaînage de tri.
+
+
+
+
+
+***********************************************************************
+			HERITAGE   class MaClasse(MaClasseMere):
+***********************************************************************
+J'ai essayé de mettre des constructeurs dans les deux classes mais, 
+dans la classe fille, je ne retrouve pas les attributs déclarés dans ma classe mère, c'est normal ?
+
+Tout à fait les méthodes étaient définies dans la classe alors que les attributs étaient directement
+déclarés dans l'instance d'objet? cest dans le constructeur qu'on déclare les attributs
+et on les écrit tous dans l'instance self.
+Python appelle d'abord les méthodes de la classe fille avant la mère.
+Exemple:
+class Personne:
+    """Classe représentant une personne"""
+    def __init__(self, nom):
+        """Constructeur de notre classe"""
+        self.nom = nom
+        self.prenom = "Martin"
+    def __str__(self):
+        """Méthode appelée lors d'une conversion de l'objet en chaîne"""
+        return "{0} {1}".format(self.prenom, self.nom)
+
+class AgentSpecial(Personne):
+    """Classe définissant un agent spécial.
+    Elle hérite de la classe Personne"""
+    
+    def __init__(self, nom, matricule):
+        """Un agent se définit par son nom et son matricule"""
+            mon_objet.ma_methode()  #!!!!!!!!
+        self.nom = nom
+        self.matricule = matricule
+    def __str__(self):
+        """Méthode appelée lors d'une conversion de l'objet en chaîne"""
+        return "Agent {0}, matricule {1}".format(self.nom, self.matricule)
+action
+>>> agent = AgentSpecial("Fisher", "18327-121")
+>>> agent.nom
+'Fisher'
+>>> print(agent)
+Agent Fisher, matricule 18327-121
+>>> agent.prenom
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: 'AgentSpecial' object has no attribute 'prenom'
+>>>
+mais la classe ne reprend pas celle de la mère?
+le constructeur appeler? s'il dans AgentSpecial n'avait pas de constructeur il aurait celui  de Personne
+il faudrait l'appeler explicitement.
+comme mon_objet.ma_methode() équivaut mon_objet.ma_methode() et on va pas laisser faire Python pour chercher en amont:
+on ajoute dans le constructeur de AgenSpecial en premier: mon_objet.ma_methode()
+
+Fonction pratiques
+issubclass(AgentSpecial, Personne) renvoie True si une classe est une sous classe
+isinstance(agent, AgentSpecial) renvoie True si un objet est issu d'une classe ou de ses classes filles.
+
+****HERITAGE MULTIPLE**** class MaClasseHeritee(MaClasseMere1, MaClasseMere2): *********
+consultation d'aide pour une classe
+Help on class AttributeError in module builtins:
+pour créer ses propres exception parcourir la hiérarchie des exceptions built-in.
+
+***********************************************************
+	LA BOUCLE FOR (iterateurs, générateurs)
+***********************************************************
+Les itérateurs
+ma_liste = [1, 2, 3]
+for element in ma_liste:
+python va appeler l'itérateur de ma_liste. L'itérateur, c'est un objet qui va être chargé de parcourir l'objet
+conteneur ici une liste. créer dans la méthode spéciale __iter__ de l'objet de la classe list qui est appelée
+et renvoie un itérateur permettant de parcourir la liste.
+
+et à chaque tour de boucle python appelle la méthode spéciale __next__ de l'itérateur, qui$
+doit renvoyer l'élément du parcours ou lever l'exception StopIteration si le parcours touche à sa fin.
+voici comment fonctionne l'itérateur qui appelle __iter__   et __next__
+>>> ma_chaine = "test"
+>>> iterateur_de_ma_chaine = iter(ma_chaine)
+>>> iterateur_de_ma_chaine
+<str_iterator object at 0x00B408F0>
+>>> next(iterateur_de_ma_chaine)
+'t'
+>>> next(iterateur_de_ma_chaine)
+'e'
+>>> next(iterateur_de_ma_chaine)
+'s'
+>>> next(iterateur_de_ma_chaine)
+'t'
+>>> next(iterateur_de_ma_chaine)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+StopIteration
+>>>
+
+Créons nos itérateurs
+class RevStr(str):     #hérite de str et redéfinit la méthode __iter__
+			#altèrele parcoure au lieu de gauche à droite 
+			#on a de droite à gauche
+    def __iter__(self):
+        """Cette méthode renvoie un itérateur parcourant la chaîne
+        dans le sens inverse de celui de 'str'"""
+        
+        return ItRevStr(self) # On renvoie l'itérateur créé pour l'occasion
+
+class ItRevStr:         #notre itérateur sera créé depuis __iter__ de revStr
+			#et devra parcourir la chaîne du dernier caractère au premier.
+			#de la dernière lettre à la première. 
+			#On stocke dans des attributs la position courante et la
+    			#chaîne à parcourir"""
+    			
+    def __init__(self, chaine_a_parcourir):
+       """On se positionne à la fin de la chaîne"""
+        self.chaine_a_parcourir = chaine_a_parcourir
+        self.position = len(chaine_a_parcourir)
+    
+    def __next__(self):
+        """Cette méthode doit renvoyer l'élément suivant dans le parcours,
+        ou lever l'exception 'StopIteration' si le parcours est fini"""
+        
+        if self.position == 0: # Fin du parcours
+            raise StopIteration
+        self.position -= 1 # On décrémente la position
+        return self.chaine_a_parcourir[self.position]
+
+
+action
+>>> ma_chaine = RevStr("Bonjour")
+>>> ma_chaine
+'Bonjour'
+>>> for lettre in ma_chaine:
+...     print(lettre)
+... 
+r
+u
+o
+j
+n
+o
+B
+>>>
+
+BON UN PEU LOURD DE FAIRE DES ITERATEURS SURTOUT POUR PARCOURIR
+NOS OBJETS DE PLUSIEURS FACONS!!
+Un autre moyen mais ça passe par les itérateurs en coulisse:
+
+Les Générateurs (plus pratiques)
+le type de parcours on demande le premier élément (next)
+elle recontre (yield) qui renvoie la valeur qui suit et se met en pause
+ensuite (next) élément suivant de l'objet l'exécution reprend à l'endroit 
+où elle s'était arrêtée et s'interrompt au (yield) et ainsi de suite et à 
+la fin l'exception (StopIteration) est automatiquement levée par Python.
+
+>>> def mon_generateur():
+...     """Notre premier générateur. Il va simplement renvoyer 1, 2 et 3"""
+...     yield 1
+...     yield 2
+...     yield 3
+...
+>>> mon_generateur
+<function mon_generateur at 0x00B494F8>
+>>> mon_generateur()
+<generator object mon_generateur at 0x00B9DC88>
+>>> mon_iterateur = iter(mon_generateur())
+>>> next(mon_iterateur)
+1
+>>> next(mon_iterateur)
+2
+>>> next(mon_iterateur)
+3
+>>> next(mon_iterateur)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+StopIteration
+>>>
+
+Equivalent à:
+for nombre in mon_generateur(): # Attention on exécute la fonction
+    print(nombre)
+il faut exécuter la fonction mon_generateur 
+ne marche pas si (for nombre in mon_generateur:)
+exemple plus concret:
+def intervalle(borne_inf, borne_sup):
+    """Générateur parcourant la série des entiers entre borne_inf et borne_sup.
+        Note: borne_inf doit être inférieure à borne_sup"""
+    
+    borne_inf += 1
+    while borne_inf < borne_sup:
+        yield borne_inf
+        borne_inf += 1
+
+action
+>>> for nombre in intervalle(5, 10):
+...     print(nombre)
+... 
+6
+7
+8
+9
+>>>
+Avantage pas de next, StopIteration ...
+
+Les générateurs comme co-routines (Altérer le parcous pendant le parcours)
+Interagir pendant le parcours car dans un for on ne peut pas modifier le comportement du parcours par la suite.
+
+Interrompre la boucle avec la méthode close comme break en somme
+generateur = intervalle(5, 20)
+for nombre in generateur:
+    if nombre > 17:
+        generateur.close() # Interruption de la boucle
+"pour appeler les méthodes du générateur on doit stocker dans une variable avant la boucle
+si on écrit  ( for nombre in intervalle(5, 20) ) on ne peut pas appeler close du générateur.
+
+Envoyer des données à notre générateur (accepte de recevoir des données pendant son exécution (le générateur))
+
+def intervalle(borne_inf, borne_sup):
+    """Générateur parcourant la série des entiers entre borne_inf et borne_sup.
+    Notre générateur doit pouvoir "sauter" une certaine plage de nombres
+    en fonction d'une valeur qu'on lui donne pendant le parcours. La
+    valeur qu'on lui passe est la nouvelle valeur de borne_inf.
+    
+    Note: borne_inf doit être inférieure à borne_sup"""
+    borne_inf += 1
+    while borne_inf < borne_sup:
+        valeur_recue = (yield borne_inf) # yield renvoie la valeur courante et se met en pause à cet instant on peut envoyer une valeur au générateur
+        if valeur_recue is not None: # Notre générateur a reçu quelque chose sinon il sera  à NONE
+            borne_inf = valeur_recue
+        borne_inf += 1 
+
+On peut demander au générateur de sauter tout de suite à 20 si le nombre est 15.
+
+
+INTERAGIR avec notre générateur on utilise la méthode send pour envoyer une valeur au générateur
+generateur = intervalle(10, 25)
+for nombre in generateur:
+    if nombre == 15: # On saute à 20
+        generateur.send(20)
+    print(nombre, end=" ")
+
+
+
+******************************************************
+	LES DECORATEURS
+******************************************************
+Les décorateurs sont un moyen simple de modifier le comportement par défaut de fonctions.
+Les Décorateurs sont des fonctions de Python dont le rôle est de modifier le comportement 
+par défaut d'autres fonctions ou classes.
+
+Une fonction modifiée par un décorateur ne s'executera pas elle-même mais appellera le decorateur.
+C'est au décorateur de décider s'il veut exécuter la fonction et dans quelles conditions.
+
+Pourquoi ne pas modifier la fonction directement?
+Si on veut tester les performances de certaines de nos fonctions comme calculer combien de temps
+elles mettent pour s'exécuter, modifier chaque fonction mais c'est pas très sûr pas la bonne solution quoi.
+
+Ce décorateur se chargera d'exécuter notre fonction en calculant le temps qu'elle met et pourra
+afficher une alerte si la durée est trop élevée.
+pour indiquer qu'une fonction doit intégrer ce test il suffira d'ajouter une ligne avant
+sa définition (plus simple et adapté)
+ils sont parfois plus complexe quans le décorateur prend des arguments en paramètres ou qui doit 
+tenir compte des paramètres de la fonction.
+THEORIE:
+les décorateurs prennent en paramètre une fonction (celle qu'il modifie) et renvoient une fonction (qui peut être la même).
+le décorateur s'exécute au moment de la définition de fonction et non lors de l'appel.
+
+>>> def mon_decorateur(fonction):
+...     """Premier exemple de décorateur"""
+...     print("Notre décorateur est appelé avec en paramètre la fonction {0}".format(fonction))
+...     return fonction
+...
+>>> @mon_decorateur #déclare la fonction qui doit être modifier par le décorateurs!!!!
+... def salut():    #nom du décorateur
+...     """Fonction modifiée par notre décorateur"""
+...     print("Salut !")
+...
+Notre décorateur est appelé avec en paramètre la fonction <function salut at 0x00BA5198>
+>>>
+
+Le décorateur est appelé avec en paramètre la fonction salut.
+En fait la fonction renvoyée remplace la fonction définie.
+ici on renvoie la même, mais on peut demander à Python d'exécuter 
+une autre fonction à la place, pour modifier son comportement.
+
+# Exemple avec décorateur
+@decorateur                              def fonction(...):
+def fonction(...):         équivalent    ....
+    ...                                  fonction = decorateur(fonction) #on remplace la fonction au dessus par la fonction que renvoie notre décorateur
+
+On va créer une nouvelle fonction qui se charge de modifier le comportement dev la fonction définie:
+
+def mon_decorateur(fonction):
+    """Notre décorateur : affiche un message avant l'appel de la fonction définie"""
+    
+    def fonction_modifiee():
+        """Fonction que l'on va renvoyer. Il s'agit en fait d'une version
+        un peu modifiée de notre fonction originellement définie. On se
+        contente d'afficher un avertissement avant d'exécuter notre fonction
+        originellement définie"""
+        
+        print("Attention ! On appelle {0}".format(fonction))
+        return fonction()
+    return fonction_modifiee
+
+@mon_decorateur
+def salut():
+    print("Salut !")
+action
+>>> salut()
+Attention ! On appelle <function salut at 0x00BA54F8>
+Salut !
+>>> salut
+<function fonction_modifiee at 0x00BA54B0> #on voit que salut est une fonction modifiée
+>>>
+
+***Décorateur avec des paramètres***
+@decorateur(parametre)        def fonction()
+def fonction(...):      ==>   ...
+    ...                        fonction = decorateur(parametre)(fonction)
+
+controler le temps d'exécution de la fonction on passe un paramètre se durée passée
+"""Pour gérer le temps, on importe le module time
+On va utiliser surtout la fonction time() de ce module qui renvoie le nombre
+de secondes écoulées depuis le premier janvier 1970 (habituellement).
+On va s'en servir pour calculer le temps mis par notre fonction pour
+s'exécuter"""
+
+import time
+
+def controler_temps(nb_secs):
+    """Contrôle le temps mis par une fonction pour s'exécuter.
+    Si le temps d'exécution est supérieur à nb_secs, on affiche une alerte"""
+    
+    def decorateur(fonction_a_executer):
+        """Notre décorateur. C'est lui qui est appelé directement LORS
+        DE LA DEFINITION de notre fonction (fonction_a_executer)"""
+        
+        def fonction_modifiee():
+            """Fonction renvoyée par notre décorateur. Elle se charge
+            de calculer le temps mis par la fonction à s'exécuter"""
+            
+            tps_avant = time.time() # Avant d'exécuter la fonction
+            valeur_renvoyee = fonction_a_executer() # On exécute la fonction
+            tps_apres = time.time()
+            tps_execution = tps_apres - tps_avant
+            if tps_execution >= nb_secs:
+                print("La fonction {0} a mis {1} pour s'exécuter".format( \
+                        fonction_a_executer, tps_execution))
+            return valeur_renvoyee
+        return fonction_modifiee
+    return decorateurv
+action
+>>> @controler_temps(4)
+... def attendre():
+...     input("Appuyez sur Entrée...")
+...
+>>> attendre() # Je vais appuyer sur Entrée presque tout de suite
+Appuyez sur Entrée...
+>>> attendre() # Cette fois, j'attends plus longtemps
+Appuyez sur Entrée...
+La fonction <function attendre at 0x00BA5810> a mis 4.14100003242 pour s'exécuter
+>>>
+
+***Tenir compte des paramètres de notre fonction***
+...
+        def fonction_modifiee(*parametres_non_nommes, **parametres_nommes):
+            """Fonction renvoyée par notre décorateur. Elle se charge
+            de calculer le temps mis par la fonction à s'exécuter"""
+            
+            tps_avant = time.time() # avant d'exécuter la fonction
+            ret = fonction_a_executer(*parametres_non_nommes, **parametres_nommes)
+            tps_apres = time.time()
+            tps_execution = tps_apres - tps_avant
+            if tps_execution >= nb_secs:
+                print("La fonction {0} a mis {1} pour s'exécuter".format( \
+                        fonction_a_executer, tps_execution))
+            return ret
+
+**Les décorateurs s'appliquent aussi au classe on peut aussi chaîner nos décorateur à la suite**
+
+Exemples d'applications
+
+les classes singleton (une classe qui peut être instancier qu'une fois (un seul objet))
+instancié une fois donc un objet ensuite et tout appel ultérieur à ce constructeur renvoie le même objet (le premier créé)
+def singleton(classe_definie):
+    instances = {} # Dictionnaire de nos instances singletons
+    def get_instance():  #si on veut créer un autre objet ce sera getinstance qui sera appelée
+        if classe_definie not in instances:   #vérifie si notre classe se trouve dans le dictionanire
+            # On crée notre premier objet de classe_definie 
+            instances[classe_definie] = classe_definie()
+        return instances[classe_definie]
+    return get_instance
+action
+>>> @singleton #pour utiliser le décorateur il faut l'appel avant la définition des classes qu'on souhaite en tant que singleton.
+... class Test:
+...     pass
+...
+>>> a = Test() #on crée un objet
+>>> b = Test() #on souhaite créer un second objet c'est celui contenu dans a qui est renvoyé
+>>> a is b #a et b pointent vers le même objet.
+True
+>>>
+Grâce à ce système, on peut avoir plusieurs classes déclarées comme dessingletonet on est sûr que, pour chacune de ces classes, un seul objet sera créé.
+
+
+
+***Contrôler les types passés à notre fonction***
+aucun contrôle n'est fait sur le type de données passées en paramètres de nos fonctions en Python
+décorateur qui vérifie les types passés en paramètres:
+def controler_types(*a_args, **a_kwargs):
+    """On attend en paramètres du décorateur les types souhaités. On accepte
+    une liste de paramètres indéterminés, étant donné que notre fonction
+    définie pourra être appelée avec un nombre variable de paramètres et que
+    chacun doit être contrôlé"""
+    
+    def decorateur(fonction_a_executer):
+        """Notre décorateur. Il doit renvoyer fonction_modifiee"""
+        def fonction_modifiee(*args, **kwargs):
+            """Notre fonction modifiée. Elle se charge de contrôler
+            les types qu'on lui passe en paramètres"""
+            
+            # La liste des paramètres attendus (a_args) doit être de même
+            # Longueur que celle reçue (args)
+            if len(a_args) != len(args):
+                raise TypeError("le nombre d'arguments attendu n'est pas égal " \
+                        "au nombre reçu")
+            # On parcourt la liste des arguments reçus et non nommés
+            for i, arg in enumerate(args):
+                if a_args[i] is not type(args[i]):
+                    raise TypeError("l'argument {0} n'est pas du type " \
+                            "{1}".format(i, a_args[i]))
+            
+            # On parcourt à présent la liste des paramètres reçus et nommés
+            for cle in kwargs:
+                if cle not in a_kwargs:
+                    raise TypeError("l'argument {0} n'a aucun type " \
+                            "précisé".format(repr(cle)))
+                if a_kwargs[cle] is not type(kwargs[cle]):
+                    raise TypeError("l'argument {0} n'est pas de type" \
+                            "{1}".format(repr(cle), a_kwargs[cle]))
+            return fonction_a_executer(*args, **kwargs)
+        return fonction_modifiee
+    return decorateur
+action
+>>> @controler_types(int, int)
+... def intervalle(base_inf, base_sup):
+...     print("Intervalle de {0} à {1}".format(base_inf, base_sup))
+...
+>>> intervalle(1, 8)
+Intervalle de 1 à 8
+>>> intervalle(5, "oups!")
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<stdin>", line 24, in fonction_modifiee
+TypeError: l'argument 1 n'est pas du type <class 'int'>
+>>>
+
+******************************************
+	LES METACLASSES
+******************************************
+Comment générer des classes à partir d'autres classes!
+Processus d'instanciation:
+class Personne:
+        
+    def __init__(self, nom, prenom):
+        """Constructeur de notre personne."""
+        self.nom = nom
+        self.prenom = prenom
+        self.age = 23
+        self.lieu_residence = "Lyon"
+
+quand on souhaite créer une personne 
+personne = Personne("Doe", "John") 
+Python appelle notre constructeur __init__ et cette méthode prend en 
+premier paramètre self. Or self c'est l'objet que nous manipulons, sauf quand on crée
+un objet on souhaite récupérer un nouvel objet mais on n'en passe aucun à la classe.
+Notre classe crée un nouvel objet et le passe à notre constructeur.
+La méthode __init__ se charge d'écrire dans notre objet ses attributs mais n'est pas
+responsable de la création de notre objet MAIS QUI S'EN CHARGE DE CREER L'OBJET ?
+la méthode __new__ donc __init__ est là pour initialiser notre objet et écrit les attribut dedans.
+bien sûr __new__ est une méthode spéciale et définie par object et donc __new__ construit le nouvel objet.
+Si __new__ renvoie une instance de la classe, on appelle le constructeur __init__ en lui 
+passant cette nouvelle instance et les arguments passés lors de la création de l'objet.
+
+__new__ est une méthode statique donc elle ne prend pas self en paramètre logique son but est de créer une nouvelle instance.
+cependant elle prend la classe manipulée cls, donc elle prend en premier paramètre la classe Personne elle-même.
+les autres passés à la méthode new seront transmis au constructeur.
+
+on peut redéfinir new dans notre classe personne
+def __new__(cls, nom, prenom):
+        print("Appel de la méthode __new__ de la classe {}".format(cls))
+        # On laisse le travail à object
+        return object.__new__(cls, nom, prenom)
+ cela peut permettre de créer une instance d'une autre classe.
+ Elle est principalement utilisée pour produire des types immuables (immutable) que l'on ne peut modifier (chaine de caractère, tuples, entiers, flottants ...
+
+PARFOIS la méthode __new__ est redéfinie dans le corps d'une métaclasse ?? 
+
+Créer une classe dynamiquement  (dans Python tout est objet même les classes, packages tout)
+Si les classes sont des objets... cela veut dire que les classes sont elles-mêmes modelées sur des classes?
+>>> type(5) <class 'int'>      >>> type(int)  <class 'type'>   ...>>> type("une chaîne") <class 'str'> >>> type([1, 2, 3]) <class 'list'>
+on demande le type et Python répond class int et si on demande la classe int il répond class type.
+
+En fait pas défaut toutes nos classes sont modelées sur la classe type.
+1 quand on crée une nouvelle classe (Personns) Python appelle la méthode __new__ de la classe type;
+2 une fois la classe créée on appelle le constructeur __init__ de la classe type.
+
+Les objets sont modelés sur des classes;
+Nos classes étant elles-mêmes des objet, sont modelées sur une classe.
+La classe sur laquelle toutes les autres sont modelées par défaut s'appelle type.
+
+On va donc créer une classe dynamiquement sans passer par le mot class mais par la classe type directement dans l'interpréteur Python:
+la classe type prend 3 arguements 
+le nom, 
+un tuple contenant les classes dont notre nouvelle classe va hériter,
+un dictionnaire contenant les attributs et méthodes de notre classe.
+
+>>> Personne = type("Personne", (), {})
+>>> Personne
+<class '__main__.Personne'>
+>>> john = Personne()
+>>> dir(john)
+['__class__', '__delattr__', '__dict__', '__doc__', '__eq__', '__format__', '__g
+e__', '__getattribute__', '__gt__', '__hash__', '__init__', '__le__', '__lt__',
+'__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '_
+_setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__']
+>>>
+Mais elle est vide, Nous allons essayer de créer deux méthodes pour notre classe:
+le constructeur __init__ et une autre presenter affichant le nom
+
+def creer_personne(personne, nom, prenom):
+    """La fonction qui jouera le rôle de constructeur pour notre classe Personne.
+    
+    Elle prend en paramètre, outre la personne :
+    nom -- son nom
+    prenom -- son prenom"""
+    
+    personne.nom = nom
+    personne.prenom = prenom
+    personne.age = 21
+    personne.lieu_residence = "Lyon"
+
+def presenter_personne(personne):
+    """Fonction présentant la personne.
+    
+    Elle affiche son prénom et son nom"""
+    
+    print("{} {}".format(personne.prenom, personne.nom))
+
+# Dictionnaire des méthodes  #{les 2 fonctions sont amenées à devenir des méthodes init etpresenter
+methodes = {                 #{on place ces 2 fonctions dans un dictionnaire clé nom furutre méthode et valeur la fonction correspondante}
+    "__init__": creer_personne,
+    "presenter": presenter_personne,
+}
+
+# Création dynamique de la classe #{on fait appel à type}
+Personne = type("Personne", (), methodes)
+
+Les effets et explications
+>>> john = Personne("Doe", "John")
+>>> john.nom
+'Doe'
+>>> john.prenom
+'John'
+>>> john.age
+21
+>>> john.presenter()
+John Doe
+>>>
+
+Si vous essayez de mettre des attributs dans ce dictionnaire passé à type, 
+vous devez être conscients du fait qu'il s'agira d'attributs de classe, 
+pas d'attributs d'instance.
+
+
+***ALORS UNE METACLASSE C'EST QUOI***
+Nous avons vu que type est la métaclasse de toutes les classes par défaut. 
+Cependant, une classe peut posséder une autre métaclasse que type.
+les métaclasses héritent de type.
+
+la méthode __new__  (4 paramètres)
+la métaclasse (la base à la création de notre nouvelle classe).
+le nom de notre nouvelle classe.
+un tuple contenant les classes dont héritent notre classe créer.
+le dictionnaire des attributs et méthodes de la classe créer.
+
+class MaMetaClasse(type):
+    
+    """Exemple d'une métaclasse."""
+    
+    def __new__(metacls, nom, bases, dict):
+        """Création de notre classe."""
+        print("On crée la classe {}".format(nom))
+        return type.__new__(metacls, nom, bases, dict)
+
+si l'on veut qu'une classe prend comme métaclasse autre chose que type c'est dans la définition
+class MaClasse(metaclass=MaMetaClasse):
+    pass
+
+
+la méthode __init__
+le constructeur d'une métaclasse prends les même paramètres que __new__ sauf le premier 
+qui n'est plus la métaclasse sevant de modèle mais la classe que l'on vient de créer.
+les 3 paramètres suivants restent les m^émes: nom, tuple des classes-mères et dictionnaire des attributs et méthodes de classe.
+
+Mais à qui ça sert?
+***LES METACLASSES EN ACTION***
+c'est un besoin assez complexe par exemple le plus répandu est une métaclasse chargée
+de tracer l'appel de ses méthodes.
+Autrement dit dès qu'on appelle une méthode d'un objet, une ligne s'affiche pour le signaler.
+Mais cet exemple fait appel au concept des métaclasses et celui des décorateurs pour les méthodes tracées.
+
+Nous allons essayer de garder nos classes créées dans un dictionnaire prenant comme clé le nom de la classe et comme valeur la classe elle-même.
+
+
+Par exemple, dans une bibliothèque destinée à construire des interfaces graphiques,
+on trouve plusieurs widgets (ce sont des objets graphiques) comme des boutons, des cases à cocher, des menus, des cadres… 
+Généralement, ces objets sont des classes héritant d'une classe mère commune. 
+En outre, l'utilisateur peut, en cas de besoin, créer ses propres classes héritant des classes de la bibliothèque.
+
+Par exemple, la classe mère de tous nos widgets s'appelleraWidget. 
+De cette classe hériteront les classesBouton,CaseACocher,Menu,Cadre, etc. 
+L'utilisateur de la bibliothèque pourra par ailleurs en dériver ses propres classes.
+
+le dictionnaire qu'on aimerait créer se présente comme suit:
+{
+    "Widget": Widget,
+    "Bouton": Bouton,
+    "CaseACocher": CaseACocher,
+    "Menu": Menu,
+    "Cadre": Cadre,
+    ...
+}
+****
+Ce dictionnaire pourrait être rempli manuellement à chaque fois qu'on crée une classe 
+héritant de Widget mais avouez que ce ne serait pas très pratique.
+****
+donc avec une métaclasses peuvent faciliter la vie:
+
+trace_classes = {} # Notre dictionnaire vide
+
+class MetaWidget(type):
+    
+    """Notre métaclasse pour nos Widgets.
+    
+    Elle hérite de type, puisque c'est une métaclasse.
+    Elle va écrire dans le dictionnaire trace_classes à chaque fois
+    qu'une classe sera créée, utilisant cette métaclasse naturellement."""
+    
+    def __init__(cls, nom, bases, dict):
+        """Constructeur de notre métaclasse, appelé quand on crée une classe."""
+        type.__init__(cls, nom, bases, dict)
+        trace_classes[nom] = cls
+
+
+Créons notre classe Widget:
+
+class Widget(metaclass=MetaWidget):
+    
+    """Classe mère de tous nos widgets."""
+    
+    pass
+
+
+Après avoir exécuté ce code, vous pouvez voir que notre classe Widget a 
+bien été ajoutée dans notre dictionnaire :
+
+>>> trace_classes
+{'Widget': <class '__main__.Widget'>}
+>>>
+
+Maintenant, construisons une nouvelle classe héritant de Widget:
+
+class bouton(Widget):
+    
+    """Une classe définissant le widget bouton."""
+    
+    pass
+
+Si vous affichez de nouveau le contenu du dictionnaire, 
+vous vous rendrez compte que la classeBoutona bien été ajoutée. Héritant deWidget, 
+elle reprend la même métaclasse (sauf mention contraire explicite) et elle est donc ajoutée au dictionnaire.
+
+Vous pouvez étoffer cet exemple, faire en sorte que l'aide de la classe soit également conservée,
+ ou qu'une exception soit levée si une classe du même nom existe déjà dans le dictionnaire.
+
+
+
+
+*************************************************************************************************************
+		LES EXPRESSIONS REGULIERES    ( le module re ) Regular Expression
+*************************************************************************************************************
+Réaliser rapidement et facilement des recherches sur des chaînes de caractères, isoler ou remplacer une chaîne de caractère ....
+Il y a d'autres modules qui permettent de manipuler du texte (find, replace de la classe str)
+
+on demande à un utilisateur d'entrer son nom, prénom avec une fonctino input et on récupère le résultat.
+mais pour un numéro de téléphone une adresse mail, il peut entrer n'importe quoi.
+
+Expressions régulières
+
+ ^chat  trouve en début de chaîne a syllabe chat dans 'chaton' mais pas 'achat'.
+ q$ trouvée uniquement si votre chaîne se termine par la lettre q minuscule.
+ chat* notre lettre pourra se retrouver 0, 1, 2, ... fois dans notre chaîne comme chateau, chatterons, chatttttttt
+ avec * (0, 1 ou plus), + (1 ou plus), ? (0 ou 1)
+ E{4} (4 fois la lettre E), E{2,4} (2 à 4 fois la lettre E), E{,5} (0 à 5 fois la lettre E), E{8, } (8 fois minimum la lettre E)
+ les classes de caractères: [A-Z] (une lettre majuscule), [A-Z]{5} recherche 5 lettres majuscules qui se suivent dans une chaîne.
+ les groupes occurence à plusieurs caractères: (chat){2,5} contenant l séquence 'cha' répétée entre 2 et 5 fois.
+ 						pratique pour remplacer des portions dans uen chaîne.
+\n saut de ligne, donc écrire \\n dans l'expression régulière.
+sinon utiliser un format de chaîne  avec r'\n' les anti-slash sont échappés
+module re
+>>>import re
+fonction search (expression régulière, chaîne de caractère) si trouvée renvoie un objet symbolisant l'expression recherchée sinon None.
+>>> re.search(r"abc", "abcdef")
+<_sre.SRE_Match object at 0x00AC1640>
+>>> re.search(r"abc", "abacadaeaf")    #ici None
+>>> re.search(r"abc*", "ab")
+<_sre.SRE_Match object at 0x00AC1800>
+>>> re.search(r"abc*", "abccc")
+<_sre.SRE_Match object at 0x00AC1640>
+>>> re.search(r"chat*", "chateau")
+<_sre.SRE_Match object at 0x00AC1800>  #cette objet est renvoyé si trouvé
+>>>
+
+en programme
+if re.match(expression, chaine) is not None:
+    # Si l'expression est dans la chaîne
+    # Ou alors, plus intuitivement
+if re.match(expression, chaine):
+
+pour savoir si c'est un téléphone: il peut être de la façon suivante
+0X XX XX XX XX
+
+0X-XX-XX-XX-XX
+
+0X.XX.XX.XX.XX
+
+0XXXXXXXXX
+
+regex: ^0[0-9]([ .-]?[0-9]{2}){4}$
+le premier chiffre est un 0
+le second et tous ceux qui suivent (9 en tout sans compter le 0 d'origine) compris entre 0 et 9.
+tous les deux chiffres on peut avoir un délimiteur optionnel (tiret, point, espace).
+
+^0 début de chaîne avec un 0 et avec $ à la fin donc l'expression ne doit rien contenir d'autre que l'expression
+[0-9] une classe après le 0 on doit trouver un chiffre entre 0 et 9.
+( début d'un goupe et dedans on trouve
+[ .-] une classe on trouve un espace, point, tiret et ? cette classe est optionnelle.
+[0-9]  une classe qui sont les chiffres entre 0 et 9 
+{2} le nombre de chiffre attendus
+{4} Ce groupe, contenant un séparateur optionnel et deux chiffres, doit se retrouver quatre fois dans notre expression 
+
+
+code pour que l'utilisateur saisisse un numéro de téléphone:
+import re
+chaine = ""
+expression = r"^0[0-9]([ .-]?[0-9]{2}){4}$"
+while re.search(expression, chaine) is None:
+    chaine = input("Saisissez un numéro de téléphone (valide) :")
+
+***remplacer une expression***difficile** fonction sub (expr rechercher, remplacer, chaine)
+exemple:                                       !!!on compte à partir de 1 pour une fois.
+>>> re.sub(r"(ab)", r" \1 ", "abcdef")
+' ab cdef'
+>>>  On remplace ici 'ab' par 'ab '
+
+(a)b(cd) : donc (a) premier groupe et (cd) le second.
+
+
+*****utiliser plusieurs fois les mêmes expressions *********** Des expressions compilées**********
+on conserve le regex sous forme d'objet qu'on stocke dans notre programme.
+mot de passe qui contient que majuscules, minuscules et chiffres: ^[A-Za-z0-9]{6,}$
+à chaque saisit mote de passe le programme appelle re.search.
+on fait: (le mot compile) et possède des méthodes search, sub ...
+
+chn_mdp = r"^[A-Za-z0-9]{6,}$"
+exp_mdp = re.compile(chn_mdp)
+mot_de_passe = ""
+while exp_mdp.search(mot_de_passe) is None:
+    mot_de_passe = input("Tapez votre mot de passe : ")
+
+*********************************************************************************************************************************
+
+******************
+	******************************
+			Exprimez le temps dans un programme      module time
+		      *****************************************
+					*************************************
+classé Generic Operating System Services (les services communs aux différents systèmes d'exploitation) le module time est 
+proche du système.
+Donc certaines fonctions de ce module pourront avoir des résultats différents sur des systèmes différents.
+
+L'idée a été de représenter uen date et une heure en fonction du nombre de secondes écoulées depuis une date précise 
+(Epoch Unix: 1 janvier 1970 à 00:00:00).
+time.time() #secondes écoulées depuis 1970. c'est le timestamp.
+time.localtime() #renvoie un objet contenant dans l'ordre: ou prend en paramètre un timestamp et en déduit 
+tm_year (année), tm_mon (mois), tm_mday (le nour du mois), tm_hour (l'heure du jour), tm_min (minutes), tm_sec (seconde), 
+tm_wday (jour de la semaine), tm_yday (le jour de l'année), tm_isdst (changement d'heure local)
+
+Récupérer un timestamp depuis une date rs_debut = time.mktime(time.localtime(time.time()))
+time.sleep(3.5) #faire une pause dans le programme.
+time.strftime("%A %d %B %Y %H:%M:%S") #formater un temps en la représentant dans une chaîne de caractères.
+%A (nim du jour de la semaine), %B (nom du mois), %d (jour du mois), %H (heure), %M m(minute), %s (seconde), %Y (année)
+Besoin juste d'une   date = datetime.date(year, month, day)
+date.today() (date) et date.fromtimestamp(timestamp) (renvoie la date correspondant au timestamp passé en arguemnt)
+Représenter une heure: datetime.date()
+>>> import datetime
+>>> datetime.datetime.now()  #datetime.fromtimestamp(timestamp) renvoie le timestamp
+datetime.datetime(2011, 2, 14, 5, 8, 22, 359000)
+>>>
+
+
+************************************************
+	PROGRAMMATION SYSTEME
+************************************************
+Accéder aux flux standard avec le module sys pour interagir avec le système. (stdin (read), stdout (write), stderr (write))
+
+>>> sys.stdout.write("Un test\n")
+Un test
+8
+>>>
+Modifier les flux standard:
+>>> fichier = open('sortie.txt', 'w')
+>>> sys.stdout = fichier
+>>> print("Quelque chose...")
+ici rien ne s'affiche à l'écran mais dans sortie.txt, mais où il est?
+sys.stdout = sys.__stdout__  #rétablir la sortie standard sinon il sera écrit dans le fichier.
+import os
+os.getcwd() #dans ce répertoire on a le fichier sortie.txt
+
+Les Signaux pour que notre système communique avec notre programme?
+import signat >>>signal.SIGINT resultat: 2 #comment intercepter ce signal.
+
+la fonction:
+import sys
+
+def fermer_programme(signal, frame):
+    """Fonction appelée quand vient l'heure de fermer notre programme"""
+    print("C'est l'heure de la fermeture !")
+    sys.exit(0)
+
+on demande de fermer le programme er renvoie 0
+connectons la fonction auu signat SIGINT sinon notre fonction sera jamais appelée:
+signal.signal(signal.SIGINT, fermer_programme) #par de parenthèse à la fonction en renvoie la référence vers la fonction on ne l'exécute pas.
+dès que le système enverra ce signal la fonction fermera le programme.
+vérifier? faire une boucle infinie
+print("Le programme va boucler...")
+import signal
+import sys
+
+def fermer_programme(signal, frame):
+    """Fonction appelée quand vient l'heure de fermer notre programme"""
+    print("C'est l'heure de la fermeture !")
+    sys.exit(0)
+
+# Connexion du signal à notre fonction
+signal.signal(signal.SIGINT, fermer_programme)
+
+# Notre programme...
+print("Le programme va boucler...")
+while True:
+    continue
+
+donc CTRL + C 
+
+******Appeler un programme Python avec des arguments****** sys.argv
+C:\Python34>python test.py arguements  #!!!!il faut passer par la ligne de commande pour tester les programmes
+Interpréter les arguements ?
+import sys
+
+if len(sys.argv) < 2:
+    print("Précisez une action en paramètre")
+    sys.exit(1)
+
+action = sys.argv[1]  #premier argument
+
+if action == "start":
+    print("On démarre l'opération")
+elif action == "stop":
+    print("On arrête l'opération")
+elif action == "restart":
+    print("On redémarre l'opération")
+elif action == "status":
+    print("On affiche l'état (démarré ou arrêté ?) de l'opération")
+else:
+    print("Je ne connais pas cette action")
+
+Interpréter les options grâce à Python (linux option courte avec ls -a et longue ls --all)
+
+import argparse                                                  #importe le module
+parser = argparse.ArgumentParser()                               #pour configurer nos options à interpréter
+parser.add_argument("x", help="le nombre a mettre au carré")     #méthode de notre parser retourne les arguements interprétés
+args = parser.parse_args()
+print ("Vous avez précisé X =", args.x)
+
+
+action:
+>python code.py --help
+usage: code.py [-h] x
+
+positional arguments:
+  x           le nombre à mettre au carré
+
+optional arguments:
+  -h, --help  show this help message and exit
+
+>python code.py 5
+Vous avez précisé X = 5
+
+Mais l'utilisateur peut entrée n'importe quoi alors:
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("x", type=int, help="le nombre à mettre au carré")
+args = parser.parse_args()
+x = args.x
+retour = x ** 2
+print(retour)
+
+action:
+>python code.py 5
+25
+
+>python code.py -8
+64
+
+>python code.py test
+usage: code.py [-h] x
+code.py: error: argument x: invalid int value: 'test'
+
+On a fait des positional arguments précisés sans option on va faire des options facultatives:
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("x", type=int, help="le nombre à mettre au carré")
+parser.add_argument("-v", "--verbose", action="store_true",
+        help="augmente la verbosité")
+args = parser.parse_args()
+
+x = args.x
+retour = x ** 2
+if args.verbose:
+    print("{} ^ 2 = {}".format(x, retour))
+else:
+    print(retour)
+
+action:
+>python code.py -h
+usage: code.py [-h] [-v] xpositional arguments:
+x le nombre à mettre au carréoptional arguments:
+-h, --help show this help message and exit
+-v, --verbose augmente la verbosité>python code.py 5
+25>python code.py 5 --verbose
+5 ^ 2 = 25>python code.py -v 5
+5 ^ 2 = 25>
+
+******************Exécuter une commande système depuis Python************************
+os.system("dir")
+on peut capturer le code de retour mais pas le retour affiché par la commande.
+system exécute un environnement particulier donc elle retournera tout de suite même si la commande tourne toujours.
+os.system("sleep 5") le programme ne s'arrêtera pas pendant cinq secondes.
+cmd = os.popen("ls") #elle renvoie un objet pipe permet de lire le retour de la commande
+cela bloque la commande jusqu'à elle ait fini de s'exécuter.
+
+*************************************************
+		LES MODULES MATHEMATIQUES  +   -   *  /   %
+	****************************************************************
+math.pow(5, 2) # 5 au carré ou 5 ** 2
+math.sqrt(25) #racine carré
+math.fabs(-3) #valeur absolue
+math.exp(5) #exponentielle
+math.degrees(angle_radians)    1 rad = 57.29 degrés
+math.radians(angle_degrés)
+math.ceil(2.3) #renvoie le plus petit entier
+math.floor(5.8) #renvoie le plus grans entier 
+math.trunc(9.5= #tronque 9.5 donc 9
+les constantes ne sont pas nombreuses: math.pi, math.e
+
+les fractions avec form fractions import Fraction par défaut numérateur (0) / dénominateur (1)
+un_demi = Fraction(1, 2)
+>>>Fraction.from_float(0.5) #créer une fraction depuis un flottant
+Fraction(1, 2)
+>>>float(un_quart) #0.25
+
+Du pseudo-aléatoire
+>>> import random
+>>> random.random()
+
+random.randrange(
+marge inférieur de l'intervalle, 
+marge supérieur de l'intervalle, 
+l'écart entre chaque valeur de l'intervalle  par défaut (1))
+
+>>>random. randrange(5, 10, 2) #génère un nombre aléatoire entre 5 inclus et 10 non inclus avec un écart de 2 entre chaque valeur
+donc les valeurs [5, 7, 9]
+>>>random.randint(1, 6) #génère au hasard un nombre entre 1 et 6 
+>>>random.choice(['a', 'b', 'k', 'p', 'i', 'w', 'z']) #renvoie au hasard un élément 'k'
+
+>>> liste = ['a', 'b', 'k', 'p', 'i', 'w', 'z']
+>>>random.shuffle(liste)                            #mélange la séquence et ne renvoie rien
+>>>liste
+['p', 'k', 'w', 'z', 'i', 'b', 'a']
+
+****************************************
+		Gérer les mots de passe
+	**************************************************
+Saisir un mot de passe
+on a input? mais le mot est affiché on a donc
+getpass mais n'affiche pas la saisi de l'utilisateur
+>>> from getpass import getpass
+>>> mot_de_passe = getpass("Taper votre mot de passe: ")
+Taper votre mot de passe:
+>>> mot_de_passe    #on stocke dans la variable mot_de_passe
+'un mot de passe'
+>>>
+
+chiffrer le mot de passe
+>>> hashlib.algorithms_guaranteed
+{'sha1', 'sha224', 'sha384', 'sha256', 'sha512', 'md5'}
+>>>
+avec import hashlib 
+on choisit un algorithme de chiffrement sha1 on va donc créer notre objet SHA1
+on va utiliser le constructeur sha1 du module hashlib et prend en paramètre une chapine,
+mais une chaîne de bytes (octets).
+Pour obtenir une chaîne de bytes depuis une chaîne stre on peut utiliser la méthode encode.
+Pour écrire directement une chaîne bytes sans passer par une chaîne str on peut mettre un b avant l'ouverture de votre chaîne:
+>>>b'test'
+générer un mot de passe:
+>>> mot_de_passe = hashlib.sha1(b"mot de passe")
+>>> mot_de_passe
+<sha1 HASH object @ 0x00BF0ED0>
+>>>
+
+pour obtenir le chiffrement à cet objet on a 
+1 méthode digest renvoie un type bytes contenant le mot de passe chiffré
+2 méthode hexdigest renvoie une chaîne str contenant uen suite de symbole hexadécimaux (de 0 à 9 et A à F)
+la 2 car préféreable si les fichiers doivent transiter d'une plateforme à l'autre
+>>> mot_de_passe.hexdigest()
+'b47ea832576a75814e13351dcc97eaa985b9c6b7'
+>>>
+pour savoir si c'est le bon voici il faut faire une comparaison: 
+
+import hashlib
+from getpass import getpass
+
+chaine_mot_de_passe = b"azerty"
+mot_de_passe_chiffre = hashlib.sha1(chaine_mot_de_passe).hexdigest()
+
+verrouille = True
+while verrouille:
+    entre = getpass("Tapez le mot de passe : ") # azerty
+    # On encode la saisie pour avoir un type bytes
+    entre = entre.encode()
+    
+    entre_chiffre = hashlib.sha1(entre).hexdigest()
+    if entre_chiffre == mot_de_passe_chiffre:
+        verrouille = False
+    else:
+        print("Mot de passe incorrect")
+
+print("Mot de passe accepté...")
+
+
+
+***********************************************************************
+			GEREZ LES RESEAUX
+***********************************************************************
+application CLients et Serveur  en TCP avec Sockets.
+Le serveur :
+1 attend une connexion de la part du client ;
+2 accepte la connexion quand le client se connecte ;
+3 échange des informations avec le client ;
+4 ferme la connexion.
+
+Le client :
+1 se connecte au serveur ;
+2 échange des informations avec le serveur ;
+3 ferme la connexion.
+
+Le serveur peut dialoguer avec plusieurs clients.
+
+Etablir une connexion!!!!! Pour que le client se connecte au serveur il faut:
+
+Le nom d'hôte (ip ou nom de domaine) et 
+un numéro de port correpond au type d'informations à échanger mais pas entre 0 et 1023 réservés par le système.
+
+les Sockets sont des objets qui permettent d'ouvrir une connexion avec une machine locale ou distante et d'échanger avec elle.
+
+commençons pas le serveur et en parallèle le client.
+
+*******SERVEUR:
+Construire le socket dans une connexion TCP
+socket.AF_INET : la famille d'adresses (adresse internet)
+socket.SOCK_STREAM : le type du socket SOCK_STREAM pour le protocole TCP
+>>>connexion_principale = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+Connecter notre socket
+pour une connexion serveur (écoute sur un port), qui va attendre des connexions de clients bind(nom_hote, port)
+>>>connexion_principale.bind(('', 12800))
+
+Faire écouter notre socket
+>>>connexion_principale.listen(5) #le nombre maximum de connexions qui peut recevoir
+
+Accepter une connexion venant du client
+la méthode accept que nous allons utiliser va bloquer le programme tant qu'aucun client  ne s'est connecté.
+		  elle renvoie 2 informations: 
+			- le socket connecté qui vient de se créer (permet de dialoguer avec notre client tout juste connnecté)
+			- un tuple représentant l'adresse IP et le port de connexion du client. (pas le même car c'est un port de sortie choisi par le système)
+>>>connexion_avec_client, infos_connexion = connexion_principale.accept()
+la méthode bloque le programme. Elle attend qu'un client se connecte la fenêtre Python reste ouverte.
+
+OUVRONS UNE NOUVELLE FENETRE
+*******CLIENT:
+Pour se connecter à un serveur:
+>>>connexion_avec_serveur.connect(('localhost', 12800)) #nom d'hôte ici localhost(même machine) et  numéro de port  (paramètre du tuple comme bind)
+********CLIENT/SERVEUR*********
+la fenêtre du serveur ne bloque plus (accept).
+>>> print(infos_connexion)
+('127.0.0.1', 2901) #ip client / port client
+
+
+*******COMMUNICATION DE SOSKETS: send/recv  (les infos seront des chaînes de bytes et pas str)
+*******SERVEUR:
+>>>connexion_avec_client.send(b"Je viens d'accepter la connexion") #renvoie le nombre de caractère envoyés
+32
+
+*******CLIENT:
+>>>msg_recu = connexion_avec_serveur.recv(1024) #nombre de caractère à lire 1024
+>>>msg_recu
+b"Je viens d'accepter la connexion"
+    !!!!!!!!!!!!!Attention le clint peut lui aussi envoyer des informations
+
+FERMER LA CONNEXION:
+>>>connexion_avec_client.close()
+
+>>>connexion_avec_serveur.close()
+
+++++++++++CODE SERVEUR+++++++++++
+import socket
+
+hote = ''
+port = 12800
+
+connexion_principale = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+connexion_principale.bind((hote, port))
+connexion_principale.listen(5)
+print("Le serveur écoute à présent sur le port {}".format(port))
+
+connexion_avec_client, infos_connexion = connexion_principale.accept()
+
+msg_recu = b""
+while msg_recu != b"fin":
+    msg_recu = connexion_avec_client.recv(1024)
+    # L'instruction ci-dessous peut lever une exception si le message
+    # Réceptionné comporte des accents
+    print(msg_recu.decode())
+    connexion_avec_client.send(b"5 / 5")
+
+print("Fermeture de la connexion")
+connexion_avec_client.close()
+connexion_principale.close()
+
+++++++++++CODE CLIENT++++++++++++
+import socket
+
+hote = "localhost"
+port = 12800
+
+connexion_avec_serveur = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+connexion_avec_serveur.connect((hote, port))
+print("Connexion établie avec le serveur sur le port {}".format(port))
+
+msg_a_envoyer = b""
+while msg_a_envoyer != b"fin":
+    msg_a_envoyer = input("> ")
+    # Peut planter si vous tapez des caractères spéciaux
+    msg_a_envoyer = msg_a_envoyer.encode() #param un nom d'encodage et permet de passer un str en chaîne bytes (pour que send accepte)
+    # On envoie le message
+    connexion_avec_serveur.send(msg_a_envoyer)
+    msg_recu = connexion_avec_serveur.recv(1024)
+    print(msg_recu.decode()) # Là encore, peut planter s'il y a des accents
+
+print("Fermeture de la connexion")
+connexion_avec_serveur.close()
+
+
+****************************************
+	Modification de notre serveur
+****************************************
+le module select permet d'interroger plusieurs clients dans l'attente d'un message à réceptionner
+sans paralyser notre programme. select va écouter sur une liste de clients qui ont un message à réceptionner.
+il suffit de parcourir ces clients de lire les messages en attente (recv) et le tour est joué.
+la méthode s'appelle pareil select et prends 4 arguments et en renvoir 3. 
+rlist : la liste des sockets en attente d'être lus ;
+wlist : la liste des sockets en attente d'être écrits ;
+xlist : la liste des sockets en attente d'une erreur (je ne m'attarderai pas sur cette liste) ;
+timeout : le délai pendant lequel la fonction attend avant de retourner. 
+Si vous précisez en timeout 0, la fonction retourne immédiatement. 
+Si ce paramètre n'est pas précisé, la fonction retourne dès qu'un des sockets change d'état (est prêt à être lu s'il est dans rlist par exemple) mais pas avant.
+
+renvoie 3 listes: rlist (socket à lire) wlist xlist 
+
+Ce qu'on veut, c'est mettre des sockets dans une liste et que select les surveille,
+en retournant dès qu'un socket est prêt à être lu. Comme cela notre programme ne bloque pas.
+Et peut recevoir des messages de plusieurs clients dans une ordre complètement inconnu.
+
+
+ligne de commande:
+rlist, wlist, xlist = select.select(clients_connectes, [], [], 2)
+
+Cette instruction va écouter les sockets contenus dans la liste clients_connectes. 
+Elle retournera au plus tard dans 2 secondes.
+Mais elle retournera plus tôt si un client envoie un message. 
+La liste des clients ayant envoyé un message se retrouve dans notre variable rlist. 
+On la parcourt ensuite et on peut appeler recv sur chacun des sockets.
+
+
+
+Le but va être de créer un serveur pouvant accepter plusieurs clients, 
+réceptionner leurs messages et leur envoyer une confirmation à chaque réception. 
+L'exercice ne change pas beaucoup mais on va utiliser select pour travailler avec plusieurs clients.
+
+
+SERVEUR A PLUSIEURS CLIENTS
+import socket
+import select
+
+hote = ''
+port = 12800
+
+connexion_principale = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+connexion_principale.bind((hote, port))
+connexion_principale.listen(5)
+print("Le serveur écoute à présent sur le port {}".format(port))
+
+serveur_lance = True
+clients_connectes = []
+while serveur_lance:
+    # On va vérifier que de nouveaux clients ne demandent pas à se connecter
+    # Pour cela, on écoute la connexion_principale en lecture
+    # On attend maximum 50ms
+    connexions_demandees, wlist, xlist = select.select([connexion_principale],
+        [], [], 0.05)
+    
+    for connexion in connexions_demandees:
+        connexion_avec_client, infos_connexion = connexion.accept()
+        # On ajoute le socket connecté à la liste des clients
+        clients_connectes.append(connexion_avec_client)
+    
+    # Maintenant, on écoute la liste des clients connectés
+    # Les clients renvoyés par select sont ceux devant être lus (recv)
+    # On attend là encore 50ms maximum
+    # On enferme l'appel à select.select dans un bloc try
+    # En effet, si la liste de clients connectés est vide, une exception
+    # Peut être levée
+    clients_a_lire = []
+    try:
+        clients_a_lire, wlist, xlist = select.select(clients_connectes,
+                [], [], 0.05)
+    except select.error:
+        pass
+    else:
+        # On parcourt la liste des clients à lire
+        for client in clients_a_lire:
+            # Client est de type socket
+            msg_recu = client.recv(1024)
+            # Peut planter si le message contient des caractères spéciaux
+            msg_recu = msg_recu.decode()
+            print("Reçu {}".format(msg_recu))
+            client.send(b"5 / 5")
+            if msg_recu == "fin":
+                serveur_lance = False
+
+print("Fermeture des connexions")
+for client in clients_connectes:
+    client.close()
+
+connexion_principale.close()
+
+
+Le dernier module, socketserver, propose une alternative pour monter vos applications serveur. 
+Il en existe d'autres, dans tous les cas : vous pouvez utiliser des sockets non bloquants (c'est-à-dire qui ne bloquent pas le programme quand vous utilisez leur méthode accept ou recv) 
+ou des threads pour exécuter différentes portions de votre programme en parallèle.
+Mais je vous laisse vous documenter sur ces sujets s'ils vous intéressent !
+ https://docs.python.org/3/library/socketserver.html
+*********************************************************************************************************************************
+*********************************************************************************************************************************
+*********************************************************************************************************************************
+
+	********************************************************************
+		***********************************************
+				TEST UNITAIRE (unittest)
+		***********************************************
+	********************************************************************
+voici les fonctionnalités à tester:
+---------------------------------------------------------------------------------
+>>> liste = ["chat", "chien", "renard", "serpent", "cheval", "parapluie"]
+>>> random.choice(liste)
+'renard'
+----------------------------------------------------------------------------------
+>>> liste = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+>>> random.shuffle(liste)
+>>> liste
+[3, 4, 7, 1, 8, 6, 5, 9, 2]
+----------------------------------------------------------------------------------
+>>> liste = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']
+>>> random.sample(liste, 5)
+['b', 'a', 'c', 'j', 'e']
+>>> # Ou peut-être que cet exemple sera plus clair
+... random.sample(range(1000), 10)
+[389, 406, 890, 955, 837, 401, 971, 716, 954, 862]
+----------------------------------------------------------------------------------
+
+
+Structure de base d'un test unitaire:
+un test unitaire peut être constitué de nombreux tests répartis dans plusieurs packages et modules.
+Nous allons nous intéresser qu'à un test case, la forme la plus simple du test unitaire.
+
+Il faut créer une classe héritant de unittest.TestCase:
+
+import random
+import unittest
+
+class RandomTest(unittest.TestCase):  #ensuite on définit un test dans une méthode dont le nom commence par test
+
+    """Test case utilisé pour tester les fonctions du module 'random'."""
+    				
+    def test_choice(self):
+        """Test le fonctionnement de la fonction 'random.choice'."""
+        liste = list(range(10))              		#crée une liste de 0 à 9
+        elt = random.choice(liste)	    		 #appelle random.choice recupère le retour
+        # Vérifie que 'elt' est dans 'liste'
+        self.assertIn(elt, liste)            		#vérifie si l'élément retourné est dans la liste
+#echouer le test remplace  liste par (''a', 'b', 'c')   #avec assertIn l'assertion lève une exception
+						        #unittest.TextCase propose plusieurs méthodes d'assertion pour nos tests
+exécutez ce code dans l'interpréteur:
+>>>unittest.main()
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+OK
+
+cela ferme la console Python. le retour?
+le . test validé sinon F (mauvais résultat), E (test a rencontré une erreur excéption levée)
+le nombre de test
+nombre de réussites (OK) ou échecs ou erreurs
+
+
+
+
+les autres exemples
+class RandomTest(unittest.TestCase):
+
+    """Test case utilisé pour tester les fonctions du module 'random'."""
+
+    # Autres méthodes de test
+    def test_shuffle(self):
+        """Test le fonctionnement de la fonction 'random.shuffle'."""
+        liste = list(range(10))
+        random.shuffle(liste)
+        liste.sort()
+        self.assertEqual(liste, list(range(10))) #assertEqual méthode la plus utilisée
+ET
+class RandomTest(unittest.TestCase):
+
+    """Test case utilisé pour tester les fonctions du module 'random'."""
+
+    # Autres méthodes de test
+    def test_sample(self):
+        """Test le fonctionnement de la fonction 'random.sample'."""
+        liste = list(range(10))
+        extrait = random.sample(liste, 5)
+        for element in extrait:
+            self.assertIn(element, liste)
+
+	 self.assertRaises(ValueError, random.sample, liste, 20)
+
+une autre avec assertRaises 2 façons:
+Soit, comme on vient de le faire, en précisant d'abord le type de l'exception qui
+ doit être levée, puis la fonction qui doit être appelée (la référence, 
+sans parenthèses) et enfin les paramètres attendus par la fonction ;
+
+Soit en utilisant un context manager (gestionnaire de contexte) qui rend 
+le code plus facile à lire.
+
+Avec un context manager (with)
+
+class RandomTest(unittest.TestCase):
+
+    """Test case utilisé pour tester les fonctions du module 'random'."""
+
+    # Autres méthodes de test
+    def test_sample(self):
+        """Test le fonctionnement de la fonction 'random.sample'."""
+        liste = list(range(10))
+        extrait = random.sample(liste, 5)
+        for element in extrait:
+            self.assertIn(element, liste)
+
+        with self.assertRaises(ValueError):
+            random.sample(liste, 20)
+
+plus lisible
+1 On appelle un nouveau context manager grâce au mot-clé with ouvert sur le 
+retour de la méthode assertRaises. Cette fois, on ne passe en paramètre de 
+cette méthode que le type de notre exception ;
+
+2 À l'intérieur de notre bloc se trouve la ligne qui doit lever l'exception ValueError. 
+Si le bloc dans le context manager lève bien l'exception, alors le test passe. 
+Sinon il ne passe pas.
+
+---------------------------------
+Initialisation des tests: tous nos code commencent pas liste = list(range(10))
+afin d'éviter de répéter cette ligne à chaque fois.
+nos méthodes sont définies dans la même classe unittest.TestCase et elle a une méthode
+qui est appelée avant chaque méthode de test c'est setUp donc créer la 
+
+class RandomTest(unittest.TestCase):
+
+    """Test case utilisé pour tester les fonctions du module 'random'."""
+
+    def setUp(self):
+        """Initialisation des tests."""
+        self.liste = list(range(10))
+
+
+et dans le code:
+class RandomTest(unittest.TestCase):
+
+    """Test case utilisé pour tester les fonctions du module 'random'."""
+
+    # Autres méthodes de test
+    def test_sample(self):
+        """Test le fonctionnement de la fonction 'random.sample'."""
+        extrait = random.sample(self.liste, 5)
+        for element in extrait:
+            self.assertIn(element, self.liste)  #**self.liste
+
+        with self.assertRaises(ValueError):
+            random.sample(self.liste, 20)   #**self.liste
+
+pour tester le code on ajoute l'instruction unittest.main() à la fin de module.
+
+Méthode d'assertion
+Méthode
+
+Explications
+
+assertEqual(a, b) 	a == b
+assertNotEqual(a, b) 	a != b
+assertTrue(x)		x is True
+assertFalse(x)		x is False
+assertIs(a, b)		a is b
+assertIsNot(a, b)	a is not b
+assertIsNone(x)		x is None
+assertIsNotNone(x)	x is not None
+assertIn(a, b)		a in b
+assertNotIn(a, b)	a not in b
+assertIsInstance(a, b)	isinstance(a, b)
+assertNotIsInstance(a, b)	not isinstance(a, b)
+assertRaises(exception, fonction, *args, **kwargs) 	Vérifie que la fonction lève l'exception attendue.
+
+https://docs.python.org/3/library/unittest.html #liste complète
+
+
+
+********************** LA DECOUVERTE AUTOMATIQUE DES TESTS************************
+on fera au lieu de unittest.main() la découverte automatique des tests.
+cette donctionnalité permet de rechercher tous les tests unitaires contenus dans un packege et de les exécuter.
+
+Lancement de tests unitaires depuis un répertoire
+répertoire pytest où il ya notre code Python
+allez dans le dossier pytest créer le fichier test_random.py avec le code
+import random
+import unittest
+
+class RandomTest(unittest.TestCase):
+
+    """Test case utilisé pour tester les fonctions du module 'random'."""
+
+    def setUp(self):
+        """Initialisation des tests."""
+        self.liste = list(range(10))
+
+    def test_choice(self):
+        """Test le fonctionnement de la fonction 'random.choice'."""
+        elt = random.choice(self.liste)
+        self.assertIn(elt, self.liste)
+
+    def test_shuffle(self):
+        """Test le fonctionnement de la fonction 'random.shuffle'."""
+        random.shuffle(self.liste)
+        self.liste.sort()
+        self.assertEqual(self.liste, list(range(10)))
+
+    def test_sample(self):
+        """Test le fonctionnement de la fonction 'random.sample'."""
+        extrait = random.sample(self.liste, 5)
+        for element in extrait:
+            self.assertIn(element, self.liste)
+
+        with self.assertRaises(ValueError):
+            random.sample(self.liste, 20)
+
+puis exécuter python avec l'option: python.exe -m unittest #-m permet d'exécuter un module spécifique  ici unittest
+comme
+c:\python34\python.exe -m unittest test_random.RandomTest.test_shuffle  #nom module.nom de la classe module.méthode à exécuter
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+OK
+
+Structure d'un projet avec ses tests. voir un projet https://cherrypy.org/
+décmpressez et dans le dossier version on peut lancer des tests avec python -m unittest
+
+******************************************************
+	****************************************************
+		MULTI-THREAD
+		**************************************
+			*************************************
+
+Programmation parallèle avec threading
+il faut créer une classe qui hérite de threading.Thread
+
+Programme sans Thread
+import random
+import sys
+import time
+
+# Répète 20 fois
+i = 0
+while i < 20:
+    sys.stdout.write("1") #affiche le chiffre sur la sortie standard (écran par défaut)
+    sys.stdout.flush()    #pour demander à Python d'afficher le chiffre tout de suite sinon le chiffre n'apparaîtront qu'à la fin de l'exécution du programme.
+    attente = 0.2  #variable attente pour faire varier entre 0.2 et 0.8
+    attente += random.randint(1, 60) / 100
+    # attente est à présent entre 0.2 et 0.8
+    time.sleep(attente) #pause sur le temps d'attente
+    i += 1
+
+Approche parallèle:
+avec deux threads qui s'exécute ensemble: le premier affiche 1 sur l'écran, tandis 
+que le second affiche 2.
+
+import random
+import sys
+from threading import Thread #créer une classe qui hérite de threading.Thread 
+import time			#reféfinir son constructeur et la méthode run
+
+class Afficheur(Thread):
+
+    """Thread chargé simplement d'afficher une lettre dans la console."""
+
+    def __init__(self, lettre): #constructeur en paramètre la lettre à afficher
+        Thread.__init__(self)   #appelle le constructeru parent étape importante quand on redéfinit le constructeur de votre thread
+        self.lettre = lettre
+
+    def run(self):
+        """Code à exécuter pendant l'exécution du thread."""
+        i = 0
+        while i < 20:
+            sys.stdout.write(self.lettre)
+            sys.stdout.flush()
+            attente = 0.2
+            attente += random.randint(1, 60) / 100
+            time.sleep(attente)
+            i += 1
+
+Si on exécute, vous obtenez rien du tout, on a définit le thread mais il faut les créer.
+
+dans le même fichier à la suite
+
+# Création des threads
+thread_1 = Afficheur("1")
+thread_2 = Afficheur("2")
+
+# Lancement des threads
+thread_1.start()
+thread_2.start()
+
+# Attend que les threads se terminent
+thread_1.join()
+thread_2.join()
+
+Exécution il affiche:
+1221121212122121211221122212121221121211
+
+Pratique mais il y a des pièges voici les méthodes qui existent pour les éviter.
+
+******La Synchronisation des threads***********
+
+Opération concurrentes (si une variables est partagé par plusieurs threads.
+nombre = 1
+nombre += 1 #si nombre est partagé avec plusieurs threads on aura des résultats étranges
+
+si nombre compte certaine opération qui s'exécute, deux threads accéderont à ce code
+mais nombre ne sera augmenté que de 1.
+Et oui nombre += 1 fait 3 choses
+Récupère la valeur de la variable nombre  + ajoute 1  + écrire le résultat dans la variable nombre.
+et si 
+thread1 exécute l'étape 1 et 2 mais pas 3
+thread2 exécute les 3 étapes
+thread1 exécute l'étape 3 mais si le résultat se base sur l'ancienne valeur de nombre
+Au final nombre sera incrémenté que de 1.
+
+*******Accès simultané à des ressources**********
+si on veut accéder à des ressources depuis différents threads.
+modification on affiche des mots sur une ressource partagée
+import random
+import sys
+from threading import Thread
+import time
+
+class Afficheur(Thread):
+
+    """Thread chargé simplement d'afficher un mot dans la console."""
+
+    def __init__(self, mot):
+        Thread.__init__(self)
+        self.mot = mot
+
+    def run(self):
+        """Code à exécuter pendant l'exécution du thread."""
+        i = 0
+        while i < 5:
+            for lettre in self.mot:
+                sys.stdout.write(lettre)
+                sys.stdout.flush()
+                attente = 0.2
+                attente += random.randint(1, 60) / 100
+                time.sleep(attente)
+            i += 1
+
+# Création des threads
+thread_1 = Afficheur("canard")
+thread_2 = Afficheur("TORTUE")
+
+# Lancement des threads
+thread_1.start()
+thread_2.start()
+
+# Attend que les threads se terminent
+thread_1.join()
+thread_2.join()
+Exécution: cTORanaTUrEdcTaOnRarTdUcEanTaOrRdTcUaEnTaORrdTcanUaErdTORTUE
+
+***********Les Locks à la rescousse**********
+Synchroniser nos threads avec les locks. (ressource bloquée)
+
+import random
+import sys
+from threading import Thread, RLock
+import time
+
+verrou = RLock()
+
+class Afficheur(Thread):
+
+    """Thread chargé simplement d'afficher un mot dans la console."""
+
+    def __init__(self, mot):
+        Thread.__init__(self)
+        self.mot = mot
+
+    def run(self):
+        """Code à exécuter pendant l'exécution du thread."""
+        i = 0
+        while i < 5:
+            with verrou:
+                for lettre in self.mot:
+                    sys.stdout.write(lettre)
+                    sys.stdout.flush()
+                    attente = 0.2
+                    attente += random.randint(1, 60) / 100
+                    time.sleep(attente)
+            i += 1
+
+# Création des threads
+thread_1 = Afficheur("canard")
+thread_2 = Afficheur("TORTUE")
+
+# Lancement des threads
+thread_1.start()
+thread_2.start()
+
+# Attend que les threads se terminent
+thread_1.join()
+thread_2.join()
+
+1 on importe RLock du module threading
+2 on crée un lock que l'on plase dans notre variable verrou
+3 dnas notre méthode run on verrouille une partie de notre thread
+
+On utilise encore un context manager pour indiquer quand bloquer le lock.
+Le lock se débloque à la fin du bloc with
+
+la partie véroullée s'exécute qu'un thread à la fois.
+
+Exécution: canardcanardTORTUETORTUEcanardcanardcanardTORTUETORTUETORTUE
+
+https://docs.python.org/3/library/threading.html
+
+*********************************************************************************************************************************
+*********************************************************************************************************************************
+
+	************************************************
+		*******************************
+			INTERFACE GRAPHIQUE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
