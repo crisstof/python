@@ -11,8 +11,8 @@ Installation
 Documentation
 -------------
 
-PyQT5:
-[![PyQT5_IHM](./img/PyQT5.png)](https://www.python.org/)
+PyQT5:\
+[![PyQT5_IHM](./img/PyQT5.png)](https://pypi.org/project/PyQt5/)
 
 
 
