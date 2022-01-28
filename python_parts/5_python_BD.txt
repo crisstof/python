@@ -1,0 +1,58 @@
+*************************************************************************
+  Base de données   python						*
+*************************************************************************
+"""
+SQLite 		pour téléphone mobile
+Mysql   	plusieur accès et jusquà plus giga de données
+PostGreSQL 	pour base de données au dessus de Tera
+
+SQLite présent en python
+DB Browser for SQLite
+Creer la BD Table tt_users avec id_user Integer, user_name Texte; user_level Integer
+
+#CRUD: Create, Read, Update, Delete
+
+
+"""
+
+#coding:utf-8
+import sqlite3
+
+connection = sqlite3.connect("base.db")#selection le fichier db
+cursor = connection.cursor()
+#print(type(connection))
+#print(type(cursor))
+
+#LECTURE
+my_username = ("toto", )
+cursor.execute('SELECT * FROM tt_users WHERE user_name = ?', my_username) #une information
+result = cursor.fetchone()[1]      #fetchall() #toto
+print("le nom utilisateur est:: {result}")
+
+#ENREGISTRER 
+#new_user = ['1, 'tutu', 14), '2, 'titi', 15)]
+new_user = (cursor.lastrowid, "Julie", 23)
+cursor.execute('INSERT INTO tt_users VALUES(?,?,?)', new_user)
+connection.commit()
+
+#affiche BD
+for row in req.fetchall():
+	print(row[1])
+
+connection.close()
+--------------------------------------------------------------------------------------------------------
+Gerer les erreurs d'écriture d'enregistrement ...
+import sqlite3
+
+try:
+	connection = sqlite3.connect("base.db") #pour erreur bb.db
+	cursor = connection.cursor()
+	user = ("tata")
+ 	req = cursor.execute('SELECT * FROM tt_users WHERE user_name = ?", user)
+	for row in req.fetchall():
+	  print(row[1])
+except Exceptin as e:
+	print("[ERREUR]", e)
+	connection.rollback() #revient en arrière si erreur pour ne pas la corrompre
+finally:
+	connection.close()

@@ -1,0 +1,151 @@
+*************************************************
+  LA GESTION DU TEMPS  python			*
+*************************************************
+"""
+*monoThread
+time.sleep(5) #le processus est en pause 5 secondes
+time.localtime()  #0->lundi structure de temps
+time.mktime(time.localtime()) #on revient sur le timestamp
+time.strftime() #%d, %m, %Y %y, %H, %I, %S, %p(am/pm), 
+		%A jour semaine, %B
+
+
+départ du temps en informatique: timestamp (pour unix c'est Epoch)
+le 1 janvier 1970 à 00h00
+time.time()
+
+
+""""
+#coding:utf-8
+import time
+print("mon premier texte")
+print("mon deuxième texte")
+
+
+
+*************************************************
+  LA GESTION DATE  python			*
+*************************************************
+#coding:utf-8
+import datetime
+
+d1 = datetime.datetime(2022, 1, 28, 13, 54, 42) 
+now = date.today()
+
+*************************************************
+  PROGRAMMATION ASYNCHRONE THREAD python		*
+*************************************************
+#coding:utf-8
+import time
+import threading
+
+def process_one():
+	i=0
+	while i<3:
+	   print("oooooo")
+	   time.sleep(0.3)
+	   i +=1
+
+def process_two():
+	i=0
+	while i<3:
+	   print("ttttttt")
+	   time.sleep(0.3)
+	   i +=1
+
+#exécution séquentielle oooo puis xxxx
+process_one()
+process_two()
+
+#exécution asynchrone
+th1 = threading.Thread(target=process_one)
+th2 = threading.Thread(target=process_two)
+
+th1.start()
+th2.start()
+
+th1.join()  #ils s'attendent fin du thread
+th2.join()
+
+print("Fin du programme")
+----------------------------------------------------------------
+avec class:
+#coding:utf-8
+import time
+import threading
+
+class MyProcess(threading.Thread):
+	def __init__(self):
+		threading.Thread.__init__(self)
+	def run(self)
+		i=0
+		while i<3:
+		  print(threading.current_thread())
+		  time.sleep(0.3)
+		  i+=1
+#exécution asynchrone
+th1 = MyProcess()
+th2 = MyProcess()
+
+th1.start()
+th2.start()
+
+th1.join()  #ils s'attendent fin du thread
+th2.join()
+
+print("Fin du programme")
+----------------------------------------------------------------
+Processus bloquant verrou (mutex, semaphor) les thread ne se mélange pas.
+#coding:utf-8
+import time
+import threading
+
+my_lock = threading.RLock()
+
+class MyProcess(threading.Thread):
+	def __init__(self):
+		threading.Thread.__init__(self)
+	def run(self)
+		i=0
+		while i<3:
+		   with my_lock:
+		  	letters = "ABC"
+		  	for lt in letters:
+		     	   print(lt)
+		     	   time.sleep(0.3)
+		   i+=1
+#ça affiche A B C A B C mis on ne sait pas quelle thread l'exécute
+#exécution asynchrone
+th1 = MyProcess()
+th2 = MyProcess()
+
+th1.start()
+th2.start()
+
+th1.join()  #ils s'attendent fin du thread
+th2.join()
+
+print("Fin du programme")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

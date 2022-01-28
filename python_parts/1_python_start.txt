@@ -1,0 +1,162 @@
+*********************************************************************************
+     Start Python								*
+*********************************************************************************
+Encodage en début de fichier par défaut python3:
+#coding:utf-8
+print("hello world \n let's go") #affiche à l'écran
+nom = input("Entrez votre nom:")
+print("votre nom est: ", nom)
+
+Fonction lambda: une fonction qui fait toujours la 
+même chose donc pas besoin de créer une fonction:
+prixTTC = lambda prixHT:prixHT + (prixHT * 20/100)
+print(prixTTC(24))
+
+
+Modularité 
+on crée un module avec la fonction calcul ...
+mais avant de l'intégrer à notre programme principal,
+nous pouvons le tester seul avec à la fin:
+if __name__ == "__main__":
+   calculer()
+Ainsi on peut l'exécuter à partir de lui même!!
+
+
+
+*********************************************************************************
+     Programmation Objet Python							*
+*********************************************************************************
+Classe			: plan et conception (class Humain:)
+Objet			:instance de classe  (Christophe)
+
+Attribut		: variable de classe (prenom, age, taille)
+Propriété		: manière de manipuler les attributs
+               		 (lecture seule, accès non autorisé en dehors de la classe...)
+
+Méthode			: fonction d'une classe (manger, marcher, parler, dormir)
+Méthode de classe	:fonction d'une classe à la création de l'instance
+Méthode statique	:fonction d'une classe, mais indépendante de celle-ci
+
+Héritage		: classe fille qui hérite d'une classe Mère
+
+
+
+class Humain:
+
+	#attribut de classe lié à la classe et pas à l'objet
+	humains_crees = 0
+	habitation = "chez_moi"
+	
+	def __init__(self, c_prenom="toto"):
+		print("Création d'un humain",self)
+		self.prenom = c_prenom
+		Humains.humains_crees += 1
+
+	#self pour méthode standard méthode d'instance ou d'objet
+	def parler(self, message)
+	print("{} a dit: {}" .format(self.nom, message))
+	
+	#cls pour classe pour méthode de classe
+	def changer_habitation(cls, nouvelle_habitation):
+		Humain.habitation = nouvelle_habitation
+	changer_hab = classmethod(changer_habitation)
+
+
+	#méthode static indépendante on ne travail pas sur la classe
+	def definition():
+		print("Bonjour");
+	defin = staticmethode(definition)
+	
+
+h1 = Humain()
+print("Prénom de h1 -> {}".format(h1.prenom))
+
+Humain.changer_hab("forêt")
+Humain.defin()
+
+h2 = Humain()
+
+---------------
+Encapsulation
+---------------	
+encapsule notation (underscore): self._age = age
+#nous avons encapsuler l'age
+def _getage(self):
+	try:
+	   return self._age ou print("aucune recupération")
+	except AttributeError:
+	   print(l'age n'existe pas vous l'avez effacé")
+
+def _setage(self, nouvelage):
+	if nouvelage < 0:
+		self._age=0
+	else:
+		self._age = nouvelage
+
+def _delage(self):
+	del self._age
+
+
+#property (<getter>, <setter>, <deleter>, <helper>)
+age = property(_getage, _setage)
+
+
+main: 
+del h1.age
+
+------------
+Doc-String
+------------
+class Voiture:
+	""" Doc string
+        Cette classe représente une voiture"""
+	....
+on appelle help(Voiture) #affiche la doc
+
+
+-----------------------------
+Héritage ou multi-héritage
+-----------------------------
+classe Voiture(Vehicule):
+	def __init__(self, nom_voiture, essence, puissance):
+		Vehicule.__init__(self, nom_voiture, essance)
+		self.puissance = puissance
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

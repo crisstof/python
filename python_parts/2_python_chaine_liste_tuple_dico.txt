@@ -1,0 +1,208 @@
+*************************************************************************************************
+    chaine  Python										*
+*************************************************************************************************
+"""
+str.upper() [minuscule], 
+str.lower() [majuscule], 
+str.capitalize() [maj début phrase], 
+str.title() (maj à chaque mot]
+str.center(<largeur>, <caractere_remplissage>)  (50, "-")
+str.find(<chaine>, <debut>, <fin>) affiche l'indice
+str.index(<chaine>, <debut>, <fin>) même mais lève une exception pour le mettre dans un try
+str.strip(() enlève les espaces
+str.replace(<ancienne>, <nouvelle>, <occurrences>)
+str.split("separateur")
+str.join() #inverse de split
+
+str.isalpha() , str.isdigit() , str.isdecimal() , str.isnumeric() , str.isalphanum() , 
+
+str.islower() #"minuscule" , str.isupper() #"majuscule" #verif si la chaine est en "  "
+
+str.isidentifier() #verif pour les mot réservé (class, def ...) , str.iskeyboard()
+
+
+Une méthode de chaine travaille sur une copie et pas sur la chaine elle même.
+"""
+
+#classe str : string (chaîne de caractères)
+ch1 = "Bonjour tout le monde"
+ch2 = ch1 #même chose
+ch1 = ch1.upper() 
+str="Bonjour/10/20"
+print("str.split("/"))  => ['Bonjour', '10', '20] #c'est une liste
+
+##recherche de mot dans une chaine##
+ch = "Le langage Python"
+if "langage" in ch:
+   print("Trouvé")
+else:
+   print("absent")
+
+*************************************************************************************************
+   Listes (on travaille directement sur la liste 						*
+			et non une copie comme sur les chaînes de caractère	[] = liste()		*
+*************************************************************************************************
+les listes comportent tous types de mélange: objets, entier ...
+"""
+help(list)
+print(type(inventaire))
+
+
+Une méthode de chaine travaille sur une copie et pas sur la chaine elle même.
+"""
+#Création d'une liste
+inventaire = list()  #on met la liste dans une variable une bonne pratique
+inventaire = [] #syntaxe rapide et liste vide plus.
+inventaire = [1,2,3,"camion"]
+note = [0] * 10 #liste de dix zéro.
+
+inventaire = range(20) #une liste avec des valeurs croissantes
+i=0
+while i < len(inventaire):
+    print(inventaire[i])
+    i+=1
+#même chose plus rapide#
+for valeur in inventaire:
+   print(valeur)
+
+print(inventaire[3]) #affiche élément indice 3 si -1 affiche le dernier.
+print(inventaire[2:]) #affiche les deux dernier éléments [:X] premier élément.
+print(inventaire[2:4] #affiche indice 2-3 mais 4 exclue (4-2= 2 éléments)
+
+#Modifier une liste
+inventaire[2] = "lait" 
+iventaire[:] = ["eau"] * 4 #on a modifier les 4 éléments de la liste.
+
+#Ajouter élément
+inventaire.append("citron") #ajoute à la fin.
+inventaire.insert(1, "haricot") #insert indice 1 et le reste est décalé.
+#Supprimer élément
+inventaire.remove("citron")#supprime la valeur
+del inventaire[3] #supprime un indice et donc la valeur.
+#Recherche
+print("Incide:", inventaire.index("haricot")) #recherche l'indice de l'élément.
+#Trier
+inventaire.sort() #attention il faut des objets du même type
+inventaire.reverse() #trier en mode décroissant après un sort.
+inventaire.count("orange") #compte le nombre d'occurrence
+#Efface vide toute la liste
+inventaire.clear()
+inventaire[:] = []
+#Créer une liste depuis un chaine de caractère ou l'inverse
+chaine = 'Bonjour tous le monde"
+phrase = "_".join(chaine) #Méthode de chaine pas de liste
+			  #travail sur une chaine pas de int
+
+#Copie de liste
+liste2 = liste1            
+liste2.append("avocat") 
+#la liste1 et 2 sont modifiées 
+#liste2 est une référence à la liste1 donc pas de copie
+#on travaille toujours sur la même liste
+----------------------------------------
+import copy
+liste2 = copy.deepcopy(liste1)
+----------------------------------------
+#Concaténation de deux listes
+liste1.extend(liste2)
+print(liste1[:])
+liste1 = liste1 + liste2
+#Parcourir une liste avec l'indice et la valeur
+inventaire = ["citron", "eau", "avocat", "pomme", "orange"]
+
+for objet in inventaire:
+   print(objet)
+
+for objet in enumerate(inventaire):
+   print(objet) #affiche les tuples
+
+for indice_objet, valeur_objet in enumerate(inventaire):
+   print("Element d'indice {} -> {}".format(indice_objet, valeur_objet))
+
+*************************************************************************************************
+   Tuples (1, valeur) (immuable on ne peut pas ajouter ou supprimer les valeurs)		*
+			(contient tout type d'objet ne peut être trié)		()		*
+*************************************************************************************************
+tuple = () #tuple vide ou avec une seule valeur (20,) ou 20,
+constante = (5,20,60)
+try:
+   constante[3]
+except:
+   print("dépassement du tuple")
+
+#affectation multiple (conteneur)
+ ##pour des constantes##
+(nombre1; nombre2) = (14, 56)
+#changer une valeur
+nombre1 = 128
+
+#Faire un retour de fonction avec deux valeurs ou multiple
+def getPlayerPos():
+   posX = 150
+   posY = 90
+   return (posX, posY)
+
+(coordX, coordY) = getPlayerPos() #récupère valeur de fonction
+
+
+##ça sert à quoi un tuple ?
+faire un tableau de constante.
+faire un retour de fonction avec deux valeurs
+
+*************************************************************************************************
+   Dictionnaires (tableau associatif (clé, valeur))						*
+			(contient tout type d'objet, pas d'indice )		{}		*
+*************************************************************************************************
+dico = {} #vide
+dico = {1:150, "prenom":"christophe", 1:"citron"}
+var=dico[clé]
+#ajouter ou modifier si la clé est la même
+dico["chat"] = "c'est un felin"
+#suppression
+valSup = dico.pop("chat") #retourne la valeur supprimée
+del dico["chat"]
+#existance d'une clé
+if "chat" in dico:
+#parcourir sur clé ou valeur
+for key in dico:
+   print(key)
+
+for k,v in dico.items():
+  print("Clé: {} -> Valeur: {}".format(k, v))
+#copier
+dico2 = dico #dico2 est une référence donc pas de copie
+dico2 = dico.copy()
+#fonction produit un dictionnaire
+def maFonction(**parametres): #parametres est un dictionnaire
+  print(parametres)           #fonction avec parametre nommée **
+			      #fonction avec paramètre variabel *
+maFonction(p=154, nom="toto")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

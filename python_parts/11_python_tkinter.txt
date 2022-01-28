@@ -1,0 +1,148 @@
+*************************************************************************************************
+    tkinter Python										*
+*************************************************************************************************
+"""
+en graphique tout est widget
+
+"""
+
+import tkinter
+#from tkinter import *
+
+mainapp = tkinter.Tk()
+mainapp.title(Mon premier programme")
+#mainapp.minsize(640, 480)
+#mainapp.maxsize(1280, 720)
+#mainapp.geometry("800*600")
+#mainapp.resizable(width=False, haight=True)#empêche le redimensionnement
+
+
+mainapp.mainloop()  #affiche la fenêtre en continue
+
+
+*************************************************************************************************
+    Centrer la fenêtre										*
+*************************************************************************************************
+import tkinter
+
+mainapp = tkinter.Tk()
+mainapp.title(Mon premier programme")
+screen_x = int(mainapp.winfo_screenwidth())
+screen_y = int(mainapp.winfo_screenheight())
+windows_x = 800
+windows_y = 600
+
+posX = (screen_x //2 ) - (windows_x //2)
+posY = (screen_y //2 ) - (windows_y //2)
+
+geo = "{}*{}+{}+{}".format(windows_x, windows_y, posX, posY)
+mainapp.geometry(geo)
+mainapp.mainloop()
+
+*************************************************************************************************
+    WIDGET									*
+*************************************************************************************************
+import tkinter
+
+app = tkinter.Tk()
+mainapp.title(Mon premier programme")
+
+label = tkinter.Label(app, text="Bienvenue à tous!")
+#ou  print(label.cget("text"))
+
+label = tkinter.Message(app, text="Bienvenue à tous!")
+
+name = tkinter.Entry(app, width=45, show="*")
+
+button_quit = tkinter.Button(app, text="ok", command=hello)
+
+label.pack()
+
+mainapp.mainloop()
+
+##Widget Avancés##
+import tkinter
+
+app = tkinter.Tk()
+
+checkWidget = tkinter.Checkbutton(app, text="Publier ?", onvalue=5)
+checkWidget.pack()
+
+radioWidget = tkinter.RadioButton(app, text="chat", value=1)
+radioWidget.pack()
+
+mainapp.mainloop()
+
+##Fenetre modale#
+import tkinter
+from tkinter import messagebox
+"""
+showerror
+showinfo
+showwarning
+askquestion askokcancel, askyesno  askretrycancel
+"""
+def modal_windows():
+	msgBox.askquestion("Sondage", "un problème!")
+
+app = tkinter.Tk()
+btn = tkinter.Button(app, text="Déclenche une erreur", command=modal_windows)
+checkWidget.pack()
+btn.pack()
+mainapp.mainloop()
+
+##Positionner un widget avec le widget de cadre
+mainframe = tkinter.Frame(app, width=300,  height=200, borderwith=1)
+mainfram.pack()
+
+
+
+*************************************************************************************************
+    Variables contrôle									*
+*************************************************************************************************
+import tkinter
+"""
+StringVar()	: chaine de caractères [str]
+IntVar()	: nombre entier [int]
+DoubleVar()	: nombre flottant [float]
+BooleanVar()	: booléen [bool]
+
+mode:
+r : A chaque fois la variable va être lu 
+w : Appel l'observatoir quand la variable est modifiée
+u : quand on supprime la variable
+
+#on modifie le label en direct
+"""
+#Observateur
+def uptdate_label(*args):
+   var_label.set(var_entry.get())
+
+#Création et paramétrage de la fenêtre
+app = tkinter.Tk()
+app.geometry("400*300")
+app.title("Variables tkinter")
+#Widgets...
+var_entry = tkinter.StringVar()
+var_entry.trace("w",uptdate_label) #uptdate_label fonction callback 
+entry = tkinter.Entry(app, textvariable=var_entry)
+var_label = tkinter.StringVar()
+label = tkinter.Label(app, textvariable=var_label)
+var_label.set("Le label...")
+
+entry.pack()
+label.pack()
+
+#boucle principale
+app.mainloop()
+
+
+
+
+
+
+
+
+
+
+

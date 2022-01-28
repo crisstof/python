@@ -1,0 +1,105 @@
+*************************************************************************************************
+    Fichier en Python										*
+*************************************************************************************************
+"""
+Modes d'ouverture: 	r (lecture seule)
+			w (écriture avec remplacement)
+			a (écriture avec ajout en fin de fichier)
+			x (lecture et écriture)
+			r+ (lecture/écriture dans un même fichier)
+			wb (écriture en mode binaire)
+
+#Lecture
+fic.read() #lit tout le fichier
+fic.readline() #lit une seule ligne
+fic.readlines() #récupère toutes les autres lignes si on lit avant d'autre ligne
+		#récupère sous forme de liste tout le contenu
+tout récupération c'est en chaine de caractère classe str. donc pas de calcul il faut caster
+
+#Ecriture
+fic.write()
+
+
+
+
+
+"""
+
+#Ouverture et Lecture
+fic = open("docs/donnees.txt", "r")
+
+content = fic.read()
+print(content) #lit tout le fichier (pas d'accent)
+
+fic.close()
+
+#gestion de l'ouverture ou avec un try exception
+if fic.closed:
+   print("Fichier fermé")
+else:
+   print("Fichier encore ouvert")
+
+
+#ouvrir et vérifier l'ouverture et plus besoin de le fermer
+with open("docs/donnees.txt", "r") as fic:
+   content = fic.read()
+   print(content)
+  
+
+#Ecriture 
+with open("docs/donnees.txt", "w") as fic:
+   	nombre = 15
+	fic.write(str(nombre))
+	fic.write("Bonjour")
+        fic.write("\n Monsieur ...")
+
+
+
+
+
+*************************************************************************************************
+    Sauvegarder un joueur en binaire								*
+*************************************************************************************************
+import pickle
+
+class Player:
+	def __init__(self, name, level):
+		self.name=name
+		self.level=level
+
+	def whoami(self):
+		print("{} ({})".format(self.name, self.level))
+
+p1 = Player("toto", 10)   #fichier de 60 octets
+
+#sauvegarde
+with open("player.data", "wb") as fic: 
+	record = pickle.Pickler(fic)
+	record.dump(p1)
+
+#récupération du fichier
+with open("player.data", "rb") as fic: 
+	get_record = pickle.Unpickler(fic)
+	player_one = get_record.load()
+
+player_one.whoami()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*************************************************************************************************
+    Gestion répertoire et dossier								*
+*************************************************************************************************
