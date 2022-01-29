@@ -1,0 +1,160 @@
+*****************************************************************************************
+  Decorateur  python (changer le comportement d'une fonction sans l'éditer)		*
+*****************************************************************************************
+"""
+décorer une fonction (design pattern)
+principe: permet d'étendre une fonctionnalité
+et de modifier son comportement
+
+avant le seule moyen est de la modifier.
+avec le decorateur.
+Maintenant changer la fonctionnalité de fonction sans 
+la  toucher.
+
+c'est une fonction avec en paramètre notre fonction et
+retourne la fonction décorée.
+ syntaxe:
+        1) func = decorator(func)
+        2) @decorator
+
+Pour la POO
+@property
+@property.setter  si _name (il y a une variable private)
+@classmethod
+@staticmethod
+
+
+on peut mettre en cascade les décorateurs et le sens de l'accès
+@logged
+@admin
+def fonction()
+"""
+----si je veut modifier ses 2 fonctions de la même manière----
+je suis obliger de changer j'édite toutes les fonctions
+donc de la répétition.
+Ensuite on alourdi le code si la modification demande de la ressource.
+DECORATEUR
+c'est une fonction avec en paramètre notre fonction et
+retourne la fonction décorée
+-------------------------------------------------------------------------
+#coding:utf-8
+
+def decorator(func)
+    print("------------------")
+    return func
+
+
+def hello()
+  print("hello !")
+
+hello = decorator(hello)
+
+
+@decorator
+def hi():
+   print("Hi !")
+
+hello()
+hi()
+
+hello fonction
+hello()  fonction callable
+-------------------------------------------------------------------------
+Mise en place : faire vérifier le profile mais ce n'est pas à la fonction 
+profile() de le faire et si nous avons besoin de faire une modification
+c'est plus facile.
+#coding:utf-8
+user_logged=False
+
+def check_user_log(func)
+    def wrapper()        #après nous avons le traitement
+       if user_logged:
+          return func()
+       else:
+          print('Vous devez être connecté.")
+    return wrapper
+
+@check_user_log
+def profile()
+  print("profil membre !")
+
+@check_user_log  #si on veut que les articles soit authentifier
+def articles():
+    print("Les articles ....")
+
+profile()
+articles()
+-------------------------------------------------------------------------
+Passer un paramètre au decorateur
+
+
+#coding:utf-8
+user-name= "toto"
+
+def check_user(username):
+   def decorator(func):
+	    def wrapper():  
+        	   #traitement      
+       		   if user-name == username
+     			return func()
+ 		   else:
+			print("utilisateur inconnu") 
+            return wrapper
+    return decorator
+
+@check_user("titi")
+def profile()
+  print("profil membre !")
+
+
+#autre syntaxe
+profile = check_user("titi")(profile)
+profile()
+
+-------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
