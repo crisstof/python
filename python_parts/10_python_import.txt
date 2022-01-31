@@ -1,12 +1,321 @@
 *************************************************************************************************
     IMPORT SUR PYTHON										*
 *************************************************************************************************
+-------------------------------------------------------------------------------------------------
+Python permet de ne pas se soucier de l'allocation/désallocation, mais cela ne foit pas nous 
+empêcher d'y réfléchir un minimum pour ne pas gaspiller inutilement une ressource qui peut vite
+devenir limitée.
+les imports lignes d'apparence anodines peut entraîner un accroissement de mémoire utilisée par 
+un script.
+
+
+-------------------------------------------------------------------------------------------------
+pip install memory_profiler : outil qui permet de mesurer la mémoire qui fournit un décorateur
+@profile permettant une analise du code de la fonction décorée ligne par ligne.
 
 exemple:
-import tkinter
-  mainapp =  tkinter.Tk()
-from tkinter import *
-  mainapp = Tk()
+from memory_profiler import profile
+
+@profile
+def test_list() -> None:
+	print('Test listes')
+	elts = 10**6
+	data = [None]*elts
+	final = [1]*(2*elts)
+	del data
+	del final
+	print('Fin test listes')
+	
+if __name__ == '__main__':
+	test_list()
+
+Nous pouvons voir la consommation de base 27.7Mio et les lignes:
+1L: aucune consommation avec le print (pas normal: il faut bien stocker la chaîne 'Test listes', on 
+peut supposer que c'est trop rapide pour être répertoriée.
+2L: elts est un int (plus de long en python3) on obtient la taille mémoire dans un shell python avec
+>>>import sys
+>>>elts = 10**6
+>>>sys.getsizeof(elts)
+28 octets et donc aucune augmentation dans la colonne Increment c'est peut être un problème de 
+précision 28 octets ridicule sur les 27.4Mio. @profile (precision=16) mais même avec le paramètre
+supplémentaire de @profile nous avons pas mieux. Alors l'outil ne fonctionne pas correctement ?
+Non mais les valeur fournit ne sont pas à l'échelle d'une simple variable.
+Pour obtenir une idée du seuil de détection, on crée une fonction créant des listes de 10 puissance i
+éléments avec i variant de 1 à 6:
+@profile 
+def test_list_precision() -> None:
+   for i in range(1,7):
+      data = [None] * 10**i
+Ce n'est pas informatif puisque les données des boucles sont regroupées sur une seule ligne (l'outil
+nous signale tout de même  6 exécutions de la ligne d'affectation de data) donc on recommence à la main:
+      data = [None] * 10
+      data = [None] * 10**2
+      .... data = [None] * 10**6
+Le résultat est mieux à partir de 10**4 nous avons une augmentation de l'occupation mémoire:
+Poutant None est stocké dans 16 octets (sys.getsizeof(None)), 10**4 éléments None dans une liste
+représentent 10**4*16=160 000 octet soit 0.15Miio bien moins que ce que nous avons.
+Il faut pas considérer memory_profile comme de la précision il est basé sur le psutil (Process and
+System UTILities) fournit des résultat généraux. Donc c'est plutôt une indication une tendance.
+
+Revenons à nos moutons!!
+Et les deux lignes del data et del final libèrent la mémoire de 7.6 et 15.3Mio.
+on peut générer un graphique avec 
+mprof run test_memory.py   #crée un fichier mprofile_yyyymmddhhmmss.dat
+pip install matplotlib #pouir ouvrir le fichier
+mprof plot #nous avons le graphique.
+
+Nous pouvons visualisez des objets de notre code pour mieux comprendre ce qui se passe en mémoire.
+directement en ligne sur http://pythontutor.com/ (mais sur de petit script)
+*************************************************************************************************
+    LES IMPORT MASSIFS										*
+*************************************************************************************************
+En important Matplotlib ou PyQt5 sur des configurationmatérielle faible, il faut attendre avant 
+que le script se lance.
+le script pour afficher une fenêtre Hello World avec PyQt5 (windows.py)
+Ici nous avons importer tous les sous module
+----------------------------------------------------
+from PyQt5 import Qt
+import sys
+
+def main() -> None:
+    app = Qt.QApplication(sys.argv)
+    widget = Qt.QWidget()
+    textLabel = Qt.QLabel(widget)
+    textLabel.setText('Hello linux Mag')
+    textLabel.move(100, 85)
+    
+    widget.setGeometry(50, 50, 320, 200)
+    widget.setWindowTitle('Fenêtre PyQt5')
+    widget.show()
+    sys.exit(app.exec())
+    
+if __name__ == '__main__':
+    main()
+-------------------------------------------------------------------------------------------------------
+Ici nous selectionnons les sous modules et le code produit la même chose. ICI ON PARLE DE SOUS-MODULE
+-------------------------------------------------------------------------------------------------------
+from PyQt5.QtWidgets import QVBoxLayout,QMainWindow,QApplication,QLabel,QWidget
+from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import pyqtSlot
+import sys
+
+def main() -> None:
+    app = QApplication(sys.argv)
+    widget = QWidget()
+    textLabel = QLabel(widget)
+    textLabel.setText('Hello linux Mag')
+    textLabel.move(100, 85)
+    
+    widget.setGeometry(50, 50, 320, 200)
+    widget.setWindowTitle('Fenêtre PyQt5')
+    widget.show()
+    sys.exit(app.exec())
+    
+if __name__ == '__main__':
+    main()
+-------------------------------------------------------------------------------------------
+Niveau Occupation de mémoire ?
+le script qt_memory.py va nous fournir des éléments de réponse (il faudra 2 appels
+en changeant le nom de la fonction appelée dans le programme principal pour s'assurer
+du chargement indépendant des sous-module)
+-------------------------------------------------------------------------------------------
+from memory_profiler import profile
+import sys
+
+@profile
+def import_all() -> None:
+	from PyQt5 import Qt
+    
+@profile 
+def import_submodules() -> None:
+    from PyQt5.QtWidgets import QApplication, QWidget, QLabel
+    from PyQt5.QtGui import QIcon
+    from PyQt5.QtCore import pyqtSlot
+    
+	
+if __name__ == '__main__':
+	import_submodules()
+    #import_all()
+------------------------------------------------------------------------------------------
+import_all() -> 70.6MiB et import_submodules() -> 46.8MiB p, economise 23.7Mio
+et sur un seul module alor imagine sur tous les modules!!
+*************************************************************************************************
+    FROM ... IMPORT  OU    IMPORT	(DIFFERENCE)  ICI ON PARLE DE FONCTION DANS UN MODULE	*  
+*************************************************************************************************
+>>>import math
+>>>math.cos(math.pi)
+l'import complet conserve l'espace de nom pour le module.
+
+>>>from math import cos, pi
+>>>cos(pi)
+Attention si on a une variable pi import va écraser sa valeur.
+
+Etudes: 
+créons le module mon_module.py
+-----------------------------
+variable = 'GLMF'
+
+def fonction(msg : str) -> None:
+    print(msg)
+-----------------------------
+>>>import sys
+>>>sys.modules #affiche un dictionnaire contenant les liens vers tous les modules que Python
+               #connaît à un moment donné.
+dans le Shell Python s'il vient dêtre lancé mon_module n'est pas encore chargé:
+>>>'math' in sys.modules
+False
+>>>import math
+>>>'math' in sys.modules
+True
+#pour notre fichier mon_module.py
+>>>import mon_module
+>>>'mon_module' in sys.modules
+True
+>>>mon_module.variable
+'GLMF'
+>>>mon_module.fonction('Hello' + mon_module.variable)
+HelloGLMF
+---------------------
+Relancer un nouveau Shell
+>>>import sys
+>>>'mon_module' in sys.modules
+False
+>>>from mon_module import fonction
+>>>fonction('Hello GLMF')
+Hello GLMF
+Avec cet import, on pourrait penser que Python n'a chargé que fonction().
+Mais quand même ce serait compliquée:
+Trouver le module, le lire intégralement et ne conserver que les éléments souhaités (fonction() peut faire appel à fonction_2()
+du même module et il faut alors garder ces deux fonctions)
+D'ailleurs Python ne le fait pas:
+>>>'mon_module' in sys.modules
+True
+Pour autant variable on se rend compte que variable n'est pas accéssible:
+ni depuis l'espace de nom mon_module.variable ni depuis l'espace dee nom global variable
+Pour savoir si le module est chargé et exécuté il faut modifier et faire
+print('Début de mon_module') #en début
+...
+print('Fin de mon_module') #en Fin
+Relance le shell
+>>>from mon_module import fonction
+Début de mon_module
+Fin de mon_module
+
+Le module à bien été chargé dans son intégralité: vous ne ferez aucune économie de mémoire en chargeant spécifiquement
+les éléments d'un modul, vous rendez le code moins lisible!!!!!!!!!!!!!!!!!!!!
+
+Apropos de FROM ... IMPORT*
+cette ecriture est à proscrire (maintenabilité) mais d'autres limitations
+Vous ne pouvez pas utiliser un from import * dans une fonction.  (def ...import )
+Vous ne pouvez pas importer des éléments débutant par le caractère _ (_cache = 'coucou')
+ainsi on n'aura accès à tous le code sauf à _cache dans notre module.
+On peut restraindre les éléments importés avec
+__all__ = ['variable', 'fonction']
+variable = 'GLMF'...
+ici from mon_module import *  #les autres variables ne seront pas accéder.
+Enfin si on souhaite protéger un module d'un import  on peut attribuer une valeur non définie
+qui afficheré un sympathique message:
+__all__= ['Ne jamais utiliser from ... immport *!!!']
+....
+*************************************************************************************************
+    LIBERER DE L'ESPACE MEMOIRE EN DECHARGEANT UN MODULE					*  
+*************************************************************************************************
+la légende veut que l'on puisse libérer de l'espace mémoire et donc décharger un module en 
+utilisant la commande del sur le nom d'un module.
+Mais non on ne peut pas décharger un module avec del.
+>>>import sys
+>>>import mon_module
+>>>'mon_module' in sys.modules
+True
+>>>del mon_module
+>>>import mon_module
+>>>'mon_module' in sys.modules
+True
+>>>mon_module.variable
+Error
+>>>sys.modules['mon_module']
+>>>sys.modules['mon_module'].variable
+'GLMF'
+On peut croire que del sys.modules['mon_module'] est la solution
+et non car sys.modules est accessible en lecture/écriture. Supprimer une clé
+peut ne pas détruire le module associé (d'autre module contiennent des références vers ce module)
+Mais cela invalide l'entrée du cache pour ce nom de module. Python cherche à nouveau le nom.
+La clé peut aussi être assignée à None de manière à forcer une ModuleNotFoundError lors de la
+prochaine importation du module.
+Attention cependant; s'il reste une référence à l'objet module et que vous invalidez l'entrée dans le cache
+de sys.modules puis réimportez le module, les deux objets modules ne seront pas les même.
+A l'inverse importlib.reload() réutilise le même objet module et réinitialise simplement le contenu du module en réexécutant
+le code du module.
+
+Démonstration en utilisant ps (état de la mémoire associé au processus python)
+$python
+$ ps -a -m -o %cpu, %mem, %command %CPU %MEM COMMAND
+0.0 0.1 /usr/bin/python3
+#Importer sys, pyQt5 pylab
+$ps -a -m -o %cpu, %mem, %command %CPU %MEM COMMAND
+0.8  0.8 /usr/bin/python3
+#Déchargeons avec del
+$ps -a -m -o %cpu, %mem, %command %CPU %MEM COMMAND
+0.1  0.8 /usr/bin/python3
+Nous avons détruit les liens pour l'accès aux modules, mais ils ne sont pas déchargés.
+La véritable solution est de faire comme dans IPython ou Jupyter à redémarrer le kernel
+ce qui pour un shell python sous entend de l'arrêter et relancer.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

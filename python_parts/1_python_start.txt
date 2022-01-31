@@ -22,6 +22,25 @@ if __name__ == "__main__":
 Ainsi on peut l'exécuter à partir de lui même!!
 
 
+*********************************************************************************
+     Portée des variables							*
+*********************************************************************************
+
+name = "toto"
+
+def mon_nom()
+    print(name)  #toto
+    name="titi"
+    print(name)  #titi
+
+print(name) #toto
+mon_nom()
+print(name)#toto
+
+#Pour que la modification reste
+   #faire un return de la fonction
+   #passer en paramètre la valeur
+
 
 *********************************************************************************
      Programmation Objet Python							*

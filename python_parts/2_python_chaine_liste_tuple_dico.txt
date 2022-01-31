@@ -38,6 +38,33 @@ if "langage" in ch:
 else:
    print("absent")
 
+Syntaxe et formatage de texte:
+------------------------------
+##syntaxe ,
+name="titi"
+namo="toto"
+print("je m'appelle",name, namo)
+##syntaxe % (vieille syntaxe)
+name="titi"
+age=20
+print("je m'appelle %s et j'ai %d " % (name,age)) #%(name, username, date)
+##syntaxe avec format()
+age=20
+text = "Bonjour {} mon age est {}".format("toto", age)
+print(text)
+
+num=254.35685
+print("{:.2f}".format(number)) #254.36
+
+dictionnaire = {"name" : "titi"}
+print("{name}".format(**dic)) #titi cle:valeur
+
+##syntaxe f-string
+name = "tutu"
+print(f"je m'appelle {name}")
+
+
+
 *************************************************************************************************
    Listes (on travaille directement sur la liste 						*
 			et non une copie comme sur les chaînes de caractère	[] = liste()		*
@@ -102,6 +129,9 @@ liste2.append("avocat")
 ----------------------------------------
 import copy
 liste2 = copy.deepcopy(liste1)
+
+voir aussi
+liste2 = list(liste1)
 ----------------------------------------
 #Concaténation de deux listes
 liste1.extend(liste2)

@@ -1,0 +1,32 @@
+******************************
+Environnement virtuel python *
+******************************
+pour python 3.3 et ultérieur (2017)
+outil venv natif sur python
+Créer un dossier Dpython
+python3 -m venv  envtest  #on a créer un dossier notre environnement python.
+			  #il suffit de supprimer le dossier pour supprimer.
+pyenv.cfg #on peut changer la version de python en changent le chemin.
+dossier include contient entête
+        lib bibliothèque
+	Scripts (bin linux) 
+activer l'environnement
+source chemin_envtest/bin/activate #démarre l'environnement   (sous linux)
+sur windows  activate.bat ou powershell .ps
+envtest/scripts/activate.bat  #active
+quitter Scripts\deactivate.bat (linux deactivate)
+----------------------------------------------------------------------------------------
+Créer un environnement virtuel avec virtualenv et virtualwrapper(2020)
+pip3 install virtualenv virtualenwrapper
+Ajouter au fichier .bashrc
+#virtualenv et virtualvwrapper
+export WORKON_HOME=$HOME/ .virtualenv
+VIRTUALENVWRAPPER_PYTHON='usr/bin/python3'
+source /usr/local/bin/virtualenvwrapper.sh
+
+Puis créons notre environnement nommé QTdev par exemple
+mkvirtualenv QT5dev -p python3
+(QT5dev)$
+Nous pouvons enfin travailler installer 
+pip install PyQt5  numpy matplotlib spyder ..
+et faire notre programme.
