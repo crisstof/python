@@ -1,0 +1,126 @@
+*************************************************************************
+FAIRE UN EXECUTABLE UN PROJET PYTHON 					*
+*************************************************************************
+avec auto-py_to-exe
+.\auto-py-to-exe
+A configurer sur un navigateur
+ASSEZ SIMPLE
+
+
+
+
+
+
+**********************************************************************************************************
+*************************************************
+DISTRIBUER UN PROJET PYTHON sur PIP	
+pip
+build setuptools
+wheel
+twine   "distri sur internet"
+
+
+*************************************************
+hiérarchie du projet
+src/les paquets .python
+tests/ tests unitaires
+-----------------------------------------------------------
+fichierprojet: pyproject.toml  #permet la construction
+[build-system]
+requires = ["setuptools", "wheel"]
+buils_backend = "setuptools.build_meta"
+------------------------------------------------------------
+fichier de configuration:   https://setuptools.pypa.io/en/latest/userguide/declarative_config.html
+configuration dynamique: setup.py
+configuration static   : .ini mais une autre setup.cfg  #plus simple
+[metadata]
+name = MonProjetPaul
+version = 1.0.0 #major.minor.maintenance ou fichier attr: chemin
+author = paul
+long_description_content_type = text/markdown #type fichier pour readme
+license = LICENSE #fichier LICENSE GPL MIT ...
+classifier =                        #répertorié au bonne endroit en cas de recherche 
+     Topic :: Software Development :: Libraries :: pygame
+     License :: Freeware
+
+
+[options]
+package_dir = 
+  = src
+python_requires = >= 3.7
+install_requires =   #paquet de demande
+   pygame
+------------------------------------------------------------------
+le site pip: python -m pip install nom_paquets
+2 site 1) principale vrai projet distribué.
+       2) test pip py  #test de pip avec notre projet
+https://pypi.org/search/
+https://pypi.org/classifiers/
+#créer un compte pip
+Manage/account
+   API tocken #crée le token
+et depuis twine: (install twine, build)
+>python -m build  #  attention dans chaque répertoires de paquet il faut ajouter
+                  # le fichier __init__.py obligatoire
+		  # pour la prise en compte
+
+Crée le répertoire dist avec 2 fichiers
+tar.gz et whl (pour python3) mais on met en ligne les 2 versions
+MISE EN LIGNE:
+  python -m twine upload --repository testpypi dist/*    #le paquet est sur a partie test mais sera effacé dans un temps
+
+  pip install url de l'instance de test
+  pip install fichier.whl #en local ou le test en local
+
+pour l'installer sur le vrai pip (un compte pour le site final) même chose à faire.
+  python -m twine twine upload dist/*  #+informations de connexion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

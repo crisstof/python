@@ -1,0 +1,180 @@
+dans le fichier src (nous avons la classe panda.py)
+--------------------------------------------------------------------------------------
+class Panda:
+	def __init__(self, anme, age):
+		#sert au développeur de vérifier
+		assert name.isalnum(), "Attribut 'name' : doit être alphanumérique (a-z, A-Z et 0-9)"
+		assert len(name) > 3 and len(name <= 25, "Attribut 'name' : nombre de caractère >3 et <= 25)"
+		assert isinstance(age, int), "Attribut 'age' : doit être un entier (int)"
+		assert age > 0 and age <= 100, "Attribut 'age' : nombre > 0 et <= 100"
+		self.name = name
+		self.age = age
+		self.hunger = 50
+	#redéfinition de la méthode str pour réafficher
+	def __str__(self):
+		return f "[Nom : {self.name} / Age : {self.age} / Faim: {self.hunger}/100]"
+
+	def eat(self, food_points):
+		if self.hunger >= 100:
+			print(f"{self.name} a déja bien mangé (faim: {self.hunget})")
+		else:
+			self.hunger += food_points
+			if self.hunger > 100:
+				print("Quel festin !")
+				self.hunger = 100
+
+			print(f"{self.name} vient de manger (faim: {self.hunger})")
+
+	def talk(self):
+		print("Nioww !")
+
+	def sleep(self):
+		print("ZzzzZzzZzz")
+
+"""
+dans le constructeur on crée le panda nom age manger à 50%
+on affiche les infos du panda
+une méthode pour faire manger le panda qui vérifie le niveau de faim 
+est qui ne mange pas trop  et si on dépasse on la remets à 100 avec affiche
+"""
+--------------------------------------------------------------------------------------
+Puis un fichier main
+--------------------------------------------------------------------------------------
+form src.panda import Panda
+
+p = Panda("KIKI", 15)
+print(p) #appelle la méthode spéciale qu'on a redéfinit __str__
+
+
+
+
+
+
+--------------------------------------------------------------------------------------
+
+
+Comment faire les Tests :
+pour que les valeurs que l'on rentre ne plante pas.
+La non régréssion du code si l'on travaille sur le code et ne fonctionne plus.
+Créer un dossier Test avec un fichier testPanda.py
+
+--------------------------------------------------------------------------------------
+#coding:utf-8
+import sys
+sys.path.append("..") #pour se retourver dans le dossier main (cd ..)
+from src.panda import Panda
+
+import unittest
+
+class TestPanda (unittest.TestCase): #hérite de unittest et la classe testcase permet de tester des scénarios ou cas précis.
+	#test si le panda est valide
+	def test_panda_is_instance_of_panda(self):
+		p = Panda("KIKI", 15) #avec erreur p = Panda(15.64, 15)
+		self.assertIsInstance(p, Panda) #vérif si elle est bien de la class panda
+	
+	def test_panda_is_positive(self)
+		p = Panda("KIKI", 15)
+		self.assertGreater(p.age, 0)
+
+if __name__  ==  '__main__':
+	unittest.main()
+
+
+
+Mais nous voyons la répétition de code pour faire les test !!
+on passe à la suite donc
+
+--------------------------------------------------------------------------------------
+
+faire le test:
+python .\testPanda.py  -v
+
+
+Nous allons préparer les données pour les tests  (méthode spéciale)
+--------------------------------------------------------------------------------------
+class TestPanda (unittest.TestCase): 
+
+	def setUp(slef):
+		self.p = Panda("KIKI", 15) 
+
+	def tearDown(self): #changer les informations ou faire un nettoyage de données
+		slef.p.age(1600)
+
+	def test_panda_is_instance_of_panda(self):
+		self.assertIsInstance(self.p, Panda) 
+	
+	def test_panda_is_positive(self)
+		self.assertGreater(self.p.age, 0)
+
+if __name__  ==  '__main__':
+	unittest.main()
+
+--------------------------------------------------------------------------------------
+
+
+*************************************************************************************************
+Faire des test aussi avec des DocStrings							*
+*************************************************************************************************
+class Panda:
+
+"""
+Calsse qui représente un Panda
+>>> isinstance(Panda("KIKI", 12), Panda) #si l'instance est bien de type Panda
+    TRUE  #si ok retourne true
+"""
+	def __init__(self, anme, age):
+		self.name = name
+		self.age = age
+		self.hunger = 50
+	#redéfinition de la méthode str pour réafficher
+	def __str__(self):
+		return f "[Nom : {self.name} / Age : {self.age} / Faim: {self.hunger}/100]"
+
+	def eat(self, food_points):
+		if self.hunger >= 100:
+			print(f"{self.name} a déja bien mangé (faim: {self.hunget})")
+		else:
+			self.hunger += food_points
+			if self.hunger > 100:
+				print("Quel festin !")
+				self.hunger = 100
+
+			print(f"{self.name} vient de manger (faim: {self.hunger})")
+
+	def talk(self):
+		print("Nioww !")
+
+	def sleep(self):
+		print("ZzzzZzzZzz")
+
+if __name__  ==  '__main__':
+	import doctest
+	doctest.testmod()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

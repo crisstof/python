@@ -67,7 +67,7 @@ print(f"je m'appelle {name}")
 
 *************************************************************************************************
    Listes (on travaille directement sur la liste 						*
-			et non une copie comme sur les chaînes de caractère	[] = liste()		*
+			et non une copie comme sur les chaînes de caractère	[] = liste()	*
 *************************************************************************************************
 les listes comportent tous types de mélange: objets, entier ...
 """
@@ -210,6 +210,30 @@ maFonction(p=154, nom="toto")
 
 
 
+*************************************************************************************************
+   POO transformer une classe en fonctionnement list avec					*
+    les méthodes spéciales et les Itérateurs							*
+												*
+*************************************************************************************************
+class Inventory: #class list
+	def __init__(self, name):
+		self.name = name
+		self.content = []
+	def __iter__(self):
+		return iter(self.content)
+	def __nest__(self):
+		return next(self.content)
+
+	def add(self, item):
+		self.content.append(item)
+
+
+obj = Inventory("MaListe")
+MaListe.add("citron")
+MaListe.add("orange")
+
+for item in MaListe:
+    print(item)
 
 
 

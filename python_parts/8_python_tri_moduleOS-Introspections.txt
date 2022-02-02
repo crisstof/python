@@ -1,0 +1,168 @@
+*************************************************
+  LES SUPERS ALGORITHMES DE TRI			*
+*************************************************
+Après les listes []
+shoppinglist = ["milk", "bread", "baked beans"]
+file d'attente FIFO (first in first out)
+pop <-1<-2<-3<-4<-push
+shoppinglist.append("soup")  	#ajout ["milk", "bread", "baked beans", soup]
+shoppinlist.pop()  		#retire soupe la liste ["milk", "bread", "baked beans"]
+pile LIFO (Last in First OUT)
+la seule différence entre ces deux tient de la valeur de pop c'est pourquoi python
+ne possède pas de valeur particulière pour accéder à la première valeur, il faut 
+utiliser un argument de pop: 
+shopppinglist.pop(0)
+
+Pour en revenir au TRI: Nous avons sort() (mais comment ça marche ?) plusieurs approche:
+LE TRI A BULLES
+boucle avec la liste tout entière en comparant à chaque tout (et en échangeant si nécessaire)
+tous les éléments adjacents. l'élément le plus grand finira sur le côté droit de la comparaison
+de sorte qu'il soit comparer à à la prochaine paire d'éléments et finira à la fin de la liste.
+avec un passage dans la boucle seul l'élément le plus grand sera à la bonne place.
+----------------------------------------------------------------------------
+cards = [8,3,7,4,2]
+swapped = True
+while swapped:  #sort until swapped is False
+  swapped = False  #assume nothing is swapped
+  for i in range(len(cards)-1): #loop entire list
+     cur = cards[i]
+     j=i+1
+     if cards[i]>cards[j]:
+        cards[i]=cards[j] 
+        cards[j]=cur
+        swapped= True #reset swapped to True if anything is swapped
+print cards
+----------------------------------------------------------------------------
+Mais la vitesse compte:mais avec une liste plus longue alors cela devient lent.
+performances O(n²) signifie qu'il analyse chaque élément ajouté.
+Bon python de prend pas cela pour sort(), mais pour des listes petites l'algorithme est
+facile à mettre en place.
+
+LE TRI RAPIDE (qsort())
+Diviser la liste avec l'élément médian. mais une autre façon et de prendre le premier élément
+et faire de la récursivité pour ne pas calculer le point médian.
+list[6,4,3,2,5,8]
+---------------------------------------------------------------------------------
+def divideuOrL, pivot,list)
+"""
+crée une sublist contenant toutes les sous valeurs et le pivot la plus grande.
+"""
+def qsort(list)
+  if list == []:
+     return []
+  else:
+    pivot = list[0]
+    lower = qsort(divide(0, pivot, list))
+    upper = qsort(divide(1, pivot, list))
+    return lower + [pivot] + upper
+---------------------------------------------------------------------------------
+la récursivité est un peut difficile mais il faut un petit exemple pour la voir.
+ou fair un arbre récursif
+       qsort([2,4,1,3])
+       |              |
+  qsort([1])         qsort([4,3])
+   |      |           |          |
+qsort()  qsort()   qsort([3])   qsort()
+                   |       |
+                 qsort() qsort()
+----------------------------------------------------------------------------------
+Il reste maintenant à diviser pour régner
+------------------------------------------
+def divide(uOrL, pivot, list)
+   divided = []
+   if uOrL == 0:
+      for elem in list[1:]:
+        if elem <= pivot:
+           divided.append(elem)
+        else:
+           for elem in list[1:]:
+             if elem <= pivot:
+                divided.append(elem)
+        return divided
+------------------------------------------
+cette fonction indique si elle doit prendre l'élément au-dessus ou en dessous du pivot.
+puis de parcourir la liste en ajoutant tous les éléments qui répondent à la condition dans une nouvelle liste.
+on renvoit la nouvelle liste, aucun élément au dessus ou en dessous du pivot (la liste ne comporte qu'un élément)
+nous renvoyons une liste vide cimme attendu par qsort.
+combien d'iteration sont nécessaire pour une liste donné ?
+quelle puissance appliqué à 2 pour obtenir 8.
+log2(8) = 3 (23=8)
+Parce que combien de fois nous devons doubler notre liste réduite pour revenir à la longueur initiale:
+log2(N) avec N le nombre d'élément dans la liste originale.
+Sachant que à chaque itération de tri rapide va demander O(N) étapes pour remplir sa tâche et qu'il fera log2(N) itérations
+nous voyeons que l'ordre de O(N log2(N)) donc il se développe beaucoup plus lentement plus linéaire comparé à la croissance polynomial
+du tri à bulle.
+Bon l'application n'est pas très robuste nous pouvons améliorer le tri rapide encore.
+
+#Nous avons encore d'autres Tris mais ils seront dans la partie C, C++
+
+
+*************************************************
+  MODULE OS					*
+*************************************************
+Mais comment partager ou récupérer des données dans votre application?
+comme tout est fichier dans linux on sait tous que ls>list.txt #redirige le résultat dans un fichier.
+mais on peut aussi traiter les commandes : ls | sort -r #va transferer le résultat de ls dans l'entrée de sort afin de créer
+une liste alphabétique inversée du contenu d'un dossier.
+Nous avons aussi les variables d'environnement pour que le programme soit plus portable.
+tapez env et nous avons une liste de variables d'environnements de votre session et certaines s'applique à l'environnement
+par défaut HOME. si on veut utiliser cela on doit importer: import os
+ce qui importe des modules qui étendent les simples construction de langage pour ajouter de raccourcies et des solutions.
+comme la bibliothèque std (module).,Mais attention si on veut donner le code à une autre il faut les même dépendances c'est 
+le rôle du gestionnaires de paquets.
+Le module os fournit un moyen d'accès aux fonctionnalités qui dépendent du système d'exploitation:
+f= opent(os.environ["HOME"]+"/list.txt","r")  #os.environ le dossier HOME de votre session
+f.readline()
+
+*************************************************
+  INTROSPECTIONS   Analyser les objets		*
+*************************************************
+Examiner un objet et ce qui permet de faire.
+age = 10
+type(age)  #retourne le type de l'objet
+help(age)  #information d'un int objet
+help("modules") #affiche les modules qui sont installés.
+help("math")  #un manuel d'aide
+print(dir(age)) #
+puis python fic.py => affiche les méthodes spéciales 'abs, round ...
+chaque objet à un identifiant
+Exemple sur un dictionnaire
+class Item:
+	def __init__(self, name, category,description, costValue=1):
+           self.name = name
+           self.category = category
+           self.description = description
+           self.costValue = costValue
+
+it1 = Item("Epee", "Arme")
+print(it1.description)  #égale à
+print(it1.__dict__["description"]) #mais on ne peut modifier avec la syntaxe
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

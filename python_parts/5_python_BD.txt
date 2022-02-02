@@ -51,8 +51,75 @@ try:
  	req = cursor.execute('SELECT * FROM tt_users WHERE user_name = ?", user)
 	for row in req.fetchall():
 	  print(row[1])
-except Exceptin as e:
+except Exception as e:
 	print("[ERREUR]", e)
 	connection.rollback() #revient en arrière si erreur pour ne pas la corrompre
 finally:
 	connection.close()
+----------------------------------------------------------------------------------------------------------
+
+*****************************************
+    MYSQL				*
+*****************************************
+pip install mysql-connector-python
+#on travail avec un curseur
+--------------------------------------------------------------------------------------------------------
+Gerer les erreurs d'écriture d'enregistrement ...
+import mysql.connectore as MC
+
+try:
+	conn = MC.connect(host='localhost', database = 'datatest', user = 'root', password= '')
+	cursor = conn.cursor()
+        #affiche
+ 	req = 'SELECT * FROM maTable'
+	cursor.execute(req)
+
+	#fecthone, fetchall, fetchmin cursor.rowcount  .lastrowid
+	maTableList = cursor.fecthall()
+
+	for info in maTableList 
+              print('Prenom : {}'.format(info[1]))
+
+       #INSERT
+	req = 'INSERT INTO maTable'id, firstname, lastname) VALUES(%s, %s, %s)'
+	infos = (cursor.lastrowid, 'TOM', 'HANKS')
+
+	cursor.execute(req, infos)
+	conn.commit()
+
+
+except MC.Error as err:
+	print(err)
+	
+finally:
+	if(conn.is_connected()):
+           cursor.close()
+           conn.close()
+
+----------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
