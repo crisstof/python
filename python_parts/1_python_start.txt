@@ -1,12 +1,32 @@
-*********************************************************************************
-     Start Python								*
-*********************************************************************************
+*************************************************************************************
+     Start Python												*
+*************************************************************************************
+--------------------python hello_world.py-------------------------------------------
 Encodage en début de fichier par défaut python3:
 #coding:utf-8
 print("hello world \n let's go") #affiche à l'écran
 nom = input("Entrez votre nom:")
 print("votre nom est: ", nom)
+------------------------------------------------------------------------------------
+version
+python --version   #3.10   (option -m le module)
+pip    --version   #22.0.2
+pip install --upgrade pip   #mise à jour de pip
+pip list  #module installé
 
+pour mettre à jour tout les modules pip
+redirigez tout les noms de modules vers un fihcier texte
+pip freeze  > pip_modules.txt
+pip insall -r pip_modules.txt --upgrade
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------
 Fonction lambda: une fonction qui fait toujours la 
 même chose donc pas besoin de créer une fonction:
 prixTTC = lambda prixHT:prixHT + (prixHT * 20/100)
