@@ -1,0 +1,122 @@
+*************************************************************************************
+     Python	Module et Package											*
+*************************************************************************************
+les modules ce sont des bouts de code enfermé dans un fichier ayant un rapport entre elles.
+(le module math contient des fonctions mathématiques)
+import math
+math.sqrt(16)
+help("math.sqrt") #pour en savoir plus sur le module et ses fonctions.
+le module crée un espace de noms dénommé math.
+changer cet espace de nom: import math as mathematiques
+mathematiques.sqrt(25)
+
+form math import fabs #si nous avons besoin que d'une fonction
+et sans préfixe math donc la fonction est chargée dans l'interpréteur
+au même plan que les fonctions existantes comme print.
+Evite plus de saisie mais l'inconvénient s'il existe 2 méthodes avec le même nom
+l'interpréteur conservera que la dernière fonction appelée.
+
+
+Faire un fichier, fichier.py:
+----------------------------
+#!chemin  (/usr/bin/python3.4)
+# -*-coding:utf-8 -*
+ mais le code ferme la fenêtre il faut donc faire:
+import os
+et à la fin du fichier on met le programme en pause:
+os.system("pause")
+
+Faire un test de module dans le module-même!!: mettre tous dans un seul fichier!!
+---------------------------------------------------------------------------------
+Comme une table de multiplication:
+dans un autre fichier on importe la fonction et on l'appelle.
+si on appelle table(8) dans fichier fonction multipli à chaque import il sera exécuté et afficher.
+Séparer les éléments du code qui doivent être exécutés lorsqu'on lance le module 
+directement en tant que programme  ou lorsqu'on cherche à l'importer:
+
+"""module multipli contenant la fonction table"""
+# -*-coding:utf-8 -*
+import os
+
+def table(nb, max=10):
+	"""fonction table"""
+	i=0
+	while i<max:
+		print(i+1, "*", nb, "=", (i+1)*nb)
+		i += 1
+#test de la fonction table
+if __name__ == "__main__":   #***connecsens même chose
+	table(4)
+	os.system("pause")
+
+*********************************************************************
+variable spécial
+#monScript.py
+if __name__ == __main__:
+ print(mon script est exécuté directement)
+else
+ print(mon script est importé par un autre module)
+#monAutreScript.py
+import monScript
+
+__name__
+En lançant le script monScript avec la commande python monScript.py, 
+on obtient le message mon script est exécuté directement. 
+Si par contre on exécute le script monAutreScript, 
+qui importe le fichier monScript.py, le message affiché 
+sera mon script est importé par un autre module.
+
+**********************************************************************
+
+si on double-clic la table de 4 s'affiche mais si on l'importe
+le code de test de n'exécutera pas.
+Puisque la variable __name__ c'est une variable qui existe dès le lancement
+de l'interpréteur. 
+Si elle vaut __main__ cela veut dire que le fichier appelé est le fichier exécuté.
+Autrement dit si __name__ vaut __main__ vous pouvez mettre un code qui sera
+exécuté si le fichier est lancé directement comme un exécutable.
+
+on peut regrouper les modules dans des packages. (il faudra les importer)
+créer un dossier package  (on peut créer des fichier py ou des sous packages)
+
+Le fichier d'initialisation le package __init__.py dans un répertoire destiné à devenir un package.
+on peut mettre du code d'initialisation .
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

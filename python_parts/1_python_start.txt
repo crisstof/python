@@ -23,10 +23,50 @@ pip insall -r pip_modules.txt --upgrade
 
 
 
-
-
-
 ----------------------------------------------------------------------------------
+Structures:
+----------
+(if)
+if a > 5:
+    a=a+1
+elif a == 5:
+     a=a+100
+else:
+    a=a-1;
+
+(while)
+nb = 7
+i = 0
+while i<10:
+   print(i+1, "*", nb, "=", (i+1) * nb)
+   i += 1
+
+(for)
+for element in sequence:  #element variable créée par for prend la valeur de la séquence parcourue
+chaine = "Bonjour"
+for lettre in chaine:
+	if lettre in "AEIOUYaeiouy":
+		print(lettre)
+	else:
+		print("*")
+
+le mot break interrompre la boucle.
+       continu continuer une boucle repartant à la ligne.
+----------------------------------------------------------------------------------
+Fonctions:
+---------
+la signature d'une fonction en python et son nom car on ne précise pas le type en Python.
+def nom_de_la_fonction(param1, param2, paramN):  #def define
+def carre(val):
+	return val * val
+
+Des fonctions limitées à une seule instruction ainsi qu'un def serait 
+plus long et moins pratique, nous avons:
+les fonctions lambda:  lambda arg1, arg2, ...: instruction de retour
+appel_maFonction = lambda x: x * x
+
+
+---------
 Fonction lambda: une fonction qui fait toujours la 
 même chose donc pas besoin de créer une fonction:
 prixTTC = lambda prixHT:prixHT + (prixHT * 20/100)

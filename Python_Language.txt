@@ -1,5 +1,5 @@
-       	*************************
-	* LANGUAGE PYTHON	*
+      *************************
+	* LANGUAGE PYTHON		*
 	*************************
 
 Interpréter un programme python:
