@@ -1,0 +1,57 @@
+***************************************************************************************************************************
+import sys   #parametre et fonction propres a des system {sys.argv}
+--------------------------------------------------------------------
+– argv : stocke les arguments de ligne de commande passés à un script Python.
+– args : un tuple de chaînes qui contient les arguments positionnels passés à une fonction.
+– exitcode : indique le code d'état du programme.
+– executable_path : renvoie le chemin du fichier exécutable Python
+– path : stocke une liste de chaînes qui spécifie le chemin de recherche des modules.
+– platform : renvoie une chaîne décrivant la plate-forme actuelle, telle que « linux » ou « darwin ».
+– stdin : représente le flux d'entrée standard.
+
+
+comprendre sys.path en Python
+sys.path.append('path/to/MyLib') #ajout dans le path
+sys.path.insert(0, libs_path)    #insert à une position donnée
+sys.path.remove('path/to/MyLib') #supprime un chemin
+
+sys.path est une liste de chaînes qui spécifie le chemin de recherche des modules. Il est initialisé à partir de la variable d'environnement PYTHONPATH , plus une valeur par défaut dépendante de l'installation. Comme vous pouvez le voir, sys.path est assez flexible et peut être utilisé de différentes manières.
+
+Un cas d'utilisation courant de sys.path consiste à l'étendre lorsque vous travaillez sur un projet qui utilise une bibliothèque personnalisée. Par exemple, disons que vous travaillez sur un projet qui utilise la bibliothèque MyLib. Vous pouvez ajouter le chemin vers MyLib à sys.path afin que Python puisse le trouver lorsqu'il recherche des modules :
+
+
+POINTS ESPRIT:
+-------------
+1)
+ Python recherchera les modules dans les répertoires répertoriés dans sys.path avant de rechercher les modules intégrés. Cela peut causer des problèmes si vous avez un module portant le même nom qu'un module intégré.
+2)
+sys.path est initialisé au démarrage de Python, donc si vous souhaitez ajouter ou supprimer des chemins de sys.path , vous devrez le faire avant d'importer des modules.
+3)
+ la modification de sys.path peut rendre votre code moins portable. Si vous distribuez votre code, d'autres personnes devront avoir la même structure de répertoires que vous pour que votre code fonctionne.
+
+Exemple:
+supposons que vous ayez un projet avec la structure de répertoires suivante :
+
+monprojet/
+__init__.py
+main.py
+utils/
+__init__.py
+util.py
+
+Si vous souhaitez importer le module util depuis main.py , vous pouvez le faire en ajoutant la ligne suivante à main.py. Vous pouvez maintenant importer util comme n'importe quel autre module : import util
+
+import sys
+sys.path.append('../utils')
+***************************************************************************************************************************
+
+
+
+import json  #api encode/decode json
+import argparse #facilite l'ecriture d'interfaces de ligne de commande conviviale
+import inspect  #pour fournir des informations sur classe, fonction , objet ...
+import os #permet d'interagir avec les fonctionnalités du système d'exploitation et d'accéder aux informations indépendantes du système
+import subprocess #gestion, génère de nouveaux processus remplace des module ou fonctions plus anciens
+import site #configuration hook crochet
+import importlib #permet de charger des modules au fur et à mesure qu'il les découvre ou l'utilisation d'objets personnalisés
+from importlib import reload #recharge un module précédemment importé par le programme

@@ -1,0 +1,198 @@
+arborescence des répertoires
+----------------------------
+
+python/
+       |  utils/ (scripts utilitaires pour êtree réutilisés (prétraitement, nettoyage ...)
+       |         length.py [get_length(name)]  lowar.py [to_lower(name)]     upper.py [to_upper(name)] 
+       |  scripts/
+       |          
+       |  packages/
+       |
+       |  scripts_packages/
+
+
+*****************example1.py (variable et fonction)*****************
+-------------------------------------------------------------------------------------------
+MY_EX1_STRING = 'Bienvenue dans le module Exemple1 !'
+def yolo( x : int): 
+     print("You only Live", x , "times.")
+     
+if __name__ == '__main__' :	#execute que avec python example1.py
+   yolo(1000)			#pour plus de controle 
+				#si l'instrucion sera exécutée ou non lors de l'importation
+
+-------------------------------------------------------------------------------------------
+
+*****************example2.py (variable et fonction)*****************
+-------------------------------------------------------------------------------------------
+import sys
+#import example1 ou from example1 import yolo   #importe que yolo on se débarasse de la notation à point example1.yolo 
+# chaîne importée
+print("La chaîne importée est : ", example1.MY_EX1_STRING)
+#fonction importée
+#example1.yolo(10) ou yolo(100)
+print(sys.path)
+-------------------------------------------------------------------------------------------
+[EXEC1: example2.py]
+$ python example2.py
+You only Live 100 times.
+['E:\\Python\\import_path_init\\script', 'C:\\Python\\DLLs', 'C:\\Python\\lib', 
+'C:\\Python', 'C:\\Python\\lib\\site-packages']
+La sortie sys.path contiendra toujours le répertoire courant à l'index 0! celui ou réside le script en cours d'exécution.
+
+*****************length.py (compte le nombre de caractère)*****************
+-------------------------------------------------------------------------------------------
+#utils/length.py
+def get_length(name: str):
+    return len(name)
+-------------------------------------------------------------------------------------------
+*****************lower.py (minuscule)*****************
+-------------------------------------------------------------------------------------------
+#utils/lower.py
+def to_lower(name: str):
+    return name.lower()
+-------------------------------------------------------------------------------------------
+*****************upper.py (compte le nombre de caractère)*****************
+-------------------------------------------------------------------------------------------
+#utils/upper.py
+def to_upper(name: str):
+    return name.upper()
+-------------------------------------------------------------------------------------------
+*****************example3.1.py*****************
+------------------------------------------------------------------------------------------------------------------
+# scripts/example3.1.py
+import utils.length
+res = utils.length.get_length("Hello")
+print("The length of the string is: ",res)    
+>>
+-> import utils.length ModuleNotFoundError: No module named 'utils' (répertoire example3.1.py > ../utils/length)
+-> The length of the string is:  5				    (répertoire example3.1.py > utils/length)
+-------------------------------------------------------------------------------------------------------------------
+si length.py est dans un autre répertoire depuis le répertoire parent de example3.1.py notre script.
+Il faudra l(ajouter au sys.path ../python/utils
+-------------------------------------------------------------------------------------------
+*****************example3.2.py*****************
+------------------------------------------------------------------------------------------------------------------
+Méthode 1:
+**********
+1 Méthode: sys.path.append
+----------------------------------------------------------
+#example3.2.py     #l'ordre de os et sys est important.
+importer os 
+importer sys
+fpath = os.path.join(os.path.dirname(__file__), 'utils') 
+#os.path.join pour ajouter le utils répertoire à ce chemin
+#os.path.dirname(__file__) renvoie le chemin absolu vers le répertoire de travail courant
+sys.path.append (fpath) #E:\Python\import_path_init\script\utils!!!!!Mais il est dans le parent donc pas bon!!!!!
+import length 
+txt = "Bonjour" 
+res_len = length.get_length(txt) 
+print("La longueur de la chaîne est : ",res_len)
+********************NE FONCTIONNE PAS POUR LE MOMENT MAIS METHODE PLUS BAS****************************************
+Méthode 2:
+**********
+echo $PYHTONPATH
+export PYTHONPATH=$PYTHONPATH:$(pwd)/utils
+
+**************************************************__init__.py******************************************************
+-------------------------------------------------------------------------------------------------------------------
+ET SI NOUS POUVIONS FAIRE import utils AU LIEU D'IMPORTER TOUS LES MODULES QU'IL CONTIENT INDIVIDUELLEMEN.
+C'est ICI que le fichier __init__.py entre en jeu pour transformer le ré^pertoire utils en package (plusieurs modules)
+Il agit comme une étape d'initialisation et c'est le premier fichier à être exécuté lorsque nous importons le package, 
+ici nous effectuons toutes les importations et le code est plus propre dans le script d'appel. 
+-----------------------------------------------------------------------------------------------------------------------
+Python/import_path_init/utils/__init__.py
+# utils/__init__.py
+from utils.lower import to_lower        # . ou ..  (..lower import to_lower) déplacement vers le haut de 2 niveaux.  
+from utils.upper import to_upper
+from utils.length import get_length
+------------------------------------------------------------------------------------------------------------------------
+#example3.3.py
+import utils
+#res = utils.length.get_length("Hello")
+#print("The length of the string is: ",res)
+
+txt = "Hello"
+res_len = utils.get_length(txt)
+print(res_len) #5
+
+res_up = utils.to_upper(txt)
+print(res_up)  #HELLO
+
+res_low = utils.to_lower(txt)
+print(res_low)  #hello
+-----------------------------------------------------------------------------------------------------------------------
+il peut être importer n'importe où et utilisé presque immédiatement.
+on peut même aussi 
+*****************example3.3.py*********************
+-----------------------------------------------------------------------------------------------------------------------
+# scripts/example3.4.py
+import os
+import sys
+PROJECT_ROOT = os.path.abspath(os.path.join(
+                  os.path.dirname(__file__), #nom du répertoire pour le script en cours
+                  os.pardir) #donne le chemin vers le répertoire parent en utilisant la notation par points (..)
+)
+print(PROJECT_ROOT)
+sys.path.append(PROJECT_ROOT) #sys.path.abspath fournira le chemin absolu vers la racine du projet.
+
+import utils
+print(utils.get_length("Hello"))
+print(sys.path)
+--------------------------------------------------------------------------------------------------------------------------
+$ python example3.4.py
+E:\Python\import_path_init
+5
+['E:\\Python\\import_path_init\\script', 'E:\\Python\\import_path_init']
+
+--------------------------------------------------------------------------------------------------------------------------
+Avant d'importer le packages utils nous devons nous assurer que utils est dans le répertoire parent.
+nous devons assurer que la racine du projet est accessible à l'interpréteur Python.
+il serait imprudent de supposer que cela se produira par défaut (nous exécutons le script à partir de scripts/example3.py)
+le sys.path aura ../importation/scripts à l'index 0
+--------------------------------------------------------------------------------------------------------------------------
+Bonus : 
+Nous pouvons même ajouter des modules d'autres répertoires dans notre fichier __init__.py. 
+Par exemple, apportons le yolo()défini dans scripts/example1.py.
+--------------------------------------------------------------------------------------------------------------------------
+# utils/__init__.py
+from utils.lower import to_lower
+from utils.upper import to_upper
+from utils.length import get_length
+from scripts.example1 import yolo
+-------------------------------------
+donc l'appel de la fonction 
+# scripts/example3.4.py
+import os
+import sys
+PROJECT_ROOT = os.path.abspath(os.path.join(
+                  os.path.dirname(__file__), #nom du répertoire pour le script en cours
+                  os.pardir) #donne le chemin vers le répertoire parent en utilisant la notation par points (..)
+)
+
+sys.path.append(PROJECT_ROOT) #sys.path.abspath fournira le chemin absolu vers la racine du projet.
+
+import utils
+print(utils.get_length("Hello"))
+print(utils.to_lower("Hello"))
+print(utils.to_upper("Hello"))
+utils.yolo(2)
+************** OUTPUT *********
+$ python example3.4.py
+5
+hello
+HELLO
+You only Live 2 times.
+-----------------------------------------------------
+Conclusion
+Quel que soit le package/module que vous essayez d'importer à l'aide de import XYZ, 
+assurez-vous que l'interpréteur Python y a accès. 
+Si ce n'est pas le cas, mettez à jour le sys.path ou mieux encore 
+ajoutez le répertoire concerné à la PYTHONPATH variable et évitez d'avoir à le gérer dans vos scripts.
+******************************************************************************************************************************
+IMPORTER AVEC __init__ à vide mais dans le script et le path dans un fichier séparé:
+
+
+
+
+
