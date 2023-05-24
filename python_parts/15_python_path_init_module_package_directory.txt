@@ -9,6 +9,11 @@ python/
        |  packages/
        |
        |  scripts_packages/
+-------------------------
+Problème:
+Nous pouvons donner le chemin d'un script normalement s'il est sur le chemin du script courant.
+Nous pouvons donner exécuter un script d'un autre répertoire (../rep1/rep2):
+mais il faut le déclarer en variable d'environnement
 
 
 *****************example1.py (variable et fonction)*****************
@@ -69,7 +74,7 @@ print("The length of the string is: ",res)
 -> The length of the string is:  5				    (répertoire example3.1.py > utils/length)
 -------------------------------------------------------------------------------------------------------------------
 si length.py est dans un autre répertoire depuis le répertoire parent de example3.1.py notre script.
-Il faudra l(ajouter au sys.path ../python/utils
+Il faudra l'ajouter au sys.path ../python/utils
 -------------------------------------------------------------------------------------------
 *****************example3.2.py*****************
 ------------------------------------------------------------------------------------------------------------------
@@ -96,8 +101,8 @@ export PYTHONPATH=$PYTHONPATH:$(pwd)/utils
 
 **************************************************__init__.py******************************************************
 -------------------------------------------------------------------------------------------------------------------
-ET SI NOUS POUVIONS FAIRE import utils AU LIEU D'IMPORTER TOUS LES MODULES QU'IL CONTIENT INDIVIDUELLEMEN.
-C'est ICI que le fichier __init__.py entre en jeu pour transformer le ré^pertoire utils en package (plusieurs modules)
+ET SI NOUS POUVIONS FAIRE import utils AU LIEU D'IMPORTER TOUS LES MODULES QU'IL CONTIENT INDIVIDUELLEMENT.
+C'est ICI que le fichier __init__.py entre en jeu pour transformer le répertoire utils en package (plusieurs modules)
 Il agit comme une étape d'initialisation et c'est le premier fichier à être exécuté lorsque nous importons le package, 
 ici nous effectuons toutes les importations et le code est plus propre dans le script d'appel. 
 -----------------------------------------------------------------------------------------------------------------------
@@ -124,7 +129,7 @@ print(res_low)  #hello
 -----------------------------------------------------------------------------------------------------------------------
 il peut être importer n'importe où et utilisé presque immédiatement.
 on peut même aussi 
-*****************example3.3.py*********************
+*****************example3.4.py*********************
 -----------------------------------------------------------------------------------------------------------------------
 # scripts/example3.4.py
 import os
@@ -191,6 +196,147 @@ Si ce n'est pas le cas, mettez à jour le sys.path ou mieux encore
 ajoutez le répertoire concerné à la PYTHONPATH variable et évitez d'avoir à le gérer dans vos scripts.
 ******************************************************************************************************************************
 IMPORTER AVEC __init__ à vide mais dans le script et le path dans un fichier séparé:
+
+************************************************************************************************
+arborescence des répertoires
+----------------------------
+
+python/
+       |  utils2/ 
+       |    module_one/frame.py
+       |           module_utils_1/  length.py [decode_payload(name)]  lowar.py [decode_payload(name)]     upper.py [decode_payload(name)] 
+       |
+       |
+       |
+       |  scripts2/example4.py  tools_common.py 
+       |          
+       
+-------------------------
+example4.py
+-----------
+import sys
+import os
+import subprocess
+import importlib
+from importlib import reload
+#path1: ['/media/christophe/OPGC/LoRaWan_Chirpstack_Server_2023/Python/Python/import_path_init/scritpt2', 
+# Import stuff common to all tools
+if '..' not in sys.path:
+    sys.path.insert(0, '..') 
+#path2: ['..', '/media/christophe/OPGC/LoRaWan_Chirpstack_Server_2023/Python/Python/import_path_init/scritpt2',
+
+import tools_common  #possible car tools_common est dans le même répertoire
+#path3: ['/media/christophe/OPGC/LoRaWan_Chirpstack_Server_2023/Python/Python/import_path_init/scritpt2/..', '..', 
+        #'/media/christophe/OPGC/LoRaWan_Chirpstack_Server_2023/Python/Python/import_path_init/scritpt2', 
+# Now import the codecs
+tools_common.update_path_to_get_module('utils2')
+import utils2.module_one.frame.module_utils_1 as fonction_frame
+
+#grace a tools_common on peut choisir le fichier à importer
+# import JSON flattener
+tools_common.update_path_to_get_module('mqttjsonflattener')
+import mqttjsonflattener.mqttjsonflattener as flattener
+
+
+#fonction_frame: 
+#'/media/christophe/OPGC/LoRaWan_Chirpstack_Server_2023/Python/Python/import_path_init/scritpt2/../utils2/module_one/frame.py'
+
+def main():
+    resexample4 = fonction_frame.get_frame_data();
+    print("resultat de example4")
+    print(resexample4)
+    
+if __name__ == "__main__":
+	main()
+    
+os.system("pause")
+-----------------------------------------------------------------------------------------------
+tools_common.py
+---------------
+# -*- coding: utf-8
+from __future__ import print_function
+import sys
+import os.path
+import inspect
+
+def update_path_to_get_module(module_name, required = True):
+    libs_path  = None
+    cmd_folder = os.path.dirname(inspect.getfile(inspect.currentframe()))
+	         #nome_repertoire_en_cour(
+	               #Renvoie le nom du fichier (texte ou binaire) dans lequel un objet a été défini. 
+	               #Cela échouera avec a TypeError si l'objet est un module intégré, une classe ou une fonction.
+	               #inspect.getfile(Renvoie l'objet frame pour le cadre de pile de l'appelant.
+
+    if   os.path.isdir(os.path.join(cmd_folder, '..', module_name)):
+        libs_path =    os.path.join(cmd_folder, '..')
+    elif os.path.isdir(os.path.join(cmd_folder, '..', 'libs', 'python', module_name)):
+        libs_path =    os.path.join(cmd_folder, '..', 'libs', 'python')
+    elif os.path.isdir(os.path.join(cmd_folder, '..', 'libs', module_name)):
+        libs_path =    os.path.join(cmd_folder, '..', 'libs')
+    elif os.path.isdir(os.path.join(cmd_folder, '..', '..', 'libs', 'python', module_name)):
+        libs_path =    os.path.join(cmd_folder, '..', '..', 'libs', 'python')
+    elif os.path.isdir(os.path.join(cmd_folder, '..', '..', 'libs', module_name)):
+        libs_path =    os.path.join(cmd_folder, '..', '..', 'libs')
+    else:
+        print("Failed to findeee path for module '{m}'.".format(m = module_name), file = sys.stderr)
+		
+		
+        if required:
+            sys.exit(1)
+        return False
+        
+    if libs_path not in sys.path:
+        sys.path.insert(0, libs_path)   
+    return True
+
+cmd_folder:media/christophe/OPGC/LoRaWan_Chirpstack_Server_2023/Python/Python/import_path_init/scritpt2
+module_name=utils
+os.path.join(cmd_folder, '..') ajoute .. à la fin les autres c'est libs ...
+sys.path.insert(0, libs_path) :
+[ ' media/christophe/OPGC/LoRaWan_Chirpstack_Server_2023/Python/Python/import_path_init/scritpt2/..
+
+ICI on peut choisir ce qu'on insert dans le path en fonction de notre structure de répertoire
+-----------------------------------------------------------------------------------------------
+frame.py
+---------------
+# -*- coding: utf-8
+import importlib
+import copy
+import sys
+import os.path
+import inspect
+import logging
+
+decoder = dict()
+
+class DataTypeFonction:
+    def __init__(self,type_de_fonction):
+        self._id = type_de_fonction
+        self._mod_name = "utils2.module_one.module_utils_1.{0}".format(type_de_fonction)
+        self._mod       = None
+        self._mod_mtime = None
+        
+    def getter_script(self):
+        return self._mod_name
+                
+#-------------------------------fin de la class---------------------------------------------------------------        
+        
+def get_frame_data():
+    txt = 'bonjour'
+    type_de_fonction = "length"
+    #type_de_fonction =  "lower"
+    #type_de_fonction =  "upper"
+    print(sys.path)
+    import utils2.module_one.module_utils_1.length as name_script
+    res = name_script.decode_payload(txt)
+    return res
+    
+def get_fonction_choix(type_de_fonction):
+  IPO = DataTypeFonction(type_de_fonction)
+  name = IPO.getter_script()
+  return name
+
+
 
 
 
