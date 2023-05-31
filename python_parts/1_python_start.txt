@@ -52,6 +52,47 @@ for lettre in chaine:
 
 le mot break interrompre la boucle.
        continu continuer une boucle repartant à la ligne.
+       
+----------------------------------------------------------------------------------
+Types de fonctions:
+------------------
+int (integer)
+a=15
+
+
+float
+a=14.5
+a=3.25e7
+
+au 9 ième terme python passe à la notation scientifique exposant.
+au 15 ième terme dépassement sans message d'erreur noté inf
+le float manipule des nombres entre 10(-308) et 10(308) avec une précision de 12 chiffres significatifs.
+ecodés sur 8 octets (64 bits) en mémoire machine: une partie 12 chiffres significatifs, et une autre
+à l'ordre de grandeur (exposant de 10)
+
+str (chaîne de caractères)
+a= 'bonjour'
+
+
+bool
+a=True
+a=not(a)
+
+
+list 
+jour = ["lundi", "mardi", "mercredi", 1800, 20.357]
+
+complex
+a = 2+3j
+b = 1 + 1j
+
+binaire
+a=0b10110
+b=0o12 #octal
+c=0x12 #hexa
+
+
+
 ----------------------------------------------------------------------------------
 Fonctions:
 ---------
