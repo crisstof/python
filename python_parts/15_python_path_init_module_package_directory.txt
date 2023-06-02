@@ -335,6 +335,100 @@ def get_fonction_choix(type_de_fonction):
   IPO = DataTypeFonction(type_de_fonction)
   name = IPO.getter_script()
   return name
+================================================================================================================================
+======================================================================RECAP=====================================================
+================================================================================================================================
+
+/repertoire/script/main.py, tools_common.py 
+/repertoire/utils/utils1/length.py, lower.py, upper.py
+
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------
+tools_common.py
+--------------
+# -*- coding: utf-8
+from __future__ import print_function
+import sys
+import os.path
+import inspect
+
+def update_path_to_get_module(module_name, required = True):
+    libs_path  = None
+    cmd_folder = os.path.dirname(inspect.getfile(inspect.currentframe()))
+	         #nome_repertoire_en_cour(
+	           #Renvoie le nom du fichier (texte ou binaire) dans lequel un objet a été défini. 
+	            #Cela échouera avec a TypeError si l'objet est un module intégré, une classe ou une fonction.
+	             #inspect.getfile(Renvoie l'objet frame pour le cadre de pile de l'appelant.
+
+    if   os.path.isdir(os.path.join(cmd_folder, '..', module_name)):
+        libs_path =    os.path.join(cmd_folder, '..')
+    elif os.path.isdir(os.path.join(cmd_folder, '..', 'libs', 'python', module_name)):
+        libs_path =    os.path.join(cmd_folder, '..', 'libs', 'python')
+    elif os.path.isdir(os.path.join(cmd_folder, '..', 'libs', module_name)):
+        libs_path =    os.path.join(cmd_folder, '..', 'libs')
+    elif os.path.isdir(os.path.join(cmd_folder, '..', '..', 'libs', 'python', module_name)):
+        libs_path =    os.path.join(cmd_folder, '..', '..', 'libs', 'python')
+    elif os.path.isdir(os.path.join(cmd_folder, '..', '..', 'libs', module_name)):
+        libs_path =    os.path.join(cmd_folder, '..', '..', 'libs')
+    else:
+        print("Failed to findeee path for module '{m}'.".format(m = module_name), file = sys.stderr)
+		
+		
+        if required:
+            sys.exit(1)
+        return False
+        
+    if libs_path not in sys.path:
+        sys.path.insert(0, libs_path)   
+    return True
+------------------------------------------------------------------------------------------------------------------------
+main.py
+-------
+import sys
+import os
+
+# Import stuff common to all tools
+if '..' not in sys.path:
+    sys.path.insert(0, '..') #ajoute au path les .. en index 0
+import tools_common
+tools_common.update_path_to_get_module('utils') #path:['F:\\works\\phidgets\\test_Phidget\\utilsmain\\..'
+
+import utils.utils1.length as fonctions 	#on importe juste le module length
+							#fonction = \\works\\phidgets\\test_Phidget\\utilsmain\\..\\utils\\utils1\\length.py
+
+txt = "Bonjour"
+res_len = fonctions.get_length(txt)
+print("La longueur de la chaîne est : ",res_len)
+------------------------------------------------------------------------------------------------------------------------
+lenght.py
+---------
+def get_length(name: str):
+    return len(name)
+------------------------------------------------------------------------------------------------------------------------
+un fichier appelé module rep1/puissance.py avec comme fonction carre et cube
+ici puissance est dans le même répertoire principal sinon il faut le trouver dans le path.
+********************************
+from rep1.puissance import carre cube #nous avons carre(a)
+from rep1.puissance import * #importe toutes les fonctions
+import  rep1.puissance       #puissance.carre(a)
+package un dossier qui rassemble des modules
+/package/puissance.py  surface.py ...
+import package1.module1
+package1.module1.fonction1(a)
+********************************
+------------------------------------------------------------------------------------------------------------------------
+****************************************************************************
+Ainsi on ne peut importer tout les modules (fichier python)
+en une seule fois car elle ne permettrait pas une vision claire
+c'est pour ça que même from module import * pour importer toutes
+les fonctions du module est à proscrire et c'est une source d'erreur
+!!!!!!!!!!!!!!!!!!
+si on ne veut pas s'embêter d'importer chaque module dans le package
+dans le programme principale nous pouvons le fait avec un fichier __init__
+****************************************************************************
 
 
 
