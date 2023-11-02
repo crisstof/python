@@ -1,5 +1,5 @@
 *************************************************************************************************
-    Tableau  Copy_Deep   JSON  ...								*
+*    Tableau  Copy_Deep   JSON  base64...							*
 *************************************************************************************************
 délimitation
 () tuples 
@@ -12,8 +12,6 @@ Tuple:sont des séquences assez semblables aux listes,
 ##ça sert à quoi un tuple ?
 faire un tableau de constante.
 faire un retour de fonction avec deux valeurs
-
-
 
 [] listes
 On travaille directement sur la liste et non une copie comme sur les chaînes de caractère
@@ -34,7 +32,6 @@ tableau associatif (clé, valeur)), contient tout type d'objet, pas d'indice.
 dico = {} #vide
 dico = {1:150, "prenom":"christophe", 1:"citron"}
 var=dico[clé]
-
 Dictionnaire:sont des objets pouvant en contenir d'autres à l'instart des listes.
 -------------ils associent chaque objet contenu à une clé (chaine de caractères) comme un carnet d'adresse
              on accède à chaque contact en précisant son nom.
@@ -189,26 +186,136 @@ for k,v in dico.items():
    json.dumps(PythonDict)#Json in string format '{"name":"criss",...}"
    json.dumps(obj, *, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=None, default=None, sort_keys=False, **kw)
 
+-------------------------------------------------------------------------------------------------
+  	print("-----JSON encode tout objet Python en String au format JSON -----")
+   	json_donnee1 = "['foo', {'bar': ('baz', None, 1.0, 2)}]"
+  	 print(json.dumps(json_donnee1)) #"['foo', {'bar': ('baz', None, 1.0, 2)}]"
+  	 print(json.dumps('\u1234'))     #"\u1234"
+  	 print("-----Encodage compact-----")
+  	 json_donnee2 = json.dumps([1, 2, 3, {'4': 5, '6': 7}], separators=(',', ':')) 
+   	print(json_donnee2)#[1, 2, 3, {"4": 5, "6": 7}]
+  	 print("-----plus lisible-----")
+  	 print(json.dumps({'4': 5, '6': 7}, sort_keys=True, indent=4))
+  	 """{
+  	  "4": 5,
+   	 "6": 7
+  	 }"""
+	
+	print("------JSON decode loads--")
+  	 # some JSON:
+  	 x =  '{ "name":"John", "age":30, "city":"New York"}'
+  	 # parse x:
+  	 y = json.loads(x)
+   	# the result is a Python dictionary:
+	print(y)	#{'name': 'John', 'age': 30, 'city': 'New York'}
+   	print(y["age"]) #30
+   
+   	# a Python object (dict):
+   	z = {
+   	"name": "John",
+   	"age": 35,
+   	"city": "New York"
+   	}
+   	y = json.dumps(z)
+  	print(y)   #en string au format json (dumps)
+		   #{"name": "John", "age": 35, "city": "New York"}
 
 
+	print("------JSON dump utilisée pour  écrire un objet sérialisé--")
+	#JSON AVEC CREATION DE FICHIER (dans la plupart des cas) 
+developer = {
+      "name": "jane doe",
+      "salary": 9000,
+      "email": "JaneDoe@pynative.com"
+   }
+	print("Started writing JSON data into a file")
+   	 with open("developer.json", "w") as write_file:
+      		json.dump(developer, write_file) 
+	#dans le fichier developer.json nous avons : {"name": "jane doe", "salary": 9000, "email": "JaneDoe@pynative.com"}
 
 
+developer = {
+    "name": "jane doe",
+    "salary": 9000,
+    "skills": ["Raspberry pi", "Machine Learning", "Web Development"],
+    "email": "JaneDoe@pynative.com"
+   }  
+	print("Done writing pretty printed JSON data into a file")
+	with open("developerPrettyPrint.json", "w") as write_file:
+      		json.dump(developer, write_file, indent=4, separators=(", ", ": "), sort_keys=True)
+   
+#dans le fichier developperPrettyPrint.json
+{
+    "email": "JaneDoe@pynative.com", 
+    "name": "jane doe", 
+    "salary": 9000, 
+    "skills": [
+        "Raspberry pi", 
+        "Machine Learning", 
+        "Web Development"
+    ]
+}
+	print("Started writing compact JSON data into a file")
+   	with open("developerDetailCompact.json", "w") as write_file:
+      		json.dump(developer_dict, write_file, separators=(',', ':'))
+  	#dans le fichier developperFetailCompact.json
+	{"name":"jane doe","salary":9000,"skills":["Raspberry pi","Machine Learning","Web 	Development"],"companies":["Google","Facebook","IBM"],"email":"JaneDoe@pynative.com"}
+	
+	fil={'name': 'File creating using json', 'address':'within this path', "Success":"Yes"}
+   	f=json.dumps(fil)
+   	with open("write.json","w") as F:
+      		F.write(f)
+	#dans le fichier write
+	{"name": "File creating using json", "address": "within this path", "Success": "Yes"}
 
 
+-------------------------------------------------------------------------------------------------
+*************************************************************************************************
+    			Base64   								*
+*************************************************************************************************
+
+ payload     = '{"applicationID":"7","devEUI":"434e535305507403","rxInfo":[{"gatewayID":"00800000a0001ad3","name":"Gateway","rssi":-110,"loRaSNR":6.5,"location":{"latitude":0,"longitude":0,"altitude":0}}],"txInfo":{"frequency":868100000,"dr":5},"adr":false,"fCnt":0,"fPort":2,"data":"wYIAVZ25JCQAf1XbGRUDBVNIVDM1ARUGAzkwMIcAVZ25JCQAf1XbFQEVQ+l6ZWF1eC1JcnN0ZWEtUHJvdG8zFQMKQ29ubmVjU2VuUxUCHkNOU1MtTkRTVEVQQVQtMjYwMDRDMDAwOFBGTk00NRUEFDEuMy4wLWRldiAocjZkY2FlMmUpFQUHQ+l6ZWF1eAIVBwU4NjQwMBUIBzg2NDAwMDAKFQEKTHVtaW5vc2l0eRUDB09QVDMwMDEBFQYDOTAwEhUBC0FpclByZXNzdXJlFQMFTFBTMjUBFQYDOTAwGA=="}'
+
+payloadEncode = payload.encode() #b'...'chaine binaire serie d'octet encode en utf8 
+payloadDecode = payloadEncode.decode('utf-8')
+jsonpayload   = json.loads(payloadDecode)#charge en json ' (au lieu de ") #{'applicationID':'7', ...
+print(jsonpayload['data']) 
+#nous avons la data directement
+wYIAVZ25JCQAf1XbGRUDBVNIVDM1ARUGAzkwMIcAVZ25JCQAf1XbFQEVQ+l6ZWF1eC1JcnN0ZWEtUHJvdG8zFQMKQ29ubmVjU2VuUxUCHkNOU1MtTkRTVEVQQVQtMjYwMDRDMDAwOFBGTk00NRUEFDEuMy4wLWRldiAocjZkY2FlMmUpFQUHQ+l6ZWF1eAIVBwU4NjQwMBUIBzg2NDAwMDAKFQEKTHVtaW5vc2l0eRUDB09QVDMwMDEBFQYDOTAwEhUBC0FpclByZXNzdXJlFQMFTFBTMjUBFQYDOTAwGA==
+
+##Juste pour compréhension mais c'est plutôt dans le process##
+#Les donnés sont en base 64 on les décodes
+dataPayload= base64.b64decode(jsonpayload['data'])
+b'\xc1\x82\x00U\x9d\xb9$$\x00\x7fU\xdb\x19\x15\x03\x05SHT35\x01\x15\x06\x03900\x87\x00U\x9d\xb9$$\x00\x7fU\xdb\x15\x01\x15C\xe9zeaux-Irstea-Proto3\x15\x03\nConnecSenS\x15\x02\x1eCNSS-NDSTEPAT-26004C0008PFNM45\x15\x04\x141.3.0-dev (r6dcae2e)\x15\x05\x07C\xe9zeaux\x02\x15\x07\x0586400\x15\x08\x078640000\n\x15\x01\nLuminosity\x15\x03\x07OPT3001\x01\x15\x06\x03900\x12\x15\x01\x0bAirPressure\x15\x03\x05LPS25\x01\x15\x06\x03900\x18'
+
+Moyen pour récupérer la data
+-----------------------------
+print("-----payload decode loads-----")
+   payloadjsondata = json.loads(payload)******************************************************************************************
+   print(json.loads(payload))
+{'applicationID': '7', 'txInfo': {'frequency': 868100000, 'dr': 5}, 'adr': False, 'fCnt': 0, 'fPort': 2, 'data': 'wYIAVZ25JCQAf1XbGRUDBVNIVDM1ARUGAzkwMIcAVZ25JCQAf1XbFQEVQ+l6ZWF1eC1JcnN0ZWEtUHJvdG8zFQMKQ29ubmVjU2VuUxUCHkNOU1MtTkRTVEVQQVQtMjYwMDRDMDAwOFBGTk00NRUEFDEuMy4wLWRldiAocjZkY2FlMmUpFQUHQ+l6ZWF1eAIVBwU4NjQwMBUIBzg2NDAwMDAKFQEKTHVtaW5vc2l0eRUDB09QVDMwMDEBFQYDOTAwEhUBC0FpclByZXNzdXJlFQMFTFBTMjUBFQYDOTAwGA=='}
+
+   print("-------data direct de loadx")
+   print(payloadjsondata['data'])
+wYIAVZ25JCQAf1XbGRUDBVNIVDM1ARUGAzkwMIcAVZ25JCQAf1XbFQEVQ+l6ZWF1eC1JcnN0ZWEtUHJvdG8zFQMKQ29ubmVjU2VuUxUCHkNOU1MtTkRTVEVQQVQtMjYwMDRDMDAwOFBGTk00NRUEFDEuMy4wLWRldiAocjZkY2FlMmUpFQUHQ+l6ZWF1eAIVBwU4NjQwMBUIBzg2NDAwMDAKFQEKTHVtaW5vc2l0eRUDB09QVDMwMDEBFQYDOTAwEhUBC0FpclByZXNzdXJlFQMFTFBTMjUBFQYDOTAwGA==
 
 
+Voici le début du décodage de la data sans les scripts:
+------------------------------------------------------
+data1 = payloadjsondata['data']
+ data3= base64.b64decode(data1) #b'\xc1\x82\x00U\x9d\xb9$$\x00\x7fU\xdb\ ...
+ print(data3.hex())
+c18200559db92424007f55db191503055348543335011506033930308700559db92424007f55db15011543e97a656175782d4972737465612d50726f746f3315030a436f6e6e656353656e5315021e434e53532d4e445354455041542d3236303034433030303850464e4d3435150414312e332e302d646576202872366463616532652915050743e97a65617578021507053836343030150807383634303030300a15010a4c756d696e6f736974791503074f505433303031011506033930301215010b41697250726573737572651503054c505332350115060339303018
 
 
-
-
-
-
-
-
-
-
-
-
+on peut faire l'inverse histoire de comprendre
+---------------------------------------------
+data2 = "C18300A7D01E2C0F9C01248C99FFED0A23FE4BBEA60F0010"
+ print(bytes.fromhex(data2))
+b'\xc1\x83\x00\xa7\xd0\x1e,\x0f\x9c\x01$\x8c\x99\xff\xed\n#\xfeK\xbe\xa6\x0f\x00\x10'
+ dd = bytes.fromhex(data2)
+print(base64.b64encode(dd))
+b'wYMAp9AeLA+cASSMmf/tCiP+S76mDwAQ'
 
 
 
