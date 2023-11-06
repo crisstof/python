@@ -1,0 +1,333 @@
+*************************************************************************************************
+*    Tableau  Copy_Deep   JSON  base64...							*
+*************************************************************************************************
+délimitation
+() tuples 
+immuable on ne peut pas ajouter ou supprimer les valeurs contient tout type d'objet ne peut être trié.
+tuple = () #tuple vide ou avec une seule valeur (20,) ou 20,
+constante = (5,20,60)	
+Tuple:sont des séquences assez semblables aux listes,
+------sauf qu'on ne peut modifier un tuple après qu'il ait été créé.
+      les TUPLES sont des listes immuables mais avec des parenthèses
+##ça sert à quoi un tuple ?
+faire un tableau de constante.
+faire un retour de fonction avec deux valeurs
+
+[] listes
+On travaille directement sur la liste et non une copie comme sur les chaînes de caractère
+inventaire = list()  #on met la liste dans une variable une bonne pratique
+inventaire = [] #syntaxe rapide et liste vide plus.
+inventaire = [1,2,3,"camion"]
+Liste:sont des séquences, ce sont des objets capables de contenir d'autres objets
+----- de n'importe quel type. ce sont donc des séquences d'objet 
+      Une liste peut contenir des objets issus de différentes classes sans inconvénient. 
+      De plus, une liste peut contenir des doublons
+#liste2 = liste1 
+#la liste1 et 2 sont modifiées 
+#liste2 est une référence à la liste1 donc pas de copie
+#on travaille toujours sur la même liste 
+
+{} dictionnaires
+tableau associatif (clé, valeur)), contient tout type d'objet, pas d'indice.
+dico = {} #vide
+dico = {1:150, "prenom":"christophe", 1:"citron"}
+var=dico[clé]
+Dictionnaire:sont des objets pouvant en contenir d'autres à l'instart des listes.
+-------------ils associent chaque objet contenu à une clé (chaine de caractères) comme un carnet d'adresse
+             on accède à chaque contact en précisant son nom.
+
+*************************************************************************************************
+    			Copy_Deep   								*
+*************************************************************************************************
+import copy
+
+Pour faire ces copies, nous utilisons le module de copie. 
+Le copy () renvoie une copie superficielle de la liste et 
+deepcopy () renvoie une copie complète de la liste. 
+Comme vous pouvez le voir, les deux ont la même valeur 
+mais ont des identifiants différents.
+
+Dans le cas d'une copie complète, une copie de l'objet est copiée 
+dans un autre  nouvel objet et donc on insérer des copies des éléments 
+trouvés dans l'original de manière récursive.
+Cela signifie que toute modification apportée à une copie de l'objet ne se reflète pas dans l'objet d'origine.
+
+
+# initializing list 1
+li1 = [1, 2, [3, 5], 4]
+
+li2 = copy.copy(li1)
+print("li2 ID: ", id(li2), "Value: ", li2) #ID li2 :   2521878674624 Valeur :   [1, 2, [3, 5], 4]
+# using deepcopy for deepcopy
+li3 = copy.deepcopy(li1)
+print("li3 ID: ", id(li3), "Value: ", li3) #ID li3 :   2521878676160 Valeur :   [1, 2, [3, 5], 4]
+
+# original elements of list
+print ("The original elements")
+for i in range(0,len(li1)):
+   print(li1[i],end=" ")#1 2 [3, 5] 4
+print("\r")
+
+ # adding and element to new list
+ li2[2][0] = 7
+ li3[2][0] = 8
+
+ print ("The new list of elements after  copying li2")
+ for i in range(0,len( li2)):
+    print(li2[i],end=" ")#1 2 [7, 5] 4
+ print("\r")
+
+ print ("The new list of elements after deep copying li3")
+ for i in range(0,len( li3)):
+    print(li3[i],end=" ")#1 2 [8, 5] 4
+ print("\r")
+
+
+# original elements of list
+print ("The original elements")
+for i in range(0,len(li1)):
+   print(li1[i],end=" ")#1 2 [7, 5] 4
+print("\r")
+#----------------------------------------------------------------------------------------------------
+#dictionnaire 
+phonebook = {'Alice': '0633432380', 'Bob': '0663621029', 'Alex': '0714381809'}
+for name in phonebook:
+    print(name, ':' , phonebook[name])#itère sur les clées Alice, Bob ...
+                                      #itère [] accès à la valeur associée
+                                      #Alice : 0633432380 etc
+ phonebook.values() #affiche que les valeurs c'est une vue n'a pas de mémoire
+ phonebook.keys()  #elles sont toutes les deux itérable for phone in phonebook.values():
+ #() tuple (immuable)  []liste (mutable)
+    
+inventaire1 = [1,2,3,"camion"]
+inventaire2 = range(20) #une liste avec des valeurs croissantes
+i=0
+while i < len(inventaire1):
+    print(inventaire1[i]) #1  2  3 camion
+    i+=1
+print("\r")
+#même chose plus rapide#
+for valeur in inventaire2:
+    print(valeur)  #0 à 19
+print("\r")
+ 
+inventaire3 = ["citron", "eau", "avocat", "pomme", "orange"]
+for objet in inventaire3:
+    print(objet) #citron etc
+
+for objet in enumerate(inventaire3):
+    print(objet) #affiche les tuples #(0, 'citron') etc
+
+for indice_objet, valeur_objet in enumerate(inventaire3):
+    print("Element d'indice {} -> {}".format(indice_objet, valeur_objet)) #Element d'indice 0 -> citron etc
+
+liste2 = copy.deepcopy(inventaire3)
+inventaire3.clear() #Efface l'inventaire3
+       
+liste2.append("avocat") #ajoute à la fin avocat
+
+
+dico = {} #vide
+dico = {1:150, "prenom":"christophe", 1:"citron"}
+#ajouter ou modifier si la clé est la même
+dico["chat"] = "c'est un felin"
+for k,v in dico.items():
+    print("Clé: {} -> Valeur: {}".format(k, v))
+    
+#suppression et renvoie la valeur
+valSup = dico.pop("chat") #retourne la valeur supprimée
+print("pop chat: ", valSup)
+#del dico["chat"]
+#existance d'une clé
+if "chat" in dico:
+   #parcourir sur clé ou valeur
+   for key in dico:
+    print(key)
+
+for k,v in dico.items():
+   print("Clé: {} -> Valeur: {}".format(k, v))
+   #copier
+   dico2 = dico #dico2 est une référence donc pas de copie
+   dico2 = dico.copy()
+
+
+*************************************************************************************************
+    				JSON   								*
+*************************************************************************************************
+********JSON**********
+   dumps Encode json #si c'est du json
+   x = {
+      "name": "John",
+      "age": 30,
+      "married": True,
+      "divorced": False,
+      "children": ("Ann","Billy"),
+      "pets": None,
+      "cars": [
+         {"model": "BMW 230", "mpg": 27.5},
+         {"model": "Ford Edge", "mpg": 24.1}
+      ]
+   }  
+   json.dumps(x)
+
+   load decode json  # x the JSON object must be str, bytes or bytearray
+   x =  '{ "name":"John", "age":30, "city":"New York"}'
+   json.loads(x)
+
+   La  json.dump() méthode (sans " s " dans " dump ") utilisée pour  écrire un objet sérialisé 
+   Python sous forme de données au format JSON dans un fichier .
+   Il est utilisé pour écrire un objet Python dans un fichier sous forme de données au format JSON.
+   json.dump(file, PythonDict) #Json encoded dict in file
+   json.dump(obj, fp, *, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=None, default=None, sort_keys=False, **kw)
+
+
+   La  json.dumps() méthode  encode tout objet Python en String au format JSON .
+   Utilisation : Il est utilisé pour écrire un objet Python dans une chaîne JSON.
+   json.dumps(PythonDict)#Json in string format '{"name":"criss",...}"
+   json.dumps(obj, *, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=None, default=None, sort_keys=False, **kw)
+
+-------------------------------------------------------------------------------------------------
+  	print("-----JSON encode tout objet Python en String au format JSON -----")
+   	json_donnee1 = "['foo', {'bar': ('baz', None, 1.0, 2)}]"
+  	 print(json.dumps(json_donnee1)) #"['foo', {'bar': ('baz', None, 1.0, 2)}]"
+  	 print(json.dumps('\u1234'))     #"\u1234"
+  	 print("-----Encodage compact-----")
+  	 json_donnee2 = json.dumps([1, 2, 3, {'4': 5, '6': 7}], separators=(',', ':')) 
+   	print(json_donnee2)#[1, 2, 3, {"4": 5, "6": 7}]
+  	 print("-----plus lisible-----")
+  	 print(json.dumps({'4': 5, '6': 7}, sort_keys=True, indent=4))
+  	 """{
+  	  "4": 5,
+   	 "6": 7
+  	 }"""
+	
+	print("------JSON decode loads--")
+  	 # some JSON:
+  	 x =  '{ "name":"John", "age":30, "city":"New York"}'
+  	 # parse x:
+  	 y = json.loads(x)
+   	# the result is a Python dictionary:
+	print(y)	#{'name': 'John', 'age': 30, 'city': 'New York'}
+   	print(y["age"]) #30
+   
+   	# a Python object (dict):
+   	z = {
+   	"name": "John",
+   	"age": 35,
+   	"city": "New York"
+   	}
+   	y = json.dumps(z)
+  	print(y)   #en string au format json (dumps)
+		   #{"name": "John", "age": 35, "city": "New York"}
+
+
+	print("------JSON dump utilisée pour  écrire un objet sérialisé--")
+	#JSON AVEC CREATION DE FICHIER (dans la plupart des cas) 
+developer = {
+      "name": "jane doe",
+      "salary": 9000,
+      "email": "JaneDoe@pynative.com"
+   }
+	print("Started writing JSON data into a file")
+   	 with open("developer.json", "w") as write_file:
+      		json.dump(developer, write_file) 
+	#dans le fichier developer.json nous avons : {"name": "jane doe", "salary": 9000, "email": "JaneDoe@pynative.com"}
+
+
+developer = {
+    "name": "jane doe",
+    "salary": 9000,
+    "skills": ["Raspberry pi", "Machine Learning", "Web Development"],
+    "email": "JaneDoe@pynative.com"
+   }  
+	print("Done writing pretty printed JSON data into a file")
+	with open("developerPrettyPrint.json", "w") as write_file:
+      		json.dump(developer, write_file, indent=4, separators=(", ", ": "), sort_keys=True)
+   
+#dans le fichier developperPrettyPrint.json
+{
+    "email": "JaneDoe@pynative.com", 
+    "name": "jane doe", 
+    "salary": 9000, 
+    "skills": [
+        "Raspberry pi", 
+        "Machine Learning", 
+        "Web Development"
+    ]
+}
+	print("Started writing compact JSON data into a file")
+   	with open("developerDetailCompact.json", "w") as write_file:
+      		json.dump(developer_dict, write_file, separators=(',', ':'))
+  	#dans le fichier developperFetailCompact.json
+	{"name":"jane doe","salary":9000,"skills":["Raspberry pi","Machine Learning","Web 	Development"],"companies":["Google","Facebook","IBM"],"email":"JaneDoe@pynative.com"}
+	
+	fil={'name': 'File creating using json', 'address':'within this path', "Success":"Yes"}
+   	f=json.dumps(fil)
+   	with open("write.json","w") as F:
+      		F.write(f)
+	#dans le fichier write
+	{"name": "File creating using json", "address": "within this path", "Success": "Yes"}
+
+
+-------------------------------------------------------------------------------------------------
+*************************************************************************************************
+    			Base64   								*
+*************************************************************************************************
+
+ payload     = '{"applicationID":"7","devEUI":"434e535305507403","rxInfo":[{"gatewayID":"00800000a0001ad3","name":"Gateway","rssi":-110,"loRaSNR":6.5,"location":{"latitude":0,"longitude":0,"altitude":0}}],"txInfo":{"frequency":868100000,"dr":5},"adr":false,"fCnt":0,"fPort":2,"data":"wYIAVZ25JCQAf1XbGRUDBVNIVDM1ARUGAzkwMIcAVZ25JCQAf1XbFQEVQ+l6ZWF1eC1JcnN0ZWEtUHJvdG8zFQMKQ29ubmVjU2VuUxUCHkNOU1MtTkRTVEVQQVQtMjYwMDRDMDAwOFBGTk00NRUEFDEuMy4wLWRldiAocjZkY2FlMmUpFQUHQ+l6ZWF1eAIVBwU4NjQwMBUIBzg2NDAwMDAKFQEKTHVtaW5vc2l0eRUDB09QVDMwMDEBFQYDOTAwEhUBC0FpclByZXNzdXJlFQMFTFBTMjUBFQYDOTAwGA=="}'
+
+payloadEncode = payload.encode() #b'...'chaine binaire serie d'octet encode en utf8 
+payloadDecode = payloadEncode.decode('utf-8')
+jsonpayload   = json.loads(payloadDecode)#charge en json ' (au lieu de ") #{'applicationID':'7', ...
+print(jsonpayload['data']) 
+#nous avons la data directement
+wYIAVZ25JCQAf1XbGRUDBVNIVDM1ARUGAzkwMIcAVZ25JCQAf1XbFQEVQ+l6ZWF1eC1JcnN0ZWEtUHJvdG8zFQMKQ29ubmVjU2VuUxUCHkNOU1MtTkRTVEVQQVQtMjYwMDRDMDAwOFBGTk00NRUEFDEuMy4wLWRldiAocjZkY2FlMmUpFQUHQ+l6ZWF1eAIVBwU4NjQwMBUIBzg2NDAwMDAKFQEKTHVtaW5vc2l0eRUDB09QVDMwMDEBFQYDOTAwEhUBC0FpclByZXNzdXJlFQMFTFBTMjUBFQYDOTAwGA==
+
+##Juste pour compréhension mais c'est plutôt dans le process##
+#Les donnés sont en base 64 on les décodes
+dataPayload= base64.b64decode(jsonpayload['data'])
+b'\xc1\x82\x00U\x9d\xb9$$\x00\x7fU\xdb\x19\x15\x03\x05SHT35\x01\x15\x06\x03900\x87\x00U\x9d\xb9$$\x00\x7fU\xdb\x15\x01\x15C\xe9zeaux-Irstea-Proto3\x15\x03\nConnecSenS\x15\x02\x1eCNSS-NDSTEPAT-26004C0008PFNM45\x15\x04\x141.3.0-dev (r6dcae2e)\x15\x05\x07C\xe9zeaux\x02\x15\x07\x0586400\x15\x08\x078640000\n\x15\x01\nLuminosity\x15\x03\x07OPT3001\x01\x15\x06\x03900\x12\x15\x01\x0bAirPressure\x15\x03\x05LPS25\x01\x15\x06\x03900\x18'
+
+Moyen pour récupérer la data
+-----------------------------
+print("-----payload decode loads-----")
+   payloadjsondata = json.loads(payload)******************************************************************************************
+   print(json.loads(payload))
+{'applicationID': '7', 'txInfo': {'frequency': 868100000, 'dr': 5}, 'adr': False, 'fCnt': 0, 'fPort': 2, 'data': 'wYIAVZ25JCQAf1XbGRUDBVNIVDM1ARUGAzkwMIcAVZ25JCQAf1XbFQEVQ+l6ZWF1eC1JcnN0ZWEtUHJvdG8zFQMKQ29ubmVjU2VuUxUCHkNOU1MtTkRTVEVQQVQtMjYwMDRDMDAwOFBGTk00NRUEFDEuMy4wLWRldiAocjZkY2FlMmUpFQUHQ+l6ZWF1eAIVBwU4NjQwMBUIBzg2NDAwMDAKFQEKTHVtaW5vc2l0eRUDB09QVDMwMDEBFQYDOTAwEhUBC0FpclByZXNzdXJlFQMFTFBTMjUBFQYDOTAwGA=='}
+
+   print("-------data direct de loadx")
+   print(payloadjsondata['data'])
+wYIAVZ25JCQAf1XbGRUDBVNIVDM1ARUGAzkwMIcAVZ25JCQAf1XbFQEVQ+l6ZWF1eC1JcnN0ZWEtUHJvdG8zFQMKQ29ubmVjU2VuUxUCHkNOU1MtTkRTVEVQQVQtMjYwMDRDMDAwOFBGTk00NRUEFDEuMy4wLWRldiAocjZkY2FlMmUpFQUHQ+l6ZWF1eAIVBwU4NjQwMBUIBzg2NDAwMDAKFQEKTHVtaW5vc2l0eRUDB09QVDMwMDEBFQYDOTAwEhUBC0FpclByZXNzdXJlFQMFTFBTMjUBFQYDOTAwGA==
+
+
+Voici le début du décodage de la data sans les scripts:
+------------------------------------------------------
+data1 = payloadjsondata['data']
+ data3= base64.b64decode(data1) #b'\xc1\x82\x00U\x9d\xb9$$\x00\x7fU\xdb\ ...
+ print(data3.hex())
+c18200559db92424007f55db191503055348543335011506033930308700559db92424007f55db15011543e97a656175782d4972737465612d50726f746f3315030a436f6e6e656353656e5315021e434e53532d4e445354455041542d3236303034433030303850464e4d3435150414312e332e302d646576202872366463616532652915050743e97a65617578021507053836343030150807383634303030300a15010a4c756d696e6f736974791503074f505433303031011506033930301215010b41697250726573737572651503054c505332350115060339303018
+
+
+on peut faire l'inverse histoire de comprendre
+---------------------------------------------
+data2 = "C18300A7D01E2C0F9C01248C99FFED0A23FE4BBEA60F0010"
+ print(bytes.fromhex(data2))
+b'\xc1\x83\x00\xa7\xd0\x1e,\x0f\x9c\x01$\x8c\x99\xff\xed\n#\xfeK\xbe\xa6\x0f\x00\x10'
+ dd = bytes.fromhex(data2)
+print(base64.b64encode(dd))
+b'wYMAp9AeLA+cASSMmf/tCiP+S76mDwAQ'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,6 +1,23 @@
 *************************************************************************************************
-    chaine  Python										*
+    chaine  Python													*
 *************************************************************************************************
+délimitation
+() tuples, [] listes, {} dictionnaires
+Liste: sont des séquences, ce sont des objets capables de contenir d'autres objets
+de n'importe quel type. ce sont donc des séquences d'objet 
+Une liste peut contenir des objets issus de différentes classes sans inconvénient. 
+De plus, une liste peut contenir des doublons 
+(c'est-à-dire qu'elle peut contenir plusieurs fois le même objet).
+
+Tuple: sont des séquences assez semblables aux listes,
+sauf qu'on ne peut modifier un tuple après qu'il ait été créé.
+les TUPLES sont des listes immuables mais avec des parenthèses
+
+Dictionnaire:sont des objets pouvant en contenir d'autres à l'instart des listes.
+ils associent chaque objet contenu à une clé (chaine de caractères) comme un carnet d'adresse
+on accède à chaque contact en précisant son nom.
+------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
 """
 str.upper() [minuscule], 
 str.lower() [majuscule], 

@@ -1,0 +1,438 @@
+arborescence des répertoires
+----------------------------
+
+python/
+       |  utils/ (scripts utilitaires pour êtree réutilisés (prétraitement, nettoyage ...)
+       |         length.py [get_length(name)]  lowar.py [to_lower(name)]     upper.py [to_upper(name)] 
+       |  scripts/
+       |          
+       |  packages/
+       |
+       |  scripts_packages/
+-------------------------
+Problème:
+Nous pouvons donner le chemin d'un script normalement s'il est sur le chemin du script courant.
+Nous pouvons donner exécuter un script d'un autre répertoire (../rep1/rep2):
+mais il faut le déclarer en variable d'environnement
+
+
+*****************example1.py (variable et fonction)*****************
+-------------------------------------------------------------------------------------------
+MY_EX1_STRING = 'Bienvenue dans le module Exemple1 !'
+def yolo( x : int): 
+     print("You only Live", x , "times.")
+     
+if __name__ == '__main__' :	#execute que avec python example1.py
+   yolo(1000)			#pour plus de controle 
+				#si l'instrucion sera exécutée ou non lors de l'importation
+
+-------------------------------------------------------------------------------------------
+
+*****************example2.py (variable et fonction)*****************
+-------------------------------------------------------------------------------------------
+import sys
+#import example1 ou from example1 import yolo   #importe que yolo on se débarasse de la notation à point example1.yolo 
+# chaîne importée
+print("La chaîne importée est : ", example1.MY_EX1_STRING)
+#fonction importée
+#example1.yolo(10) ou yolo(100)
+print(sys.path)
+-------------------------------------------------------------------------------------------
+[EXEC1: example2.py]
+$ python example2.py
+You only Live 100 times.
+['E:\\Python\\import_path_init\\script', 'C:\\Python\\DLLs', 'C:\\Python\\lib', 
+'C:\\Python', 'C:\\Python\\lib\\site-packages']
+La sortie sys.path contiendra toujours le répertoire courant à l'index 0! celui ou réside le script en cours d'exécution.
+
+*****************length.py (compte le nombre de caractère)*****************
+-------------------------------------------------------------------------------------------
+#utils/length.py
+def get_length(name: str):
+    return len(name)
+-------------------------------------------------------------------------------------------
+*****************lower.py (minuscule)*****************
+-------------------------------------------------------------------------------------------
+#utils/lower.py
+def to_lower(name: str):
+    return name.lower()
+-------------------------------------------------------------------------------------------
+*****************upper.py (compte le nombre de caractère)*****************
+-------------------------------------------------------------------------------------------
+#utils/upper.py
+def to_upper(name: str):
+    return name.upper()
+-------------------------------------------------------------------------------------------
+*****************example3.1.py*****************
+------------------------------------------------------------------------------------------------------------------
+# scripts/example3.1.py
+import utils.length
+res = utils.length.get_length("Hello")
+print("The length of the string is: ",res)    
+>>
+-> import utils.length ModuleNotFoundError: No module named 'utils' (répertoire example3.1.py > ../utils/length)
+-> The length of the string is:  5				    (répertoire example3.1.py > utils/length)
+-------------------------------------------------------------------------------------------------------------------
+si length.py est dans un autre répertoire depuis le répertoire parent de example3.1.py notre script.
+Il faudra l'ajouter au sys.path ../python/utils
+-------------------------------------------------------------------------------------------
+*****************example3.2.py*****************
+------------------------------------------------------------------------------------------------------------------
+Méthode 1:
+**********
+1 Méthode: sys.path.append
+----------------------------------------------------------
+#example3.2.py     #l'ordre de os et sys est important.
+importer os 
+importer sys
+fpath = os.path.join(os.path.dirname(__file__), 'utils') 
+#os.path.join pour ajouter le utils répertoire à ce chemin
+#os.path.dirname(__file__) renvoie le chemin absolu vers le répertoire de travail courant
+sys.path.append (fpath) #E:\Python\import_path_init\script\utils!!!!!Mais il est dans le parent donc pas bon!!!!!
+import length 
+txt = "Bonjour" 
+res_len = length.get_length(txt) 
+print("La longueur de la chaîne est : ",res_len)
+********************NE FONCTIONNE PAS POUR LE MOMENT MAIS METHODE PLUS BAS****************************************
+Méthode 2:
+**********
+echo $PYHTONPATH
+export PYTHONPATH=$PYTHONPATH:$(pwd)/utils
+
+**************************************************__init__.py******************************************************
+-------------------------------------------------------------------------------------------------------------------
+ET SI NOUS POUVIONS FAIRE import utils AU LIEU D'IMPORTER TOUS LES MODULES QU'IL CONTIENT INDIVIDUELLEMENT.
+C'est ICI que le fichier __init__.py entre en jeu pour transformer le répertoire utils en package (plusieurs modules)
+Il agit comme une étape d'initialisation et c'est le premier fichier à être exécuté lorsque nous importons le package, 
+ici nous effectuons toutes les importations et le code est plus propre dans le script d'appel. 
+-----------------------------------------------------------------------------------------------------------------------
+Python/import_path_init/utils/__init__.py
+# utils/__init__.py
+from utils.lower import to_lower        # . ou ..  (..lower import to_lower) déplacement vers le haut de 2 niveaux.  
+from utils.upper import to_upper
+from utils.length import get_length
+------------------------------------------------------------------------------------------------------------------------
+#example3.3.py
+import utils
+#res = utils.length.get_length("Hello")
+#print("The length of the string is: ",res)
+
+txt = "Hello"
+res_len = utils.get_length(txt)
+print(res_len) #5
+
+res_up = utils.to_upper(txt)
+print(res_up)  #HELLO
+
+res_low = utils.to_lower(txt)
+print(res_low)  #hello
+-----------------------------------------------------------------------------------------------------------------------
+il peut être importer n'importe où et utilisé presque immédiatement.
+on peut même aussi 
+*****************example3.4.py*********************
+-----------------------------------------------------------------------------------------------------------------------
+# scripts/example3.4.py
+import os
+import sys
+PROJECT_ROOT = os.path.abspath(os.path.join(
+                  os.path.dirname(__file__), #nom du répertoire pour le script en cours
+                  os.pardir) #donne le chemin vers le répertoire parent en utilisant la notation par points (..)
+)
+print(PROJECT_ROOT)
+sys.path.append(PROJECT_ROOT) #sys.path.abspath fournira le chemin absolu vers la racine du projet.
+
+import utils
+print(utils.get_length("Hello"))
+print(sys.path)
+--------------------------------------------------------------------------------------------------------------------------
+$ python example3.4.py
+E:\Python\import_path_init
+5
+['E:\\Python\\import_path_init\\script', 'E:\\Python\\import_path_init']
+
+--------------------------------------------------------------------------------------------------------------------------
+Avant d'importer le packages utils nous devons nous assurer que utils est dans le répertoire parent.
+nous devons assurer que la racine du projet est accessible à l'interpréteur Python.
+il serait imprudent de supposer que cela se produira par défaut (nous exécutons le script à partir de scripts/example3.py)
+le sys.path aura ../importation/scripts à l'index 0
+--------------------------------------------------------------------------------------------------------------------------
+Bonus : 
+Nous pouvons même ajouter des modules d'autres répertoires dans notre fichier __init__.py. 
+Par exemple, apportons le yolo()défini dans scripts/example1.py.
+--------------------------------------------------------------------------------------------------------------------------
+# utils/__init__.py
+from utils.lower import to_lower
+from utils.upper import to_upper
+from utils.length import get_length
+from scripts.example1 import yolo
+-------------------------------------
+donc l'appel de la fonction 
+# scripts/example3.4.py
+import os
+import sys
+PROJECT_ROOT = os.path.abspath(os.path.join(
+                  os.path.dirname(__file__), #nom du répertoire pour le script en cours
+                  os.pardir) #donne le chemin vers le répertoire parent en utilisant la notation par points (..)
+)
+
+sys.path.append(PROJECT_ROOT) #sys.path.abspath fournira le chemin absolu vers la racine du projet.
+
+import utils
+print(utils.get_length("Hello"))
+print(utils.to_lower("Hello"))
+print(utils.to_upper("Hello"))
+utils.yolo(2)
+************** OUTPUT *********
+$ python example3.4.py
+5
+hello
+HELLO
+You only Live 2 times.
+-----------------------------------------------------
+Conclusion
+Quel que soit le package/module que vous essayez d'importer à l'aide de import XYZ, 
+assurez-vous que l'interpréteur Python y a accès. 
+Si ce n'est pas le cas, mettez à jour le sys.path ou mieux encore 
+ajoutez le répertoire concerné à la PYTHONPATH variable et évitez d'avoir à le gérer dans vos scripts.
+******************************************************************************************************************************
+IMPORTER AVEC __init__ à vide mais dans le script et le path dans un fichier séparé:
+
+************************************************************************************************
+arborescence des répertoires
+----------------------------
+
+python/
+       |  utils2/ 
+       |    module_one/frame.py
+       |           module_utils_1/  length.py [decode_payload(name)]  lowar.py [decode_payload(name)]     upper.py [decode_payload(name)] 
+       |
+       |
+       |
+       |  scripts2/example4.py  tools_common.py 
+       |          
+       
+-------------------------
+example4.py
+-----------
+import sys
+import os
+import subprocess
+import importlib
+from importlib import reload
+#path1: ['/media/christophe/OPGC/LoRaWan_Chirpstack_Server_2023/Python/Python/import_path_init/scritpt2', 
+# Import stuff common to all tools
+if '..' not in sys.path:
+    sys.path.insert(0, '..') 
+#path2: ['..', '/media/christophe/OPGC/LoRaWan_Chirpstack_Server_2023/Python/Python/import_path_init/scritpt2',
+
+import tools_common  #possible car tools_common est dans le même répertoire
+#path3: ['/media/christophe/OPGC/LoRaWan_Chirpstack_Server_2023/Python/Python/import_path_init/scritpt2/..', '..', 
+        #'/media/christophe/OPGC/LoRaWan_Chirpstack_Server_2023/Python/Python/import_path_init/scritpt2', 
+# Now import the codecs
+tools_common.update_path_to_get_module('utils2')
+import utils2.module_one.frame.module_utils_1 as fonction_frame
+
+#grace a tools_common on peut choisir le fichier à importer
+# import JSON flattener
+tools_common.update_path_to_get_module('mqttjsonflattener')
+import mqttjsonflattener.mqttjsonflattener as flattener
+
+
+#fonction_frame: 
+#'/media/christophe/OPGC/LoRaWan_Chirpstack_Server_2023/Python/Python/import_path_init/scritpt2/../utils2/module_one/frame.py'
+
+def main():
+    resexample4 = fonction_frame.get_frame_data();
+    print("resultat de example4")
+    print(resexample4)
+    
+if __name__ == "__main__":
+	main()
+    
+os.system("pause")
+-----------------------------------------------------------------------------------------------
+tools_common.py
+---------------
+# -*- coding: utf-8
+from __future__ import print_function
+import sys
+import os.path
+import inspect
+
+def update_path_to_get_module(module_name, required = True):
+    libs_path  = None
+    cmd_folder = os.path.dirname(inspect.getfile(inspect.currentframe()))
+	         #nome_repertoire_en_cour(
+	               #Renvoie le nom du fichier (texte ou binaire) dans lequel un objet a été défini. 
+	               #Cela échouera avec a TypeError si l'objet est un module intégré, une classe ou une fonction.
+	               #inspect.getfile(Renvoie l'objet frame pour le cadre de pile de l'appelant.
+
+    if   os.path.isdir(os.path.join(cmd_folder, '..', module_name)):
+        libs_path =    os.path.join(cmd_folder, '..')
+    elif os.path.isdir(os.path.join(cmd_folder, '..', 'libs', 'python', module_name)):
+        libs_path =    os.path.join(cmd_folder, '..', 'libs', 'python')
+    elif os.path.isdir(os.path.join(cmd_folder, '..', 'libs', module_name)):
+        libs_path =    os.path.join(cmd_folder, '..', 'libs')
+    elif os.path.isdir(os.path.join(cmd_folder, '..', '..', 'libs', 'python', module_name)):
+        libs_path =    os.path.join(cmd_folder, '..', '..', 'libs', 'python')
+    elif os.path.isdir(os.path.join(cmd_folder, '..', '..', 'libs', module_name)):
+        libs_path =    os.path.join(cmd_folder, '..', '..', 'libs')
+    else:
+        print("Failed to findeee path for module '{m}'.".format(m = module_name), file = sys.stderr)
+		
+		
+        if required:
+            sys.exit(1)
+        return False
+        
+    if libs_path not in sys.path:
+        sys.path.insert(0, libs_path)   
+    return True
+
+cmd_folder:media/christophe/OPGC/LoRaWan_Chirpstack_Server_2023/Python/Python/import_path_init/scritpt2
+module_name=utils
+os.path.join(cmd_folder, '..') ajoute .. à la fin les autres c'est libs ...
+sys.path.insert(0, libs_path) :
+[ ' media/christophe/OPGC/LoRaWan_Chirpstack_Server_2023/Python/Python/import_path_init/scritpt2/..
+
+ICI on peut choisir ce qu'on insert dans le path en fonction de notre structure de répertoire
+-----------------------------------------------------------------------------------------------
+frame.py
+---------------
+# -*- coding: utf-8
+import importlib
+import copy
+import sys
+import os.path
+import inspect
+import logging
+
+decoder = dict()
+
+class DataTypeFonction:
+    def __init__(self,type_de_fonction):
+        self._id = type_de_fonction
+        self._mod_name = "utils2.module_one.module_utils_1.{0}".format(type_de_fonction)
+        self._mod       = None
+        self._mod_mtime = None
+        
+    def getter_script(self):
+        return self._mod_name
+                
+#-------------------------------fin de la class---------------------------------------------------------------        
+        
+def get_frame_data():
+    txt = 'bonjour'
+    type_de_fonction = "length"
+    #type_de_fonction =  "lower"
+    #type_de_fonction =  "upper"
+    print(sys.path)
+    import utils2.module_one.module_utils_1.length as name_script
+    res = name_script.decode_payload(txt)
+    return res
+    
+def get_fonction_choix(type_de_fonction):
+  IPO = DataTypeFonction(type_de_fonction)
+  name = IPO.getter_script()
+  return name
+================================================================================================================================
+======================================================================RECAP=====================================================
+================================================================================================================================
+
+/repertoire/script/main.py, tools_common.py 
+/repertoire/utils/utils1/length.py, lower.py, upper.py
+
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------
+tools_common.py
+--------------
+# -*- coding: utf-8
+from __future__ import print_function
+import sys
+import os.path
+import inspect
+
+def update_path_to_get_module(module_name, required = True):
+    libs_path  = None
+    cmd_folder = os.path.dirname(inspect.getfile(inspect.currentframe()))
+	         #nome_repertoire_en_cour(
+	           #Renvoie le nom du fichier (texte ou binaire) dans lequel un objet a été défini. 
+	            #Cela échouera avec a TypeError si l'objet est un module intégré, une classe ou une fonction.
+	             #inspect.getfile(Renvoie l'objet frame pour le cadre de pile de l'appelant.
+
+    if   os.path.isdir(os.path.join(cmd_folder, '..', module_name)):
+        libs_path =    os.path.join(cmd_folder, '..')
+    elif os.path.isdir(os.path.join(cmd_folder, '..', 'libs', 'python', module_name)):
+        libs_path =    os.path.join(cmd_folder, '..', 'libs', 'python')
+    elif os.path.isdir(os.path.join(cmd_folder, '..', 'libs', module_name)):
+        libs_path =    os.path.join(cmd_folder, '..', 'libs')
+    elif os.path.isdir(os.path.join(cmd_folder, '..', '..', 'libs', 'python', module_name)):
+        libs_path =    os.path.join(cmd_folder, '..', '..', 'libs', 'python')
+    elif os.path.isdir(os.path.join(cmd_folder, '..', '..', 'libs', module_name)):
+        libs_path =    os.path.join(cmd_folder, '..', '..', 'libs')
+    else:
+        print("Failed to findeee path for module '{m}'.".format(m = module_name), file = sys.stderr)
+		
+		
+        if required:
+            sys.exit(1)
+        return False
+        
+    if libs_path not in sys.path:
+        sys.path.insert(0, libs_path)   
+    return True
+------------------------------------------------------------------------------------------------------------------------
+main.py
+-------
+import sys
+import os
+
+# Import stuff common to all tools
+if '..' not in sys.path:
+    sys.path.insert(0, '..') #ajoute au path les .. en index 0
+import tools_common
+tools_common.update_path_to_get_module('utils') #path:['F:\\works\\phidgets\\test_Phidget\\utilsmain\\..'
+
+import utils.utils1.length as fonctions 	#on importe juste le module length
+							#fonction = \\works\\phidgets\\test_Phidget\\utilsmain\\..\\utils\\utils1\\length.py
+
+txt = "Bonjour"
+res_len = fonctions.get_length(txt)
+print("La longueur de la chaîne est : ",res_len)
+------------------------------------------------------------------------------------------------------------------------
+lenght.py
+---------
+def get_length(name: str):
+    return len(name)
+------------------------------------------------------------------------------------------------------------------------
+un fichier appelé module rep1/puissance.py avec comme fonction carre et cube
+ici puissance est dans le même répertoire principal sinon il faut le trouver dans le path.
+********************************
+from rep1.puissance import carre cube #nous avons carre(a)
+from rep1.puissance import * #importe toutes les fonctions
+import  rep1.puissance       #puissance.carre(a)
+package un dossier qui rassemble des modules
+/package/puissance.py  surface.py ...
+import package1.module1
+package1.module1.fonction1(a)
+********************************
+------------------------------------------------------------------------------------------------------------------------
+****************************************************************************
+Ainsi on ne peut importer tout les modules (fichier python)
+en une seule fois car elle ne permettrait pas une vision claire
+c'est pour ça que même from module import * pour importer toutes
+les fonctions du module est à proscrire et c'est une source d'erreur
+!!!!!!!!!!!!!!!!!!
+si on ne veut pas s'embêter d'importer chaque module dans le package
+dans le programme principale nous pouvons le fait avec un fichier __init__
+****************************************************************************
+
+
+
+
+
+
+

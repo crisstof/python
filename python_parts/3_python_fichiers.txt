@@ -101,5 +101,98 @@ player_one.whoami()
 
 
 *************************************************************************************************
-    Gestion répertoire et dossier								*
+    Gestion répertoire et dossier et fichier								*
 *************************************************************************************************
+import os  ##module de dialogue avec le système d'exploitation     
+chdir("/home/christophe/monfichiers") #chdir change dir
+nom_repertoire_courant = os.getcwd()
+-------------------------------------------------------------------
+Ecriture séquentiel dans un fichier
+------------------------------------
+obFichier = open('monfichiers', 'a') #crée objet fichier
+obFichier.write('Bonjour, fihcier!')
+obFichier.write('commen ça va ?')
+obFichier.close()
+
+Lecture séquentiel dans un fichier
+------------------------------------
+ofi = open('monfichiers', 'r') 
+t = ofi.read(7) #7 indique combien de caractères doivent êtres lus
+print(t) 
+ofi.close()
+
+readline() lit une seule ligne renvoie une chaîne de caractère
+readlines() lit l'intégralité d'un fichier en une instruction renvoie une liste 
+
+Copie de fichier en pas de  50 caractères
+------------------------------------------
+def copieFichier(source, destination):
+  "copie intégrale d'un fichier"
+  fs = open(source, 'r')
+  fd = open(destination, 'w')
+  while 1:
+    txt = fs.read(50)
+    if txt =="":
+       break
+    fd.write(txt)
+  fs.close()
+  fd.close()
+  return
+ 
+ Traitement sur les fichiers ça commence comme ça 
+ ------------------------------------------------
+ recopier un fichier texte en omettant toutes les lignes qui commencent par #
+ --------------------------------------------------------------------------------
+def filtre(source,destination):
+   "recopier un fichier en éliminant les lignes de remarques"
+   fs = open(source, 'r')
+   fd = open(destination, 'w')
+   while 1:
+      txt = fs.readline()
+      if txt =='':
+         break
+      if txt[0] != '#':
+         fd.write(txt)
+   fs.close()
+   fd.close()
+   return
+
+Nous ne pouvons pas enregistrer d'autres types de valeurs qu'en transformant en chaîne de caractère.
+x = 52
+f.write(str(x))
+si nous enregistrons en valeurs numériques en les transformant en chaine de caractère,
+nous risquons de ne plus pourvoir les retransformer correctement en valeurs numériques lorsque nous allons relire le fichier
+a=5, b=2.63, c=67
+f.write(str(a)) #b, c
+print(f.read()) => 52.8367
+
+avec pickle  (conserver) mais ce seront des fichiers binaires
+import pickle
+pickle.dump(a,f) ...
+j = pickle.load(f)
+
+
+
+------------------------------------------
+Souvent nous avons des fichiers binaires décodé par un logiciel spécifique:
+images, sons, vidéos ...
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
