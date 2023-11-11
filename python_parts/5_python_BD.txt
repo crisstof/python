@@ -97,6 +97,192 @@ finally:
            conn.close()
 
 ----------------------------------------------------------------------------------------------------------
+Passer de sqlite3 à postgreSQL
+
+-----------------------------------------------------------------------------------
+sqlite créer une base de donnée (fichier)
+>>> import sqlite3
+>>> import sys
+>>> fichierDonnees = "bd_test.sq3"
+>>> conn = sqlite3.connect(fichierDonnees)
+>>> cur = conn.cursor()
+>>> cur.execute("CREATE TABLE membres (age INTEGER, nom TEXT, taille REAL)")
+<sqlite3.Cursor object at 0x7fc5c768b3c0>
+>>> cur.execute("INSERT INTO membres(age,nom,taille) VALUES(21,'Dupon',1.83)")
+<sqlite3.Cursor object at 0x7fc5c768b3c0>
+>>> cur.execute("INSERT INTO membres(age,nom,taille) VALUES(11,'Blumàr',1.50)")
+<sqlite3.Cursor object at 0x7fc5c768b3c0>
+>>> conn.commit() #enregistre les données dans la base depuis le curseur
+>>> cur.close()
+>>> conn.close()
+------------------------------------------------------------------------------------
+sqlite lire et écrire dans la base de donnée (fichier)
+>>> import sqlite3
+>>> conn = sqlite3.connect("bd_test.sq3")
+>>> cur = conn.cursor()
+>>> cur.execute("SELECT * FROM membres")
+<sqlite3.Cursor object at 0x7f160c963540>
+>>> for l in cur:
+...  print(l)
+... 
+(21, 'Dupon', 1.83)
+(11, 'Blumàr', 1.5)
+>>> cur.execute("SELECT * FROM membres")
+<sqlite3.Cursor object at 0x7f160c963540>
+>>> list(cur)
+[(21, 'Dupon', 1.83), (11, 'Blumàr', 1.5)]
+>>> cur.execute("SELECT * FROM membres")
+<sqlite3.Cursor object at 0x7f160c963540>
+>>> cur.fetchall() #curseur qui renvoie une liste de tuple
+[(21, 'Dupon', 1.83), (11, 'Blumàr', 1.5)]
+>>> cur.execute("INSERT INTO membres(age,nom,taille) VALUES(19,'Ricard',1.75)") #tant que le curseur est ouvert on peut enregistrer de nouvelle donnée.
+<sqlite3.Cursor object at 0x7f160c963540>
+>>> 
+-----------------------------------------------------------------------------------------
+Dans un vrai programme les valeur se présenterons dans des variables.
+il est déconseillé de faire appel dans ce bit au techniques ordinaires de formatage des chaîne.
+c'est une faille de sécurité SQL injection, que sur du formulaire web il faut confier le formatage des requêtes au 
+module d'interface lui-même.
+Bonne technique:
+la chaine "patron" utilise le point d'interrogation comme balise de conversion, et le formatage
+est pris en charge par la méthode execute() du curseur.
+>> import sqlite3
+>>> conn = sqlite3.connect("./bd_test.sq3")
+>>> cur =conn.cursor()
+>>> data=[(17,"Durand",1.74),(7,"Paul",1.30),(20,"Weber",1.65)]
+>>> for index in data:
+...     cur.execute("INSERT INTO membres(age, nom, taill) VALUES(?,?,?)", index)
+>>>conn.commit()
+le module d'interface s'occupe de traiter chaque variable correctement en fonction de son type.
+chaque itération index remplace ?
+
+Modification
+cur.execute("UPDATE membres SET nom='Gerard' WHERE nom='Ricard'")
+Supprimer
+cur.execute("DELETE  FROM membres WHERE nom='Gerard'")
+
+pour du fichier texte il faurait plusieurs ligne de code.
+
+UTILISER POSTGRESQL
+--------------------
+Ajouter un référentiel officiel
+sudo apt install wget ca-certificates 
+recupère le certificat et ajoute à l'utilitaire de gestion apt-key et
+créer un nouveau fichier de configuration avec une adresse de référentiel postgresql
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
+#install postgresql
+>>sudo apt update
+>>apt install postgresql postgresql-contrib
+vérifier l'état de posgresql:
+>>service postgresql status
+------------------------------------------
+admin dafault: postgres
+démarrer une session:
+>>sudo -u postgres psql
+>\conninfo
+>\l  #liste les bases de données
+>\du #liste les utilisateurs
+>\password postgres 
+-------------------------------------------
+CREATE DATABASE test_erp
+>\ test_erp  #connection
+CREATE TABLE clients (id SERIAL PRIMARY KEY, first_name VARCHAR, last_name VARCHAR, role VARCHAR);
+>\dt
+INSERT INTO clients (first_name, last_name, role) VALUES ('John', 'Smith', 'CEO');
+SELECT * FROM clients;
+--------------------------------------------
+vim /etc/postgresql/14/main/postgresql.conf
+listen_addresses='*'  #uncomment
+vim /etc/postgresql/14/main/pg_hba.conf
+#ajoute une nouvelle connexion
+[connection_type][database][user][addess][method]
+host all all 0.0.0.0/0 md5
+nous avons alloué tcp/ip connection host toutes les bases de données 
+à tous les utilisateurs avec ipv4 0.0.0.0/0 utilise md5
+>>systemctl restart postgresql   #port 5432
+>>ss -nlt | grep 5432
+connexion à distance au cherry servers
+psql -h 5.199.162.56 -p 5432 -d test_erp -U postgres
+\conninfo
+connection à l'application code python
+pip install psycopg2-binary
+--------------------------
+import psycopg2
+
+# Connect to your PostgreSQL database on a remote server
+conn = psycopg2.connect(host="5.199.162.56", port="5432", dbname="test_erp", user="postgres", password="test123")
+
+# Open a cursor to perform database operations
+cur = conn.cursor()
+
+# Execute a test query
+cur.execute("SELECT * FROM clients")
+
+# Retrieve query results
+records = cur.fetchall()
+
+# Finally, you may print the output to the console or use it anyway you like
+print(records)
+You will get the following output when using an ipython3 interpreter:
+
+-------------
+sinon avec le client pgadmin4
+------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
