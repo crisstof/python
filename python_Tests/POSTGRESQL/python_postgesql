@@ -1,0 +1,283 @@
+Objectifs: dialogue entre un client et une base de données
+généraliste être capable de mettre en place une petite base de données
+comportant plusieurs tables, de produire des enregistrements, et permettre de tester le résultat de requêtes SQL basique.
+
+Insttaler POSTGRESQL
+--------------------
+jouter un référentiel officiel
+sudo apt install wget ca-certificates 
+recupère le certificat et ajoute à l'utilitaire de gestion apt-key et
+créer un nouveau fichier de configuration avec une adresse de référentiel postgresql
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
+#install postgresql
+>>sudo apt update
+>>apt install postgresql postgresql-contrib
+vérifier l'état de posgresql:
+>>service postgresql status
+
+
+------------------------------------------
+admin default: postgres
+démarrer une session:
+>>sudo -u postgres psql
+>\conninfo
+>\l  #liste les bases de données
+>\du #liste les utilisateurs
+>\password postgres 
+-------------------------------------------
+lister les utilisateurs linux:
+cat /etc/passwd | cut -d: -f1
+utilisateur: postgres
+passwd : postgres
+
+fichier de configuration:
+/etc/postgresql/14/main/pg_hba.conf
+
+---------------------------------------------
+> sudo /etc/init.d/postgresql restart
+Il faut ouvrir une session sur le système linux en tant qu'utilisateur postgres.
+(au départ celui-ci est le seul à pouvoir créer de nouveau utilisateur du SGBDR) pour cela:
+> createuser criss -d -p
+Saisir le mot de passe: abcde
+le nouveau rôle est-il super-utlisateur ? (o/n) n
+le nouveau rôle est-il autorisé à créer de nouveau rôles ? (o/n) n
+Le nom d'utilisateur est quelconque: il ne doit pas nécessairement correspondre à un utilisateur déjà répertorié dans le système linux.
+
+Créer une base au nom de criss:
+creatdb -U criss discothèque
+mot de passe: abcde
+le serveur postgres est prêt à dialoguer avec le client python.
+
+
+"Pour réaliser des applications: un logiciel destiné au traitement de données devrait toujours être construit sur la base d'un dictionnaire d'application."
+dictionnaire d'application: c'est une structure de données peut convenir, l'essentiel est de construire une référence centrale décrivant les données que l'on se propose de manipuler et des informations sur leur mise en forme.
+Nous utiliserons un dictionnaire dont les valeurs sont des listes de tuples mais on peut opter pour une organisation différente des mêmes informations.
+Il faudra l'installer dans une variable globale pour être accessible à n'importe quel endroit du programme. elles sont globales qu'à l'intérieur d'un même module, si nous souhaitons organiser notre logiciel comme une ensemble de modules (bonne pratique), nous aurons accès à nos variables globales que dans un seul d'entre eux.
+Regrouper dans une classe particulière toutes les variables qui nécessitent un statut global pour l'ensemble de l'application .
+Encapsulées dans l'espace de nom d'une classe, ces variables peuvent être utilisées dans problème dans n'importe quel module.
+il suffit d'importer la classe.  Faire
+-------------------------------------------------------------------
+class Glob(object):
+	"""Espace de noms pour les variables et fonctions <pseudo-globale>"""
+   dbName= "discothèque"  	#nom de la base de données
+   user = "criss"		#propriétaire ou utilisateur
+   passwd = "abcde"		#mot de passe d'accès
+   host = "127.0.0.1"		#nom ou adresse IP du serveur
+   port = 5432
+   
+   #Structure de la base de données Dictionnaire des tables & champs:
+   dicoT ={"compositeurs":[('id_comp', "k", "clé primaire"),
+   			   ('nom', 25, "nom"),
+   			   ('prenom', 25, "prénom"),
+   			   ('a_naiss', "i", "année de naissance"),
+   			   ('a_mort', "i", "année de mort")]
+   	   "oeuvres":[('id_oeuv', "k", "clé primaire"),
+   	              ('id_comp', "i", "clé compositeur"),
+   	              ('titre', 50, "titre de l'oeuvre"),
+   	              ('duree', "i", "durée (en minutes)"),
+   	              ('interpr', 30, "interprète principal")]}
+   	              
+Le dictionnaire d'application décrivant la structure de la base de données est contenu dnas la variable Glob.dicoT
+dictionnaire python clés (nom des tables) et valeurs (liste description des champs de la table sous forme d'autant de tuples ou chaque tuple est un champ particulier de la table)
+notre description à trois informations seulement: nom du champ, son type et un bref commentaire.
+-------------------------------------------------------------------
+Définir une classe d'objets-interfaces
+--------------------------------------
+La classe Glob() sera installé en début de script ou dans un module séparé importé en début de script.
+nous avons donc sauvegarder la classe Glob() dans le module dict_app.py pour l'importer ailleurs.
+
+les objets-interfaces sont similaires aux objets-fichiers pour intéragire avec la base de données.
+-----------------------------------------------
+import sys  #fonctions système
+from pg8000 import DBAPI #pour communiquer avec PostgreSQL sur python3 pour les autres version psycopg2
+from dict_app import *
+
+class GestionBD(object) :
+ """Mise en place et interfaçage d'une base de données PostgreSQL"""
+    def __init__(self, dbName, user, passwd, host, port=5432):
+    "connexion et création du curseur"
+       try:
+          self.baseDonn = DBAPI.connect(host =host, port =port, database = dbName,user=user, password=passwd)
+          
+       except Exception as err:
+         print('la connexion à la base a échoué: \n'\
+               'Erreur detectée:\n%s' %err)
+       else:
+         self.cursor = self.baseDonn.cursor()  #création du curseur
+         self.echec =0 #car __init__ n'a pas de return donc on memorise le resultat de la créationde l'objet
+
+def creerTables(self, dicTables):
+  "Création des tables décrites dans le dictionnaire <dicTables>."
+   for table in dicTables:
+      req = "CREATE TABLE %s (" % table pk = ' '
+      for descr in dicTables[table]:
+        tch = descr[0]
+        tch = descr[1]
+        if tch == 'i' :
+           tupeChamp = 'INTEGER'
+        elif tch =='k':
+	   # champ 'clé primaire' (entier incrémenté automatiquement)
+	   typeChamp ='SERIAL'
+	   pk = nomChamp
+	else:
+	   typeChamp ='VARCHAR(%s)' % tch
+	req = req + "%s %s, " % (nomChamp, typeChamp)
+   if pk == '':
+      req = req[:-2] + ")"
+   else:
+      req = req + "CONSTRAINT %s_pk PRIMARY KEY(%s))" % (pk, pk)
+   self.executerReq(req)
+
+def supprimerTables(self, dicTables):
+"Suppression de toutes les tables décrites dans <dicTables>"
+   for table in list(dicTables.keys()):
+     req ="DROP TABLE %s" % table
+     self.executerReq(req)
+   self.commit() # transfert -> disque
+
+def executerReq(self, req, param =None):
+"Exécution de la requête <req>, avec détection d'erreur éventuelle"
+   try:
+      self.cursor.execute(req, param)
+   except Exception as err:
+      # afficher la requête et le message d'erreur système :
+      print("Requête SQL incorrecte :\n{}\nErreur        	
+      détectée :".format(req))
+      print(err)
+      return 0
+   else:
+     return 1
+     
+def resultatReq(self):
+"renvoie le résultat de la requête précédente (une liste de tuples)"
+   return self.cursor.fetchall()
+   
+def commit(self):
+   if self.baseDonn:
+      self.baseDonn.commit() # transfert curseur -> disque
+   
+def close(self):
+   if self.baseDonn:
+      self.baseDonn.close()
+
+
+
+****************************************
+Construire un générateur de formulaires
+****************************************
+comment on peut utiliser le même dictionnaire d'application afin d'élaborer du code généraliste.
+réaliser une classe d'objets-formulaires capables de prendre en charge l'encodage des enregistrements de n'importe quelle table, en construisant automatiquement les instructions d'entrée adéquates grâce aux informations du dictionnaire d'application.
+
+ce formulaire simpliste prendrait une forme d'une fenêtre spécialisée dans laquelle les champs d'entrée et leurs libellés pourraient encore une fois être générés de manière automatique.
+on montre juste comment automatiser sa construction sur un principe semblables:
+
+class Enregistreur(object):
+"""classe pour gérer l'entrée d'enregistrements divers"""
+def __init__(self, bd, table):
+   self.bd =bd
+   self.table =table
+   self.descriptif =Glob.dicoT[table] # descriptif des champs
+
+def entrer(self):
+"procédure d'entrée d'un enregistrement entier"
+   champs ="("  # ébauche de chaîne pour les noms de champs
+   valeurs =[]  # liste pour les valeurs correspondantes
+   # Demander successivement une valeur pour chaque champ :
+   for cha, type, nom in self.descriptif:
+      if type =="k": # on ne demandera pas le n° d'enregistrement
+         continue # à l'utilisateur (numérotation auto.)
+      champs = champs + cha + ","
+      val = input("Entrez le champ %s :" % nom)
+      if type =="i":
+          val =int(val)
+      valeurs.append(val)
+   balises ="(" + "%s," * len(valeurs) # balises de conversion
+   champs = champs[:-1] + ")" # supprimer la dernière virgule,
+   balises = balises[:-1] + ")" # et ajouter une parenthèse
+   req ="INSERT INTO %s %s VALUES %s" % (self.table, champs, balises)
+   self.bd.executerReq(req, valeurs)
+
+   ch =input("Continuer (O/N) ? ")
+   if ch.upper() == "O":
+      return 0
+   else:
+     return 1
+     
+     
+     
+     
+     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -140,8 +140,8 @@ sqlite lire et écrire dans la base de donnée (fichier)
 >>> 
 -----------------------------------------------------------------------------------------
 Dans un vrai programme les valeur se présenterons dans des variables.
-il est déconseillé de faire appel dans ce bit au techniques ordinaires de formatage des chaîne.
-c'est une faille de sécurité SQL injection, que sur du formulaire web il faut confier le formatage des requêtes au 
+il est déconseillé de faire appel dans ce but au techniques ordinaires de formatage des chaîne.
+c'est une faille de sécurité SQL injection, (que sur du formulaire web) il faut confier le formatage des requêtes au 
 module d'interface lui-même.
 Bonne technique:
 la chaine "patron" utilise le point d'interrogation comme balise de conversion, et le formatage
@@ -177,7 +177,7 @@ sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs
 vérifier l'état de posgresql:
 >>service postgresql status
 ------------------------------------------
-admin dafault: postgres
+admin default: postgres
 démarrer une session:
 >>sudo -u postgres psql
 >\conninfo
