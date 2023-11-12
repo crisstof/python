@@ -174,13 +174,16 @@ on montre juste comment automatiser sa construction sur un principe semblables:
 
 class Enregistreur(object):
 """classe pour gérer l'entrée d'enregistrements divers"""
-def __init__(self, bd, table):
+def __init__(self, bd, table): #instanciation
    self.bd =bd
    self.table =table
    self.descriptif =Glob.dicoT[table] # descriptif des champs
 
-def entrer(self):
+def entrer(self): #génère le formulaire
 "procédure d'entrée d'un enregistrement entier"
+"prend en charge l'entrée des enregistrements dans la table
+en s'adaptant à leur structure grâce au descriptif du dictionnaire"
+"objectif de construire morceau par morceau une chaine de caractere qui devient une requête SQL comme creerTable on peut aujouter aussi la suppression/modification d'enregistrement"
    champs ="("  # ébauche de chaîne pour les noms de champs
    valeurs =[]  # liste pour les valeurs correspondantes
    # Demander successivement une valeur pour chaque champ :
@@ -203,8 +206,73 @@ def entrer(self):
       return 0
    else:
      return 1
-     
-     
+------------------------------
+si vous en voulez plus aller voir les extensions python ou How to program de Deitel & coll.
+
+Voici le corps de l'application
+-------------------------------
+##### Programme principal : #########
+# Création de l'objet-interface avec la base de données :
+bd = GestionBD(Glob.dbName, Glob.user, Glob.passwd, Glob.host, Glob.port)
+if bd.echec:
+   sys.exit()
+
+while 1:
+  print("\nQue voulez-vous faire :\n"\
+     	"1) Créer les tables de la base de données\n"\
+	"2) Supprimer les tables de la base de données ?\n"\
+	"3) Entrer des compositeurs\n"\
+	"4) Entrer des oeuvres\n"\
+	"5) Lister les compositeurs\n"\
+	"6) Lister les oeuvres\n"\
+	"7) Exécuter une requête SQL quelconque\n"\
+	"9) terminer ?   Votre choix :", end=' ')
+  ch = int(input())
+  if ch ==1:
+     # création de toutes les tables décrites dans le dictionnaire :
+     bd.creerTables(Glob.dicoT)
+  elif ch ==2:
+     # suppression de toutes les tables décrites dans le dic. :
+     bd.supprimerTables(Glob.dicoT)
+  elif ch ==3 or ch ==4:
+     # création d'un <enregistreur> de compositeurs ou d'oeuvres :
+     table ={3:'compositeurs', 4:'oeuvres'}[ch]
+     enreg =Enregistreur(bd, table)
+     while 1:
+	if enreg.entrer():
+	   break
+	elif ch ==5 or ch ==6:
+	   # listage de tous les compositeurs, ou toutes les oeuvres :
+	   table ={5:'compositeurs', 6:'oeuvres'}[ch]
+	if bd.executerReq("SELECT * FROM %s" % table):
+	# analyser le résultat de la requête ci-dessus :
+	   records = bd.resultatReq() # ce sera un tuple de tuples
+	   for rec in records: # => chaque enregistrement
+		for item in rec: # => chaque champ dans l'enreg.
+		  print(item, end=' ')
+		print()
+	elif ch ==7:
+	   req =input("Entrez la requête SQL : ")
+	   if bd.executerReq(req):
+		print(bd.resultatReq())# ce sera un tuple de tuples
+	else:
+	   bd.commit()
+	   bd.close()
+	   break
+
+----------------------------------------------
+Communication réseau et mutithreading
+---------------------------------------------- 
+
+
+   
+----------------------------------------------
+serveur web en python
+----------------------------------------------
+le psp (python server pages) entremêle html et psp.
+nous pouvons écrire des scripts distincts qui génèrent du code HTML classique sous la forme de chaînes de caractères et de doter le serveur web d'un module pour interpréter ces scripts et renvoyer du code HTML en réponse aux requêtes du navigateur (mod_python pour Apache par exemple)
+Nous pouvons aussi développer nous-même un serveur spécialisé autonome qui contient en un seul logiciel la fonctionnalité souhaitée pour notre application.
+avec des bibliothèques de protocole http comme utiliser Cherrypy pour des serveur web nous avons Zope.
      
      
      
