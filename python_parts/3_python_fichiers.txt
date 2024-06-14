@@ -110,7 +110,7 @@ nom_repertoire_courant = os.getcwd()
 Ecriture séquentiel dans un fichier
 ------------------------------------
 obFichier = open('monfichiers', 'a') #crée objet fichier
-obFichier.write('Bonjour, fihcier!')
+obFichier.write('Bonjour, fichier!')
 obFichier.write('commen ça va ?')
 obFichier.close()
 
@@ -173,17 +173,99 @@ j = pickle.load(f)
 
 
 
-------------------------------------------
+----------------------------------------------------------------------------
 Souvent nous avons des fichiers binaires décodé par un logiciel spécifique:
 images, sons, vidéos ...
+----------------------------------------------------------------------------
+********************
+LECTURE D'UN FICHIER
+********************
+Lecture d'un fichier ?
+------------Lecture d"un fichier---------------
+#open() ouvre le fichier en mode lecture 'r'
+#readline() lit toutes les lignes du fichier et les places dans une liste.
+#ensuite nous itérons sur chaque ligne et utilisons strip() pour supprimer les caractères de fin de ligne.
+-----------------------------------------------------
+with open('nom_du_fichier.txt', 'r') as fichier:
+    lignes = fichier.readlines()
+    for ligne in lignes:
+        print(ligne.strip())
+-----------------------------------------------------
+avec la boucle while et le readline() nous lisons une ligne à la fois.
+Utile pour de plus gros fichiers sans problème de mémoire.
+    while ligne:
+        print(ligne.strip())
+        ligne = fichier.readline()
+
+-----------------------------------------------------
+utiliser un itérateur pour parcourir automatiquement les lignes deu fichier.
+fermer le fichier avec file.close() après utilisation.
+
+with open('nom_du_fichier.txt', 'r') as fichier:
+    for ligne in fichier:
+        print(ligne.strip())
+----------------------------------------------------
+
+script
+for filename in args.files:
+        with open(filename, 'r') as file:
+            for line in file:
+                content = line.strip()
+                print(content)
+
+
 
   
-  
+
+
+*******************
+Créer un répertoire
+*******************
+print("---------Crée le répertoire------------------")
+        # Create ouptut directory if we need to
+        #parent_dir = "C:\MonDossier"                      #windows
+        parent_dir = "/home/criss/MonDossier"              #Linux
+        #path = os.path.join(parent_dir, directory)
+        #
+        # dirname = os.path.join(parent_dir, jsonpayload['applicationName'])#C:\Connecs\applicationName
+        if ('applicationName' in jsonpayload ):
+            print(jsonpayload['applicationName'])
+            dirname = os.path.join(parent_dir, jsonpayload['applicationName'])
+        elif ( 'applicationName' in jsonpayload['deviceInfo'] ):
+            print(jsonpayload['deviceInfo']['applicationName'])
+            dirname = os.path.join(parent_dir, jsonpayload['deviceInfo']['applicationName'])
+        else:
+            print("aucune cle")
+            dirname="default-cle"
+        
+        #---------------Création du répertoire----------------
+        if not os.path.isdir(dirname):
+            try:
+                os.mkdir(dirname)
+            except OSError as e:
+                logger.error("Exception: {0}.".format(str(e)), exc_info = True)
 
 
 
+******************************************
+Ecrire dans un fichier à la suite un json
+******************************************
+def process_string_message(jsonpayload, filename):
+    logger.debug("Process string message.")
+    r = []
+    try:
+        msg    = base64.b64decode(jsonpayload['data']).decode('utf-8')
+        jsonpayload['data'] = msg
+        decode = json.dumps(jsonpayload, ensure_ascii=False)
+        r.append(decode)
+        if args.verbose:
+            print(decode)
+        with open(filename, 'a') as f:
+            f.write(decode + '\n')
 
-
+    except Exception as e:
+        logger.error("Exception: {0}.".format(str(e)), exc_info = True)
+    return r
 
 
 

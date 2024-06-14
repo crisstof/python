@@ -1,0 +1,210 @@
+Travailler sur des chaines ?
+
+Elimine ou remplace un caractère dans une chaine ?
+chaine_sans_? = ancienne_chaine.replace('?', '')
+chaine_sans_? = ancienne_chaine.translate({ord('?'): None})
+chaine_sans_sautdeligne = chaine_avecsautdeligne.replace('\n', '')
+
+Supprimer des espaces et caractères aux extrémités?
+chaine = chaine.strip()
+
+
+
+
+JSON en texte ?
+du texte (str)
+{"applicationID":"7","data":"wYIAVZ25JCQAf1XbGRUDBVNIVDM1ARUGAzkwMIcAVZ2"}
+Encode en byte: 
+data = trame_str.encode()
+b'{"applicationID":"7","data":"wYIAVZ25JCQAf1XbGRUDBVNIVDM1ARUGAzkwMIcAVZ2"}'
+Decode byte en chaine de caractere retour comme avant:
+data1 = data.decode('utf-8')
+{"applicationID":"7","data":"wYIAVZ25JCQAf1XbGRUDBVNIVDM1ARUGAzkwMIcAVZ2"}
+
+on extrait de l'objet le payload  en byte et le décode en chaine de caratère 
+msg.payload.decode('utf-8') permet de décoder une séquence d’octets (bytes) en une chaîne de caractères en utilisant l’encodage UTF-8. Voici ce que cela signifie
+Lorsque vous recevez des données sous forme d’octets (par exemple, depuis un message MQTT), elles sont souvent encodées dans un format spécifique, comme UTF-8
+Pour convertir ces octets en texte lisible, vous utilisez la méthode .decode('utf-8').
+
+Nous transformons ce json en mode texte en dictionnaire:
+trame_dict = json.loads(trame_str) #charge en json ' (au lieu de ") string en dict    trame_str.replace("'",'"')
+{'applicationID': '7', 'data': 'wYIAVZ25JCQAf1XbGRUDBVNIVDM1ARUGAzkwMIcAVZ2'}
+comme c'est un dictionnaire facile de récupérer la data:
+ data_brut = trame_dict['data']
+Bien sûr la data est encoder donc sérialiser en base64 
+data_decode_base64 = base64.b64decode(trame_dict['data']) exemple: t1 = base64.b64decode(jsonpayload['data'])[0]
+b'\xc1\x82\x00U\x9d\xb9$$\x00\x7fU\xdb\x19\x15\x03\x05SHT35\x01\x15\x06\x03900\x87\x00U\x9d\xb9$$\x00'
+Et nous pouvons le transformer en hexa 
+data_hexa = data_decode_base64.hex()
+c18200559db92424007f55db191503055348543335011506033930308700559db92424007f55db15011543e97a656175782d
+afficher le byte en hexa  data.hex()
+inverser de hexa en byte  bytes.fromhex(datahexa)
+
+Le payload de paho mqtt
+ payload = str(msg.payload.decode("utf-8")) convertie en chaine.
+Mais si nous avons deux json imbriquer il n'est pas possible de faire un data1 = json.loads(payload.replace("'",'"')) car le format du json est erroné.
+JSON
+{"tst":"2023-06-20T10:55:23.114416Z+0200","topic":"application/2e3a6572-b88c-4234-a536-176ba0073462/device/434e535306e31268/event/up","qos":0,"retain":0,"payloadlen":930,"payload":"{"deduplicationId":"0d15a0a0-f628-44a1-a1db-e35191efa2a7","time":"2023-06-20T06:42:33.596132+00:00","deviceInfo":{"tenantId":"d7ed6da1-bbed-4591-91e8-af5aaceed8ef","tenantName":"ChirpStack","applicationId":"2e3a6572-b88c-4234-a536-176ba0073462","applicationName":"SDT","deviceProfileId":"6eca0548-5d29-42fb-a104-53b203e00d77","deviceProfileName":"node1","deviceName":"device_node1","devEui":"434e535306e31268","tags":{}},"devAddr":"0114f0d5","adr":false,"dr":5,"fCnt":0,"fPort":2,"confirmed":true,"data":"wYMAtAAAAA+SASSH7FcLCiP+S76mDwAQ","rxInfo":[{"gatewayId":"7076ff00560901e0","uplinkId":48341,"time":"2023-06-20T06:42:33.596132+00:00","rssi":-80,"snr":10.2,"channel":5,"board":261,"location":{},"context":"jlivJA==","metadata":{"region_common_name":"EU868","region_config_id":"eu868"},"crcStatus":"CRC_OK"}],"txInfo":{"frequency":868100000,"modulation":{"lora":{"bandwidth":125000,"spreadingFactor":7,"codeRate":"CR_4_5"}}}}"}
+
+Le deuxième JSON commence à payload donc il faut le sélectionner dans loads qui transforme un json en dictionnaire pour sélectionner la clé:valeur?
+il faut travailler sur la chaine donc:
+if '{"tst' in payload:  #decode json
+            print("\nTransforme le json tst et l'adapte pour le décoder")
+            print(payload)
+            x = re.search("\"payload\":\"", payload)
+            print(x)
+            tuple = x.span()
+            b=tuple[1]
+            print(tuple ,"le tuple choisi: ", b)
+            print("recherche chaine payload")
+            print(b)
+            print(payload[b:-2])
+            payload = payload[b:-2]
+            print("-----------***************------------------------------------")
+            data_tst = json.loads(payload)
+            print(data_tst)
+
+
+
+
+
+**************************************************************************REGEX  Regular  expression operations*************************************************************************** 
+-------
+REGEX 
+-------
+https://www.w3schools.com/python/python_regex.asp
+Regex
+import re
+
+findall Renvoie une liste contenant toutes les correspondances
+search  Renvoie un objet Match s'il y a une correspondance n'importe où dans la chaîne
+split   Renvoie une liste où la chaîne a été divisée à chaque correspondance
+sub     Remplace une ou plusieurs correspondances par une chaîne
+
+
+Métacaractères (caractère avec une signification particulière)
+[] ensemble de carctères "[a-m]"
+\  Signale une séquence spéciale (peut également être utilisé pour échapper des caractères spéciaux)  "\d"
+.  n'importe quel caractères sauf nouvelle ligne  "he..o"
+^  commence avec  "^ello"
+$  termine avec   "planet$"
+*  zéro ou plusieurs occurrences  "he.*o"
++  une ou plusieurs occurrences   "he.+o"
+?  zéro ou une occurrences        "he.?o"
+{} Spécifie le nombre d'occurrences "he.{2}o"
+|  Soit ou "falls|stays"
+()  Capture and group
+
+
+Séquences spéciales
+\A Renvoie une correspondance si les caractères spécifiés sont au début de la chaîne  "AThe"
+\b Renvoie une correspondance où les caractères spécifiés se trouvent au début ou à la fin d'un mot
+(le "r" au début garantit que la chaîne est traitée comme une "chaîne brute")          r"\bain" ou r"ain\b"
+\B Renvoie une correspondance où les caractères spécifiés sont présents, mais PAS au début (ou à la fin) d'un mot
+(le "r" au début garantit que la chaîne est traitée comme une "chaîne brute")          r"\Bain" ou r"ain\B"
+\d Renvoie une correspondance où la chaîne contient des chiffres (nombres de 0 à 9)    "\d"
+\D Renvoie une correspondance où la chaîne NE contient PAS de chiffres                 "\D"
+\s Renvoie une correspondance où la chaîne contient un espace blanc                    "\s"
+\S Renvoie une correspondance où la chaîne NE contient PAS de caractère d'espace blanc "\S"
+\w Renvoie une correspondance où la chaîne contient des caractères de mot (caractères de a à Z, chiffres de 0 à 9 et caractère de soulignement _)  "\w"
+\W Renvoie une correspondance où la chaîne NE contient aucun caractère de mot   '\W'
+\Z Returns a match if the specified characters are at the end of the string "Spain\Z"
+
+
+Ensembles (un ensemble de caractères placés entre crochets []
+[arn]        	Renvoie une correspondance où l'un des caractères spécifiés (a, r ou n) est présent
+[a-n]		Renvoie une correspondance pour n'importe quel caractère minuscule, par ordre alphabétique entre a et n
+[^arn] 		Renvoie une correspondance pour n'importe quel caractère SAUF a, r et n
+[0123]		Renvoie une correspondance où l'un des chiffres spécifiés (0, 1, 2 ou 3) est présent
+[0-9]		Renvoie une correspondance pour n'importe quel chiffre entre 0 et 9
+[0-5][0-9]	Renvoie une correspondance pour tout nombre à deux chiffres compris entre 00 et 59
+[a-zA-Z]	Renvoie une correspondance pour n'importe quel caractère alphabétiquement entre a et z, minuscule OU majuscule
+[+]		Dans les ensembles, +, *, ., |, (), $,{} n'a pas de signification particulière, donc [+] signifie : renvoie une correspondance pour n'importe quel caractère + de la chaîne
+
+
+------------------------------exemples de ReGEX--------------------------------------------
+txt = "That will be 59 dollars"
+#Find all digit characters:
+x = re.findall("\d", txt)
+print(x) //['5', '9']
+
+
+txt = "The rain in Spain"
+x = re.search("\s", txt)
+print("The first white-space character is located in position:", x.start()) //3
+
+txt = "The rain in Spain"
+x = re.search("rain", txt)
+print(x) //
+
+
+#Split the string at every white-space character:
+txt = "The rain in Spain"
+x = re.split("\s", txt)
+print(x)//['The', 'rain', 'in', 'Spain']
+
+
+
+#Split the string at the first white-space character:
+txt = "The rain in Spain"
+x = re.split("\s", txt, 1)
+print(x)//
+#Split the string at the first white-space character:
+
+txt = "The rain in Spain"
+x = re.split("\s", txt, 1)
+print(x)
+import re
+​
+#Split the string at the first white-space character:
+​
+txt = "The rain in Spain"
+x = re.split("\s", txt, 1)
+print(x)
+​
+['The', 'rain in Spain']
+#Split the string at the first white-space character:
+
+txt = "The rain in Spain"
+x = re.split("\s", txt, 1)
+print(x)
+import re
+​
+#Split the string at the first white-space character:
+​txt = "The rain in Spain"
+x = re.split("\s", txt, 1)
+print(x)//['The', 'rain in Spain']
+
+#Replace all white-space characters with the digit "9":
+txt = "The rain in Spain"
+x = re.sub("\s", "9", txt)
+print(x)
+x = re.sub("\s", "9", txt, 2)//The9rain9in Spain remplace les 2 première occurrence
+
+
+#The search() function returns a Match object:
+txt = "The rain in Spain"
+x = re.search("rain", txt)
+print(x)//<re.Match object; span=(4, 8), match='rain'>
+
+L'objet Match possède des propriétés et des méthodes utilisées pour récupérer des informations sur la recherche et le résultat :
+.span()renvoie un tuple contenant les positions de début et de fin de la correspondance.
+.stringrenvoie la chaîne passée dans la fonction
+.group()renvoie la partie de la chaîne où il y avait une correspondance
+
+
+#Search for an upper case "S" character in the beginning of a word, and print its position:
+txt = "The rain in Spain"
+x = re.search(r"\bS\w+", txt)
+print(x.span()) //(12, 17)
+print(x.group())//Spain
+
+x = re.search(r"\"payload\"", payload) cela recherche commence 170 "payload" fini 179 c'est le caractère après le " ce qui donne le mot entier.
+
+
+
+
+
+
+
+------------------------------------------------------------------------------------------

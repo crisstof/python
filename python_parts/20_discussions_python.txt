@@ -1,0 +1,37 @@
+
+Le base64 encode/decode ? 
+Utlisé pour la Sérialisation/Désérialisation lors de transfert réseau il peut augmenter la taille des données mais elle est essentielle pour une communication entre système hétérogènes.
+Codage d'information utilisant 64 caractères disponible sur la majorité des systèmes informatique.
+Le Base64 permet de convertir des données binaires (images, audio) en une représentation textuelle utilisant 64 caractères adaptée pour les transmission sur internet.
+L'application principale pour intégrer des données binaires dans des documents texte (html, css, e-mails, évite les problèmes de compatibilité lors de transfert ou stockage de données.
+
+
+
+JSON ?
+import json
+
+dict=json.load(file-io)
+		<---------------load----------
+		----------------dump--------->    file  json.dump(dict, file-io)
+	dict
+	list
+		----------------dumps-------->    string  str=json.dumps(dict)
+		<---------------loads---------
+dict = json.loads(str)
+
+load (s)  into python object   'read into a python'
+dump (s   to a file/string     'write to'
+
+dump :  Utilisé pour écrire un objet Python dans un fichier sous forme de données au format JSON.
+load :
+
+dumps : Utilisé pour écrire un objet Python dans une chaîne JSON
+Encode tout objet Python en String au format JSON
+loads : Utilisé pour transformer du str en dict ou list
+
+
+
+
+-------------------------------Site----------------------------
+https://www.w3schools.com/python/default.asp
+https://koor.fr/Python/Index.wp

@@ -154,7 +154,29 @@ for k,v in dico.items():
 *************************************************************************************************
     				JSON   								*
 *************************************************************************************************
-********JSON**********
+JSON ?
+import json
+
+dict=json.load(file-io)
+		<---------------load----------
+		----------------dump--------->    file  json.dump(dict, file-io)
+	dict
+	list
+		----------------dumps-------->    string  str=json.dumps(dict)
+		<---------------loads---------
+dict = json.loads(str)
+
+load (s)  into python object   'read into a python'
+dump (s   to a file/string     'write to'
+
+dump :  Utilisé pour écrire un objet Python dans un fichier sous forme de données au format JSON.
+load :
+
+dumps : Utilisé pour écrire un objet Python dans une chaîne JSON
+Encode tout objet Python en String au format JSON
+loads : Utilisé pour transformer du str en dict ou list
+
+********JSON**********************************************************************************
    dumps Encode json #si c'est du json
    x = {
       "name": "John",
