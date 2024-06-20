@@ -3,17 +3,24 @@
 *************************************************************************************************
 délimitation
 () tuples, [] listes, {} dictionnaires
-Liste: sont des séquences, ce sont des objets capables de contenir d'autres objets
+
+Liste: 
+-----
+sont des séquences, ce sont des objets capables de contenir d'autres objets
 de n'importe quel type. ce sont donc des séquences d'objet 
 Une liste peut contenir des objets issus de différentes classes sans inconvénient. 
 De plus, une liste peut contenir des doublons 
 (c'est-à-dire qu'elle peut contenir plusieurs fois le même objet).
 
-Tuple: sont des séquences assez semblables aux listes,
+Tuple:
+------
+ sont des séquences assez semblables aux listes,
 sauf qu'on ne peut modifier un tuple après qu'il ait été créé.
 les TUPLES sont des listes immuables mais avec des parenthèses
 
-Dictionnaire:sont des objets pouvant en contenir d'autres à l'instart des listes.
+Dictionnaire:
+-------------
+sont des objets pouvant en contenir d'autres à l'instart des listes.
 ils associent chaque objet contenu à une clé (chaine de caractères) comme un carnet d'adresse
 on accède à chaque contact en précisant son nom.
 ------------------------------------------------------------------------------------------------
@@ -166,6 +173,73 @@ for objet in enumerate(inventaire):
 for indice_objet, valeur_objet in enumerate(inventaire):
    print("Element d'indice {} -> {}".format(indice_objet, valeur_objet))
 
+converser avec une liste ?
+--------------------------------
+--------------------------------
+on mélange les types et on peut même mettre une liste dans une liste, une liste commence toujours avec l'index 0.
+ajout de valeur
+>>> liste = [1,2,3]
+>>> liste.append("ok")
+afficher un item d'une liste: liste[0]
+supprimer une entrée avec un index: del liste[1]
+supprimer une entrée avec sa valeur: liste.remove("a")
+inverser les valeurs d'une liste: liste.reverse()
+compter le nombre d'items d'une liste: len(liste)
+compter le nombre d'occurences d'une valeur: liste.index("b")
+vider une liste: liste[:] = [] # vide la liste
+boucle sur une liste:
+>>> liste = ["a","d","m"]
+>>> for lettre in liste:
+...     print lettre  # a d m
+boucle sur une liste avec l'index:
+>>> for lettre in enumerate(liste):
+...     print lettre   (0, 'a')  (1, 'd')  (2, 'm')
+ La valeur retourner par la boucle sont des tuples 
+
+Copier une liste: list2 = list1
+si l'on change une valeur sur le list1 elle sera affecté sur la list2 aussi
+En fait cette syntaxe permet de travailler sur un même élément nommé différemment
+copie d'une liste indépendante:
+>>> x = [1,2,3]
+>>> y = x[:]
+>>> y[0] = 9
+>>> x
+[1, 2, 3]
+>>> y
+[9, 2, 3]
+
+ou pour des données plus complexes:
+>>> import copy
+>>> x = [[1,2], 2]
+>>> y = copy.deepcopy(x)
+>>> y[1] = [1,2,3]
+>>> x
+[[1, 2], 2]
+>>> y
+[[1, 2], [1, 2, 3]]
+
+
+transformer une string en liste: 
+>>> ma_chaine = "Olivier:ENGEL:Strasbourg"
+>>> ma_chaine.split(":")
+['Olivier', 'ENGEL', 'Strasbourg']
+
+transformer une liste en string
+>>> liste = ["Olivier","ENGEL","Strasbourg"]
+>>> ":".join(liste)
+'Olivier:ENGEL:Strasbourg'
+
+trouver un item dans une liste: 3 in liste
+agrandire un eliste par une liste: x.extend(y
+permutation d'ensemble et de cas possible: 
+>>> from itertools import permutations
+>>> list(permutations(['a', 'b', 'c']))
+[('a', 'b', 'c'), ('a', 'c', 'b'), ('b', 'a', 'c'), ('b', 'c', 'a'), ('c', 'a', 'b'), ('c', 'b', 'a')]
+nous pouvons aussi:  list(product(['a', 'b'], ['c', 'd']))
+initialiser une liste: [0] * 5  => [0,0,0,0,0]
+
+
+
 *************************************************************************************************
    Tuples (1, valeur) (immuable on ne peut pas ajouter ou supprimer les valeurs)		*
 			(contient tout type d'objet ne peut être trié)		()		*
@@ -196,11 +270,48 @@ def getPlayerPos():
 faire un tableau de constante.
 faire un retour de fonction avec deux valeurs
 
+converser avec un tuple ?
+--------------------------------
+--------------------------------
+un tuple avec une seule valeur:
+>>> mon_tuple = ("ok")
+>>> type(mon_tuple)
+<type 'str'>
+>>> mon_tuple = ("ok",)
+>>> type(mon_tuple)
+<type 'tuple'>
+
+afficher une valeur du tuple: >>> mon_tuple[0]   #si indice est égale à 1
+
+On ne peut changer la valeur d'un tuple:
+>>> mon_tuple[1] = "ok"
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: 'tuple' object does not support item assignment
+
+Le tuple permet une affectation multiple
+>>> v1, v2 = 11, 22
+>>> v1
+11
+>>> v2
+22
+
+Il permet également de renvoyer plusieurs valeurs lors d'un appel d'une fonction:
+>>> def donne_moi_ton_nom():
+...     return "olivier", "engel"
+... 
+>>> donne_moi_ton_nom()
+('olivier', 'engel')
+
+On utilisera un tuple pour définir des sortes de constantes qui n'ont donc pas vocation à changer
+
+
 *************************************************************************************************
    Dictionnaires (tableau associatif (clé, valeur))						*
 			(contient tout type d'objet, pas d'indice )		{}		*
 *************************************************************************************************
 dico = {} #vide
+a = dict{}
 dico = {1:150, "prenom":"christophe", 1:"citron"}
 var=dico[clé]
 #ajouter ou modifier si la clé est la même
@@ -224,6 +335,52 @@ def maFonction(**parametres): #parametres est un dictionnaire
   print(parametres)           #fonction avec parametre nommée **
 			      #fonction avec paramètre variabel *
 maFonction(p=154, nom="toto")
+
+converser avec un dictionnaire ?
+--------------------------------
+--------------------------------
+ajoute: a["cle"] = "valeur"
+récupérer une valeur : dict.get("name")
+vérifier la présence d'une clé: dict.has_key("nom")
+supprimer une entrée : del a["nom"]
+
+récupérer les clés en boucle:
+for cle in fiche.keys():
+...     print cle
+
+récupérer les valeurs en boucle:
+for valeur in fiche.values():
+...     print valeur
+
+récupérer les clés/valeurs en boucle:
+for cle,valeur in fiche.items():
+...     print clé, valeur
+
+une des forces de python est la combinaison tuple/dictionnaire pour l'utilisation de coordonnées:
+>>> b = {}
+>>> b[(3,2)]=12
+>>> b[(4,5)]=13
+>>> b
+{(4, 5): 13, (3, 2): 12}
+
+Créer une copie indépendante d'un dictionnaire python? dict2 = dict1 cela ne fonctionne pas
+>>> d = {"k1":"Bruce", "k2":"Wayne"}
+>>> e = d.copy()
+>>> d["k1"] = "BATMAN"
+>>> e
+{"k1":"Bruce", "k2":"Wayne"}
+
+Fusionner des dictionnaires: dict1.update(dict2)
+>>> a = {'nom': 'Wayne'}
+>>> b = {'prenom': 'bruce'}
+>>> a.update(b)
+>>> print(a)
+{'nom': 'Wayne', 'prenom': 'Bruce'}
+
+
+
+
+
 
 
 
