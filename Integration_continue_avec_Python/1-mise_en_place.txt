@@ -1,0 +1,1 @@
+Nous allons réaliser une structure d'intégration continue pour développer un projet python:

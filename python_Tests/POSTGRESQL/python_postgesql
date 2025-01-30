@@ -4,7 +4,7 @@ comportant plusieurs tables, de produire des enregistrements, et permettre de te
 
 Insttaler POSTGRESQL
 --------------------
-jouter un référentiel officiel
+ajouter un référentiel officiel
 sudo apt install wget ca-certificates 
 recupère le certificat et ajoute à l'utilitaire de gestion apt-key et
 créer un nouveau fichier de configuration avec une adresse de référentiel postgresql
