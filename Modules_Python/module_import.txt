@@ -48,7 +48,7 @@ sys.path.append('../utils')
 
 
 import json  #api encode/decode json
-import argparse #facilite l'ecriture d'interfaces de ligne de commande conviviale
+import argparse #facilite l'écriture d'interfaces de ligne de commande conviviale
 import inspect  #pour fournir des informations sur classe, fonction , objet ...
 import os #permet d'interagir avec les fonctionnalités du système d'exploitation et d'accéder aux informations indépendantes du système
 import subprocess #gestion, génère de nouveaux processus remplace des module ou fonctions plus anciens
