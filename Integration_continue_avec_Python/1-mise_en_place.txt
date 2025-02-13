@@ -1,1 +1,139 @@
 Nous allons réaliser une structure d'intégration continue pour développer un projet python:
+L'intégration continue (CI) consiste à créer et tester fréquemment chaque modification apportée à votre code.
+
+La programmation est itérative.
+Le code source réside dans un référentiel partagé par tous les membres de l'équipe.
+si vous devez travailler sur ce produit, vous devez obtenir une copie.
+Vous apporterez des modification, les testerez et les réintégrez dans le référentiel principal.
+Rincez et répéter.
+
+Il faut avoir un système de contrôle de version (VCS) comme got (GitHub, gitlab, BitBucket)
+on travail sur une copie (fork), on crée une branch d'un référentiel, et fusionner dans la branche principale.
+
+Le référentiel Git
+contient plus que du code, la documentation, des scripts de test (schéma de base de données) (fichiers externes)
+si on a besoin de bibliothèques externes il faut les stocker dans requirements.txt ou un pipfile.
+
+L'intérêt d'une CI est que tout le monde travaille sur une base stable connue.
+
+Test Automatisés chaque développeur doit écrire son test pour couvrir chaque nouvelle fonction avec un test unitaire et
+exécuter des tests automatiquement avec chaque modifiation validée est un excellent moyen de détecter les bugs.
+
+Les tests ne garantissent pas que votre code est exempt de bugs, mais il protège contre de nombreux changements négligents. Ainsi
+il y a une tranquilité d'esprit car vous savez que le serveur testera votre code à chaque fois que vsu commitez même si on a
+oublié localement.
+
+
+Utiliser un service d'intégration continue externe comme github.
+---------------------------------------------------------------
+ils agissent comme des moniteurs pour votre référentiel et empêchent de fucsionner avec la branche principale
+si leurs modifications interrompent la construction.
+La fusion déclenche le serveur CI, il y a des niveau gratuit on peut se servir de CircleCI
+										  --------
+
+Tests dans un Environnement Intermédiaire
+-----------------------------------------
+Un environnement de production est l'endroit où votre logiciel sera exécuté.
+il faut un environnement qui imite celui de la production.
+Cette étape concerne d'avantage le code de l'application que le code de la bibliothèque.
+Toutes les bibliothèques Python que vous écrivez doivent être testées sur un serveur de build, pour assurer
+qu'elles fonctionnent dans des environnements différents de votre ordinateur local.
+c'est un environnement de développement ou intermédiaire ou environnement de test.
+DEV environnement de développement et PROD environnement de production.
+Déploiement continu (CD)
+
+**************************
+Exemple d'un pipeline CI
+**************************
+
+GitHub:    
+circleCI:  https://app.circleci.com/
+
+On doit développer une calculatrice avec soustraction, multiplication, addition et division.
+créer un dépôt GitHub CalculatorLibrary et ajouter un READLE et .gitignore et clonez le en local.
+
+Configurer un environnement de travail
+--------------------------------------
+pour que d'autres (et le serveur CI) reproduisent vos conditions de travail, nous devons mettre en place
+un environnement virtuel quelque part en dehors de votre référentiel et activez-le:
+
+#Creation de l'environnement virtuel
+python3 -m venv calculator
+#Activztion de l'environnement virtuel
+. calculatore/bin/activate  ou .\venv\Scripts\activate
+env> vous pouvez installer les paquets
+
+Exemple simple de python:
+------------------------
+calculatorLibrary/
+|_ .git
+|
+|_ .gitignore
+|_ README.md
+|_ calculator.py
+|
+
+calculator.py
+
+def add(first_term, second_term=:
+   return first_term + second_term
+
+def substract(first_term, second_term=:
+   return first_term - second_term
+
+
+Lorsque nore pipeline sera opérationnel on ajoutera le reste.
+cd CalculatorLibrary
+git add calculator.py
+git commit -m "Ajout des fonctions pour l'addition et la soustraction"
+
+
+Ecrire des tests Unitaires
+--------------------------
+. la première étape implique le linting
+C'est à dire l'exécution d'un programme, appelé linter pour analyser le code à la recherche d'erreurs potentielles.
+*flake8* est couramment utilisé pour vérifier si votre code est conforme au style de codage Python standard.
+Linting garantit que votre code est facile à lire pour le reste de la communauté Python.
+
+. la deuxième étape est le test unitaire
+cela consiste à vérifier un seule fonction ou unité de code.
+Python est livré avec une bibliothèque de tests unitaires standard.
+mais d'autres existent nous utiliserons *pytest*.
+
+Une pratique standard qui va de pair avec les tests consiste à calculer la couverture du code.
+c'est le pourcentage de code source qui est couvert par vos tests.
+pytest a une extension pytest-cov qui vous aide à comprendre la couverture de votre code.
+
+Ce sont les dépendances externes, et vous devez les installer
+pip intall flake8 pytest pytest-cov
+Ces sont les seuls paquets externes que vous utiliserez. Assurez-vous de les stocker
+dans le requirement.txt afin que d'autres puissent répliquer votre environnement
+pip freeze  >   requirements.txt
+
+
+Pour exécuter votre linter, exécutez ce qui suit:
+flake8 --statistics
+./caluclator.py:3:1  E302 expected 2 blank lines  found 1
+./caluclator.py:6:1  E302 expected 2 blank lines  found 1
+2                    E302 expected 2 blank lines  found 1
+
+l'option --statistics vous donne un aperçu du nombre de fois qu'une erreur s'est produite.
+nous avons 2 violations PEP 8, car flake8 attend deux lignes vides avant chaque définition de fonctions.
+
+
+Ecrire les tests
+-----------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
