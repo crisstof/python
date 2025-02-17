@@ -1,0 +1,145 @@
+.circleci/config.yml
+
+*****CircleCI*******
+# Fichier de configuration python pour circleci 2.0
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.7
+    working_directory: ~/repo
+    steps:
+    #Etape 1: obtenir le référentiel de Github
+      - checkout
+    #Etape 2: créer un environnement virtuel et installer les dépendances
+      - run:
+          name: Install dependencies
+          command: |
+            python3 -m venv venv
+            . /bin/activate
+            pip install -r requirements.txt
+      - run:
+          name: Run tests
+          command: |
+            . venv/bin/activate
+            flake8 --exclude=venv* --statistics
+            pytest -v --cov=calculator
+
+-----------------------------------------------------------------------------------------------------------------------
+Certains concepts ne sont pas familiers
+nous utilisons docker pour que cela fonctionne pas que sur son ordinateur portable.
+Avant  on créer un programme qui isole une partie des ressources physique du pc (mémoire, disque ...)
+et les transforme en machine virtuelle mais elle consomme beaucoup de ressource.
+Nous avons maintenant les conteneurs et on a pas besoin de créer un système d'exploitation virtuel complet.
+Docker est capable d'exécuter des conteneurs Linux sur Windows et macOS.
+on a besoin d'une image Docker.
+CircleCI maintient des images Docker pré-construites pour plusieurs langages de programmation.
+Dans le fichier de configuration nous avons spécifié une image Linux sur laquelle python est déjà installé.
+cette image créera un conteneur dans lequel tout le reste se passe/
+
+
+
+# Fichier de configuration python pour circleci 2.0
+version: 2 #chaque fichier config et yml commence par la version de circleCI utilisé pour les émettre les avertissements concernant les modifications avec rupture.
+jobs: #représentent une exécution unique du projet et sont définis par un ensemble d'étapes. Si vous n'avez qu'une seule tâche elle doit s'appeler build.
+  build: #c'est le nom de votre tâche on peut avoir plusieus tâche avec des noms uniques.
+    docker: #les étapes d'un travail se déroulent dans un environnement appelé exécuteur
+            #L'exécuteur commun dans CircleCI est un conteneur docker.
+	    #il s'agit d'un environnement d'exécution hébergé dans le cloud, mais d'autres options existent, comme
+	    #un environnement macOS 
+      - image: circleci/python:3.7 #une image docker est un fichier pour créer un conteneur nous utilisons un image sur laquelle python3.7 est préinstallé
+    working_directory: ~/repo #répertoire de travail votre référentiel doit être extrait quelque par sur le serveur de construction. Le répertoire représente le chemin du fichier où le référentiel sera stocké.
+    steps:  #cette clé marque le début d'une liste d'étapes à effectuer par le serveur de génération
+    #Etape 1: obtenir le référentiel de GitHub 
+      - checkout #extraction la première étape que le serveur doit effectuer consiste à extraire le code source dans le répertoire de travail
+                 #Ceci est effectué par une étape spéciale appelée paiement
+    #Etape 2: créer un environnement virtuel et installer les dépendances
+      - run: #l'exécution de programmes ou de commandes en ligne de commande se fait à l'intérieur de la touche de commande.
+             #les commandes shell réelles seront imbriquées à l'intérieur
+          name: Install dependencies #nom l'interface utilisateur de CircleCI vous montre chaque étape de construction sous la forme d'une 
+                                     #section extensible. Le titre de la section est tiré de la valeur associée à la clé de nom.
+	                             
+          command: |  #command cette clé représente la commande à exécuter via le shell.
+		      # le pipe spécifie que ce qui suit est un ensemble littéral de commandes, une par ligne, exactement comme vous le verriez 
+		      #dans un script shell/bash.
+            python3 -m venv venv
+             . /bin/activate            pip install -r requirements.txt
+      - run:
+          name: Run tests
+          command: |
+             . venv/bin/activate            flake8 --exclude=venv* --statistics
+            pytest -v --cov=calculator
+
+
+
+documentation référence de CircleCI : https://circleci.com/docs/language-python/
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------Execution nous avons modifier le config.yml car deprecated de docker et le venv modification--------------
+# Fichier de configuration python pour circleci 2.0
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: cimg/python:3.10.2
+    working_directory: ~/repo
+    steps:
+    #Etape 1: obtenir le référentiel de Github
+      - checkout
+    #Etape 2: créer un environnement virtuel et installer les dépendances
+      - run:
+          name: Install dependencies
+          command: |
+            python3 -m venv venv 
+            . venv/bin/activate
+            pip install -r requirements.txt
+      - run:
+          name: Run tests
+          command: |
+            . venv/bin/activate
+            flake8 --exclude=venv* --statistics
+            pytest -v --cov=calculator
+-----------------------------------------------------------------------------------------------------------------------------------------------
+ajouter le projet dans circleCI choisir et se connecter depuis notre dépot git
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
