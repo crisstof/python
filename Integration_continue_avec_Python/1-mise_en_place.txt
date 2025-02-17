@@ -59,11 +59,17 @@ un environnement virtuel quelque part en dehors de votre référentiel et active
 
 #Creation de l'environnement virtuel
 python3 -m venv calculator
-#Activztion de l'environnement virtuel
+#Activation de l'environnement virtuel
 . calculatore/bin/activate  ou .\venv\Scripts\activate
 env> vous pouvez installer les paquets
+-------------------------------------------
+python -m venv calculator
+.\calculator\Scripts\activate
+-------------------------------------------
 
-Exemple simple de python:
+
+
+Exemple d'architecture simple de python:
 ------------------------
 calculatorLibrary/
 |_ .git
@@ -71,22 +77,24 @@ calculatorLibrary/
 |_ .gitignore
 |_ README.md
 |_ calculator.py
-|
+|_calculator/Scripts/activate   #environnement virtuel
 
+--------------------------------------------------------
 calculator.py
 
-def add(first_term, second_term=:
+def add(first_term, second_term):
    return first_term + second_term
 
-def substract(first_term, second_term=:
+def substract(first_term, second_term):
    return first_term - second_term
+--------------------------------------------------------
 
-
-Lorsque nore pipeline sera opérationnel on ajoutera le reste.
+Lorsque notre pipeline sera opérationnel on ajoutera le reste.
 cd CalculatorLibrary
 git add calculator.py
 git commit -m "Ajout des fonctions pour l'addition et la soustraction"
 
+----------------On va reprendre plus tard------------------------------------
 
 Ecrire des tests Unitaires
 --------------------------
@@ -102,14 +110,23 @@ mais d'autres existent nous utiliserons *pytest*.
 
 Une pratique standard qui va de pair avec les tests consiste à calculer la couverture du code.
 c'est le pourcentage de code source qui est couvert par vos tests.
-pytest a une extension pytest-cov qui vous aide à comprendre la couverture de votre code.
+Pytest a une extension pytest-cov qui vous aide à comprendre la couverture de votre code.
 
 Ce sont les dépendances externes, et vous devez les installer
 pip intall flake8 pytest pytest-cov
-Ces sont les seuls paquets externes que vous utiliserez. Assurez-vous de les stocker
+Ces sont les seuls paquets externes que vous utiliserez. Assurez vous de les stocker
 dans le requirement.txt afin que d'autres puissent répliquer votre environnement
 pip freeze  >   requirements.txt
-
+----------------------reprise du pipeline-------------------------
+requirements.txt
+flake8
+pytest
+pytest-cov
+------------------------------------------------------------------
+installer les dépendances dans venv
+D:\github\python\Integration_continue_avec_Python\exemple\CalculatorLibrary\calculator\Scripts> python.exe -m pip install --upgrade pip 
+pip install -r requirements.txt
+------------------------------------------------------------------
 
 Pour exécuter votre linter, exécutez ce qui suit:
 flake8 --statistics
@@ -121,10 +138,239 @@ l'option --statistics vous donne un aperçu du nombre de fois qu'une erreur s'es
 nous avons 2 violations PEP 8, car flake8 attend deux lignes vides avant chaque définition de fonctions.
 
 
-Ecrire les tests
------------------
+Il est maintenant d'Ecrire les tests
+-----------------------------------------------
+test_calculator.py
+
+import calculator
+
+class test_addition(self):
+    assert 4 == calculator.add(2, 2)
+
+class test_subtraction(self):
+    assert 2 == calculator.subtract(4, 2)
 
 
+nous avons une erreur de self "correstion"
+--------------------------------------------
+import calculator
+import unittest
+
+
+class TestAddition(unittest.TestCase):
+    def test_add(self):
+        self.assertEqual(4, calculator.add(2, 2))
+
+
+class TestSubtraction(unittest.TestCase):
+    def test_subtract(self):
+        self.assertEqual(2, calculator.subtract(4, 2))
+
+------------------------------------------------
+Loin d'être exhaustif mais reste simple.
+exécution: pytest -v -cov 
+Résultat
+platform win32 -- Python 3.10.2, pytest-8.3.4, pluggy-1.5.0 -- D:\github\python\Integration_continue_avec_Python\exemple\CalculatorLibrary\calculator\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: D:\github\python\Integration_continue_avec_Python\exemple\CalculatorLibrary
+configfile: ov
+plugins: cov-6.0.0
+collected 2 items                                                                                                                        
+
+test_calculator.py::TestAddition::test_add PASSED                                                                                 [ 50%] 
+test_calculator.py::TestSubtraction::test_subtract PASSED                                                                         [100%] 
+------------------------------------------------------------------------------------------------------------------------------------------
+Pytest est excellent pour la découverte de teste. vous avez un fichier avec le préfixe test et pytest sait qu'il contiendra des tests
+unitaires pour son exécution. Les mêmes principes s'appliquent aux noms de classe et de méthode à l'intérieur du fichier.
+Le paramètre -v vous donne une sortie plus agréable, qui indique quels test ont réussi et échoué. (ici les 2 ont réussi)
+L'indicateur --cov  s'assure que pytest-cov s'exécute et vous donne un rapport de couverture de code pour calculator.py
+
+Vous avez terminé les préparatifs.
+Validez le fichier de test et transférez toutes ces modifications vers la branche master:
+votre dossier doit contenir:
+calculatorLibrary/
+|_ .git
+|_ .gitignore
+|_ README.md
+|_ calculator.py
+|_ requirements.txt
+|_ test_calculator.py
+
+|_ calculator (venv)
+
+
+**Connectez vous à CIRCLECI**
+-----------------------------
+Vous êtes prêt à mettre en place votre pipeline d'intégration continue !
+CircleCI dois savoir comment exécuter votre build et s'attend à ce que ces informations soient fournies dans un format particulier.
+il nécessite un dossier .circleci dans votre référentiel et un fichier de configuration à l'intérieur.
+
+Un fichier de configuration contient des instructions pour toutes les étapes que le serveur de génération doit exécuter.
+Le serveur de génération doit exécuter CircleCI s'attend à ce que ce fichier s'appelle config.yml
+le yml utilise un langage de sérialisation de données, YAML et possède sa propre spécification.
+L'objectif du  YAML est d'être lisible par l'homme et de bien fonctionner avec les langages de programmation modernes pour les tâches courantes
+et quotidienne. 
+
+Il existe 3 manières de base de représenter les données:
+.  Mappages (paires clé-valeur)
+.  Séquences (listes)
+.  Scalaires (chaînes ou nombres)
+
+L'indentation peut être utilisée pour la structure.
+Les deux-points séparent les paires clé-valeur.
+Les tirets sont utilisée pour créer des listes.
+
+Créez le dossier .circle dans votre référentiel et un fichier config.yml.
+
+# Fichier de configuration python pour circleci 2.0
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.7
+    working_directory: ~/repo
+    steps:
+    #Etape 1: obtenir le référentiel de Github
+      - checkout
+    #Etape 2: créer un environnement virtuel et installer les dépendances
+      - run:
+          name: Install dependencies
+          command: |
+            python3 -m venv venv
+            . /bin/activate
+            pip install -r requirements.txt
+      - run:
+          name: Run tests
+          command: |
+            . venv/bin/activate
+            flake8 --exclude=venv* --statistics
+            pytest -v --cov=calculator
+      - store_artifacts:
+-------------------------------Modification pour le test réel---------------------------------------------------------------
+# Fichier de configuration python pour circleci 2.0
+. calculator/Scripts/activate pour venv mais ici on est dans un docker linux et venv + docker ça fait doublons de virtualisation
+           
+     
+
+Certains concepts ne sont pas familiers
+nous utilisons docker pour que cela fonctionne pas que sur son ordinateur portable.
+Avant  on créer un programme qui isole une partie des ressources physique du pc (mémoire, disque ...)
+et les transforme en machine virtuelle mais elle consomme beaucoup de ressource.
+Nous avons maintenant les conteneurs et on a pas besoin de créer un système d'exploitation virtuel complet.
+Docker est capable d'exécuter des conteneurs Linux sur Windows et macOS.
+on a besoin d'une image Docker.
+CircleCI maintient des images Docker pré-construites pour plusieurs langages de programmation.
+Dans le fichier de configuration nous avons spécifié une image Linux sur laquelle python est déjà installé.
+cette image créera un conteneur dans lequel tout le reste se passe/
+
+
+
+# Fichier de configuration python pour circleci 2.0
+version: 2 #chaque fichier config et yml commence par la version de circleCI utilisé pour les émettre les avertissements concernant les modifications avec rupture.
+jobs: #représentent une exécution unique du projet et sont définis par un ensemble d'étapes. Si vous n'avez qu'une seule tâche elle doit s'appeler build.
+  build: #c'est le nom de votre tâche on peut avoir plusieus tâche avec des noms uniques.
+    docker: #les étapes d'un travail se déroulent dans un environnement appelé exécuteur
+            #L'exécuteur commun dans CircleCI est un conteneur docker.
+	    #il s'agit d'un environnement d'exécution hébergé dans le cloud, mais d'autres options existent, comme
+	    #un environnement macOS 
+      - image: circleci/python:3.7 #une image docker est un fichier pour créer un conteneur nous utilisons un image sur laquelle python3.7 est préinstallé
+    working_directory: ~/repo #répertoire de travail votre référentiel doit être extrait quelque par sur le serveur de construction. Le répertoire représente le chemin du fichier où le référentiel sera stocké.
+    steps:  #cette clé marque le début d'une liste d'étapes à effectuer par le serveur de génération
+    #Etape 1: obtenir le référentiel de GitHub 
+      - checkout #extraction la première étape que le serveur doit effectuer consiste à extraire le code source dans le répertoire de travail
+                 #Ceci est effectué par une étape spéciale appelée paiement
+    #Etape 2: créer un environnement virtuel et installer les dépendances
+      - run: #l'exécution de programmes ou de commandes en ligne de commande se fait à l'intérieur de la touche de commande.
+             #les commandes shell réelles seront imbriquées à l'intérieur
+          name: Install dependencies #nom l'interface utilisateur de CircleCI vous montre chaque étape de construction sous la forme d'une 
+                                     #section extensible. Le titre de la section est tiré de la valeur associée à la clé de nom.
+	                             
+          command: |  #command cette clé représente la commande à exécuter via le shell.
+		      # le pipe spécifie que ce qui suit est un ensemble littéral de commandes, une par ligne, exactement comme vous le verriez 
+		      #dans un script shell/bash.
+            python3 -m venv venv
+             . /bin/activate            pip install -r requirements.txt
+      - run:
+          name: Run tests
+          command: |
+             . venv/bin/activate            flake8 --exclude=venv* --statistics
+            pytest -v --cov=calculator
+
+
+
+documentation référence de CircleCI : https://circleci.com/docs/language-python/
+
+
+
+Notre pipeline se compose de 3 étapes:
+--------------------------------------
+Vérification du référentiel:
+---------------------------
+. Installation des dépendances dans un environnement virtuel.
+. Exécution du linter et des tests à l'intérieur de l'environnement virtuel.
+connectez vous au compte circleCI et ajouter des projets
+Trouvez votre référentiel CalculattorLibrary et cliquez sur configurer le projet.
+Sélectionnez Python comme langue puisque nous avons déjà un config.yml, nous pouvons ignorer les étapes suivantes et cilquer sur Démarrer la construction.
+
+CircleCI vous amènera au tableau de bord d'exécution de votre travail.
+Si vous avez suivi les étapes vous devirez voir votre travail réussier.
+La version finale de votre dossier CalculatorLibrary devrais ressembler à ceci
+calculatorLibrary/
+|
+|_ .circleci
+|_ .git
+|_ .gitignore
+|_ README.md
+|_ calculator.py
+|_ requirements.txt
+|_ test_calculator.py
+
+Nous avons crée notre premier pipeline d'intégration continue.
+Désormais chaque fois que vous pousserez vers la branche master, une tâche sera déclenchée.
+Vous pouvez vois la liste de vos tâches actuelles et passés en cliquant sur jobs dans la barre latérale de CircleCI.
+
+
+Faire des changements:
+--------------------
+il est temps d'ajouter la multiplication à notre bibliothèque calculatrice.
+ajouter un test unitaire sans écrire la fonction.
+Sans le code le test échouera ce qui entraînera également l'échec du travail CircleCI.
+Ajouter le code du teste maintenant
+def test_multiply(self):
+	assert 100 == calulator.mutiply(10, 10)
+poussez le code vers la branche principale et voyez le travail écouer dans CircleCI. Cela montre que l'intégration continue
+fonctionne et surveille vos arrières si vous faites une erreur.
+
+Ajouter maintenant le code à calculator.py
+
+def multiply(first_term, second_term):
+    return first_term * second_term
+assurez vous des 2 espaces vides entre la fonction de multiplication et la précédente sinon cela échouera à la vérification des linters.
+Cela devrait être une réussite.
+
+Ce flus de travail consistant à écrire d'abord un test qui échoue, puis à ajouter le code pour réussir le test 
+est appelé développement piloté par les tests (TDD pour Test Driven Development)
+C'est une excellente façon de travailler car cela vous fait réfléchir à l'avance à la structure de votre code.
+
+Maintenant il reste la division
+
+----------------------------------------------------------------------------------------------------------------------------------------
+Remarque:
+--------
+Sur les grandes applications avec de nombreuses pièce mobiles, l'exécution de l'intégration continue peut prendre un certain temps.
+La plupart des équipes mettent en place une procédure de notification pour prévenir en cas d'échec d'un de leurs jobs.
+les options les plus populaires sont:
+. envoi de mail pour chaque build échoué
+. envoi de notifications d'échec à un canal stack
+. affichage des pannes sur un tableau de bord visible par tous.
+
+Par défait Circle doit envoyer un mail lorsqu'une tâche échoue.
+
+Etape suivantes pour des améliorations:
+--------------------------------------
+il y a des stratégie de ramification lorsqu'on doit fusionner vers le main il y a un examen par les pairs.
+
+Problèmes de dépendances nous avons virtualvenv, docker, VM,
 
 
 

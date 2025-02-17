@@ -1,0 +1,3 @@
+[submodule "Integration_continue_avec_Python/CalculatorLibrary"]
+	path = Integration_continue_avec_Python/CalculatorLibrary
+	url = https://github.com/crisstof/CalculatorLibrary.git
