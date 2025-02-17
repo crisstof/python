@@ -1,0 +1,123 @@
+*****Gestion de fichier en python*****
+
+Ouvrir le fichier
+------------------
+open()
+r lecture mais provoque une erreur si le fichier n'existe pas.
+a append ouvre un fichier pour l'ajout, crée le fichier s'il n'existe pas.
+w ouvre un fichier en écriture, crée le fichier s'il n'existe pas.
+x Crée le fichier, renvoie une erreur si le fichier existe.
+
+on peut spécifier si le fichier doit être traité en mode binaire ou texte:
+t pour texte
+b pour le mode binaire (image)
+
+Syntaxe
+ouvrir un fichier en lecture:  f = open("fichier_demo.txt")
+                   équivalent  f = open("fichier_demo.txt", "rt")
+
+fichier_demo.txt
+Bonjour ! Bienvenue dans fichier_demo.txt
+Ce fichier est à des fins de test.
+Bonne chance !
+
+la fonction open() renvoie un objet file qui a une méthode read()
+pour lire le contenu
+f = open("fichier_demo.txt"", "r")
+print(f.read())
+
+read() lit le fichier entier.
+f.read(5)  renvoie les 5 premiers caractères du fichier.
+f.readline() lit le fichier ligne par ligne
+for x in f:
+ print(x)   #lit tout le fichier ligne par ligne.
+
+
+Fermer le fichier
+----------------
+f.close()
+
+Ecrire / Créer des fichiers
+---------------------------
+f = open("fic_demo.txt", "a")
+f.write("coucou le fichier !")
+f.close()
+#ouvre puis ferme le fichier après l'ajout de texte
+f = open("dic_demo2.txt", "r")
+print(f.read())
+
+#ouvre le fic_demo3.txt et écrasez le contenu
+f = open("fic_demo3.txt", "w")  #w écrasera l'intégralité du texte
+f.write("Oups j'ai écrasé le contenu du texte !")
+f.close()
+
+
+Créer un nouveau fichier
+------------------------
+f = open("fic_cree_demo.txt", "x")
+cree un nouveau fichier s'il n'existe pas
+f = open("fic_cree_demo.txt", "w")
+
+Supprimer un fichier
+--------------------
+os.remove("fic.txt")
+
+on peut vérifier avant s'il existe
+import os
+if os.path.exists("fic1.txt")
+   os.remove("fic1.txt")
+else
+  print("fichier n'existe pas")
+
+Supprimer un rrépertoire
+import os
+os.rmdir("mon_dossier")
+#on ne peut supprimer que des dossiers vides
+
+Copier des fichiers
+-------------------
+import shutil
+src_path = r"E:\demos\fic.txt"
+dst_path = r"E:\aother\fic.txt"
+shutil.copy(src_path, dst_path)
+print("Fichier copié !")
+
+Renommer des fichiers
+----------------------
+le module os fournit des opérations pour le traitement suppr, renommer ...
+os permet l'interaction avec le système d'exploitation.
+os.rename(ancien, nouveau)
+
+déplacer un fichier avec os.remove
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
